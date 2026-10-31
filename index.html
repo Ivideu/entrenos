@@ -1,13 +1,14 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Aprende antes de entrenar</title><link rel="stylesheet" href="style.css"></head><body>
-<header><h1>Aprende antes de entrenar</h1><p>Lee, mira la pizarra y sal a la pista con la cabeza ya en marcha.</p></header>
-<main id="app"></main>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@700;800&display=swap"><link rel="stylesheet" href="style.css"><title>Pizarra del equipo</title></head><body>
+<div class="top"><b>Pizarra del equipo</b><select id="sel" aria-label="Elegir sesión"></select></div>
+<header class="hero" id="hero"></header><main id="app"></main>
 <script src="datos-jugador.js"></script><script src="board.js"></script>
 <script>
-const L=a=>"<ul>"+a.map(x=>"<li>"+x+"</li>").join("")+"</ul>";
-JUGADOR.slice().reverse().forEach((s,n)=>{const d=document.createElement("details");d.open=!n;
-d.innerHTML=`<summary>${s.fecha}: ${s.titulo}</summary>
-<section><h3>💡 Concepto clave del día</h3><p>${s.concepto}</p></section>
-<section class="reto"><h3>🧠 El reto cognitivo</h3><p>${s.reto}</p></section>
-<section><h3>🎬 Pizarra táctica</h3><div class="bs"></div><div class="cols"><div><h4>Con balón</h4>${L(s.con)}</div><div><h4>Sin balón</h4>${L(s.sin)}</div></div></section>`;
-app.append(d);Object.values(s.anims).forEach(a=>{const b=document.createElement("div");d.querySelector(".bs").append(b);Board(b,a)})});
+const L=a=>"<ul>"+a.map(x=>"<li>"+x+"</li>").join("")+"</ul>",S=JUGADOR.slice().reverse();
+S.forEach((s,i)=>sel.add(new Option(s.fecha+": "+s.titulo,i)));
+function show(n){const s=S[n],key="m"+s.id;let v=[];try{v=JSON.parse(localStorage[key]||"[]")}catch(e){}
+hero.innerHTML='<p class="kick">Sesión del '+s.fecha+'</p><h1>'+s.titulo+'</h1><p class="lead">'+s.concepto+'</p>';
+app.innerHTML='<div class="reto"><small>Tu reto en pista</small>'+s.reto+'</div><h2>Míralo en movimiento</h2><div class="bs"></div><div class="cols"><div><h3>Con balón</h3>'+L(s.con)+'</div><div><h3>Sin balón</h3>'+L(s.sin)+'</div></div><h2>Mi misión de hoy</h2><p>Marca lo que vas a cumplir en el entreno.</p><div class="chk">'+s.sin.map((x,i)=>'<label><input type="checkbox" '+(v.includes(i)?"checked":"")+'><span>'+x+'</span></label>').join("")+'</div>';
+Object.values(s.anims).forEach(a=>{const b=document.createElement("div");app.querySelector(".bs").append(b);Board(b,a)});
+app.querySelector(".chk").onchange=()=>{try{localStorage[key]=JSON.stringify([...app.querySelectorAll(".chk input")].flatMap((c,i)=>c.checked?[i]:[]))}catch(e){}}}
+sel.onchange=()=>show(+sel.value);show(0);
 </script></body></html>
