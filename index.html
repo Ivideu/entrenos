@@ -1,0 +1,13 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Aprende antes de entrenar</title><link rel="stylesheet" href="style.css"></head><body>
+<header><h1>Aprende antes de entrenar</h1><p>Lee, mira la pizarra y sal a la pista con la cabeza ya en marcha.</p></header>
+<main id="app"></main>
+<script src="datos-jugador.js"></script><script src="board.js"></script>
+<script>
+const L=a=>"<ul>"+a.map(x=>"<li>"+x+"</li>").join("")+"</ul>";
+JUGADOR.slice().reverse().forEach((s,n)=>{const d=document.createElement("details");d.open=!n;
+d.innerHTML=`<summary>${s.fecha}: ${s.titulo}</summary>
+<section><h3>💡 Concepto clave del día</h3><p>${s.concepto}</p></section>
+<section class="reto"><h3>🧠 El reto cognitivo</h3><p>${s.reto}</p></section>
+<section><h3>🎬 Pizarra táctica</h3><div class="bs"></div><div class="cols"><div><h4>Con balón</h4>${L(s.con)}</div><div><h4>Sin balón</h4>${L(s.sin)}</div></div></section>`;
+app.append(d);Object.values(s.anims).forEach(a=>{const b=document.createElement("div");d.querySelector(".bs").append(b);Board(b,a)})});
+</script></body></html>

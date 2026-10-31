@@ -1,0 +1,16 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Sala del míster</title><link rel="stylesheet" href="style.css"></head><body class="m">
+<header><h1>Sala del míster</h1><p>Sesiones diseñadas a partir de lo que has visto en tus jugadores.</p></header>
+<main id="app"></main>
+<script src="datos-jugador.js"></script><script src="datos-mister.js"></script><script src="board.js"></script>
+<script>
+const L=a=>"<ul>"+a.map(x=>"<li>"+x+"</li>").join("")+"</ul>";
+MISTER.slice().reverse().forEach((m,n)=>{const j=JUGADOR.find(x=>x.id==m.id)||{titulo:m.id,fecha:m.id,anims:{}};
+const d=document.createElement("details");d.open=!n;
+d.innerHTML=`<summary>${j.fecha}: ${j.titulo}</summary>
+<section class="reto"><h3>Lo que he visto</h3><p>${m.observacion}</p><p class="mut">Objetivo: ${m.objetivo}</p></section>
+${m.fases.map((f,i)=>`<section><h3>${f.n}</h3><p><span class="min">${f.min} min</span> · ${f.t}</p><p>${f.d}</p>${L(f.reglas)}<div class="bs" id="b${n}_${i}"></div></section>`).join("")}
+<section><h3>Feedback socrático: preguntas en los parones</h3>${L(m.preguntas)}</section>
+<section><h3>Qué mirar para saber si funciona</h3>${L(m.senales)}</section>`;
+app.append(d);
+m.fases.forEach((f,i)=>{const a=f.anim&&(m.anims[f.anim]||j.anims[f.anim]);if(a){const b=document.createElement("div");d.querySelector("#b"+n+"_"+i).append(b);Board(b,a)}})});
+</script></body></html>
