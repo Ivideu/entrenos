@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b1220">
+<title>Antes de saltar a pista · Infantil</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="badge">Infantil · 2º año</span>
+    <h1 id="titulo">Antes de saltar a pista ⚽</h1>
+    <div class="sub" id="fecha">Cargando el entrenamiento de hoy…</div>
+  </header>
+
+  <main id="ficha"></main>
+
+  <section class="card past" id="anteriores" hidden>
+    <h2>📚 Entrenamientos anteriores</h2>
+    <div id="lista"></div>
+  </section>
+
+  <footer>Lee la ficha, mira las pizarras y sal a la pista con la cabeza ya en marcha. 💪</footer>
+</div>
+
+<script src="anim.js"></script>
+<script src="render.js"></script>
+<script>
+(function () {
+  const { h } = FutsalAnim;
+  let sesiones = [];
+
+  function show(id) {
+    const s = sesiones.find(x => x.id === id) || sesiones[0];
+    document.getElementById('titulo').textContent = s.titulo;
+    document.getElementById('fecha').textContent = FutsalRender.fmtFecha(s.fecha);
+    FutsalRender.renderPlayer(document.getElementById('ficha'), s);
+    try { history.replaceState(null, '', '#' + s.id); } catch (e) { /* algunos navegadores lo bloquean en file:// */ }
+    renderLista(s.id);
+  }
+
+  function renderLista(actual) {
+    const cont = document.getElementById('lista');
+    cont.replaceChildren();
+    const otras = sesiones.filter(x => x.id !== actual);
+    document.getElementById('anteriores').hidden = otras.length === 0;
+    otras.forEach(x => cont.append(h('button', { class: 'btn', type: 'button', onclick: () => { show(x.id); scrollTo({ top: 0 }); } }, FutsalRender.fmtFecha(x.fecha) + ' · ' + x.titulo)));
+  }
+
+  fetch('sessions.json', { cache: 'no-cache' })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(data => {
+      sesiones = (Array.isArray(data) ? data : [data]).sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+      if (!sesiones.length) throw new Error('vacío');
+    })
+    .catch(() => {
+      document.getElementById('fecha').textContent = 'Todavía no hay entrenamiento publicado. ¡Vuelve pronto!';
+    })
+    .then(() => { if (sesiones.length) show(location.hash.slice(1)); });
+})();
+</script>
+</body>
+</html>

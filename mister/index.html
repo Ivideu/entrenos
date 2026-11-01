@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Panel del míster · Fútbol sala Infantil</title>
+<link rel="stylesheet" href="../docs/style.css">
+<style>
+  .badge.coach{background:var(--blue);color:#fff}
+  textarea,input[type=date],input[type=file]{width:100%;background:#0e1730;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit}
+  textarea{min-height:92px;resize:vertical}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chips label{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer}
+  .chips input{accent-color:var(--accent);width:18px;height:18px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+  .row>div{flex:1 1 180px}
+  .tabs{display:flex;gap:8px;margin:18px 0 0;flex-wrap:wrap}
+  .tabs .btn.on{background:var(--accent);color:#1b1b1b;border-color:var(--accent);font-weight:800}
+  .block{border-left:5px solid var(--blue);background:var(--card2);border-radius:12px;padding:12px 14px;margin:12px 0}
+  .block h3{margin:0 0 4px;font-size:1.02rem}
+  .block .min{float:right;background:var(--accent);color:#1b1b1b;border-radius:999px;padding:1px 10px;font-weight:800;font-size:.85rem}
+  .steps li{margin:8px 0}
+  .warn{border-left:5px solid var(--red);background:#2a1620}
+  code{background:#0e1730;padding:2px 6px;border-radius:6px}
+  .hist .btn{margin:4px 6px 4px 0}
+  [hidden]{display:none!important}
+  @media print{
+    body{background:#fff;color:#000}
+    .no-print,.tabs,header.top .sub,#panelGen,#panelPub,#panelImp,#hist,#pane-player,footer{display:none!important}
+    .card,.block{background:#fff;border:1px solid #bbb;color:#000}
+    .block{border-left:5px solid #444}
+    .block .min{background:#ddd}
+    #pane-mister{display:block!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="badge coach">Solo para el míster</span>
+    <h1>Panel del míster 🧠</h1>
+    <div class="sub">Cuéntame lo que has visto → te preparo el entrenamiento y la ficha animada para los jugadores.</div>
+  </header>
+
+  <!-- 1. Generar -->
+  <section class="card" id="panelGen">
+    <h2>1 · ¿Qué has visto en el último partido o entrenamiento?</h2>
+    <textarea id="idea" placeholder="Ej: Se mueven en bloque, sin crear espacios y se quedan estáticos esperando el balón."></textarea>
+    <div class="muted" style="margin-top:6px">Marca el/los diagnósticos que encajan (se marcan solos según lo que escribas). El primero marcado será el foco principal.</div>
+    <div class="chips" id="chips"></div>
+    <div class="row">
+      <div><label class="muted" for="fecha">Fecha del entrenamiento</label><input type="date" id="fecha"></div>
+      <div><button class="btn primary" type="button" id="btnGen" style="width:100%;padding:12px">⚡ Generar entrenamiento</button></div>
+    </div>
+  </section>
+
+  <div id="resultado" hidden>
+    <div class="tabs no-print">
+      <button class="btn on" type="button" data-pane="mister">📋 Sesión del míster</button>
+      <button class="btn" type="button" data-pane="player">👀 Vista del jugador</button>
+      <button class="btn" type="button" data-pane="pub">🚀 Publicar</button>
+    </div>
+
+    <section id="pane-mister"></section>
+
+    <section id="pane-player" hidden>
+      <header class="top" style="padding-top:14px">
+        <span class="badge">Infantil · 2º año</span>
+        <h1 id="pTitulo"></h1>
+        <div class="sub" id="pFecha"></div>
+      </header>
+      <div id="pFicha"></div>
+    </section>
+
+    <section id="panelPub" hidden class="card">
+      <h2>🚀 Publicar la ficha para los jugadores</h2>
+      <ol class="steps">
+        <li>(Opcional, si ya tienes entrenamientos publicados) carga tu <code>docs/sessions.json</code> actual para no perderlos:
+          <input type="file" id="fileSess" accept="application/json,.json"></li>
+        <li><button class="btn primary" type="button" id="btnDownload">⬇ Descargar sessions.json actualizado</button></li>
+        <li>Sustituye el archivo <code>docs/sessions.json</code> de tu proyecto por el descargado y sube el cambio (commit en GitHub o arrastra la carpeta <code>docs</code> a Netlify).</li>
+      </ol>
+      <p class="muted" id="pubMsg"></p>
+      <p class="muted">⚠️ Solo se publica la <b>parte del jugador</b>. Tu sesión de entrenador no sale de tu ordenador.</p>
+    </section>
+  </div>
+
+  <!-- Importar -->
+  <section class="card" id="panelImp">
+    <h2>📥 ¿Tienes una sesión a medida (hecha por Claude en el chat)?</h2>
+    <div class="muted">Si lo que has visto no encaja en los diagnósticos, cuéntaselo a Claude en el chat y te devolverá un JSON de sesión. Pégalo aquí para verlo, ajustarlo y publicarlo.</div>
+    <textarea id="jsonIn" placeholder='Pega aquí el JSON de la sesión…' style="margin-top:10px"></textarea>
+    <div style="margin-top:8px"><button class="btn" type="button" id="btnImp">Cargar sesión pegada</button> <span class="muted" id="impMsg"></span></div>
+  </section>
+
+  <section class="card hist no-print" id="hist" hidden>
+    <h2>🗂 Mis entrenamientos generados</h2>
+    <div id="histList"></div>
+  </section>
+
+  <footer>Guarda esta carpeta <code>mister/</code> solo en tu ordenador (no la subas a GitHub/Netlify).</footer>
+</div>
+
+<script src="../docs/anim.js"></script>
+<script src="../docs/render.js"></script>
+<script src="library.js"></script>
+<script>
+(function () {
+  const { h } = FutsalAnim;
+  const $ = s => document.querySelector(s);
+  const HKEY = 'mister-historial-v1';
+  let current = null, existing = [];
+
+  /* historial local */
+  const loadHist = () => { try { return JSON.parse(localStorage.getItem(HKEY) || '[]'); } catch (e) { return []; } };
+  const saveHist = s => {
+    try {
+      const l = loadHist().filter(x => x.id !== s.id); l.unshift(s);
+      localStorage.setItem(HKEY, JSON.stringify(l.slice(0, 40)));
+    } catch (e) {}
+    renderHist();
+  };
+  function renderHist() {
+    const l = loadHist(), box = $('#histList');
+    box.replaceChildren();
+    $('#hist').hidden = !l.length;
+    l.forEach(s => box.append(h('button', { class: 'btn', type: 'button', onclick: () => setCurrent(s, false) }, FutsalRender.fmtFecha(s.fecha) + ' · ' + s.titulo)));
+  }
+
+  /* chips */
+  const chips = $('#chips');
+  Object.entries(FutsalLib.TAGS).forEach(([k, t]) => {
+    chips.append(h('label', {}, h('input', { type: 'checkbox', value: k, id: 'tag-' + k }), t.nombre));
+  });
+  ['bloque', 'estatico'].forEach(k => $('#tag-' + k).checked = true);
+  $('#fecha').value = new Date().toISOString().slice(0, 10);
+  $('#idea').value = 'Se mueven en bloque, sin crear espacios y se quedan estáticos esperando el balón.';
+  $('#idea').addEventListener('input', e => {
+    FutsalLib.detectTags(e.target.value).forEach(k => $('#tag-' + k).checked = true);
+  });
+  const checkedTags = () => Array.from(chips.querySelectorAll('input:checked')).map(i => i.value);
+
+  /* generar */
+  $('#btnGen').addEventListener('click', () => {
+    const tags = checkedTags();
+    if (!tags.length) { alert('Marca al menos un diagnóstico.'); return; }
+    const s = FutsalLib.buildSession({ tags, idea: $('#idea').value.trim(), fecha: $('#fecha').value });
+    setCurrent(s, true);
+    $('#resultado').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  /* pestañas */
+  document.querySelectorAll('.tabs .btn').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.tabs .btn').forEach(x => x.classList.toggle('on', x === b));
+    $('#pane-mister').hidden = b.dataset.pane !== 'mister';
+    $('#pane-player').hidden = b.dataset.pane !== 'player';
+    $('#panelPub').hidden = b.dataset.pane !== 'pub';
+    if (b.dataset.pane === 'player') drawPlayer();
+    else FutsalAnim.stopAll();
+  }));
+
+  function drawPlayer() {
+    $('#pTitulo').textContent = current.titulo;
+    $('#pFecha').textContent = FutsalRender.fmtFecha(current.fecha);
+    FutsalRender.renderPlayer($('#pFicha'), current);
+  }
+
+  /* ficha del míster */
+  function renderMister(s) {
+    const m = s.mister || {};
+    const root = $('#pane-mister');
+    root.replaceChildren();
+    root.append(
+      h('div', { class: 'card' },
+        h('h2', {}, '📋 ' + s.titulo),
+        h('div', { class: 'muted' }, FutsalRender.fmtFecha(s.fecha) + ' · Infantil 2º año · 4 jugadores de campo + 2 porteros'),
+        m.contexto ? h('p', {}, h('b', {}, 'Lo que vi: '), m.contexto) : null,
+        h('button', { class: 'btn no-print', type: 'button', onclick: () => window.print() }, '🖨 Imprimir / guardar PDF')
+      )
+    );
+    (m.bloques || []).forEach(b => root.append(
+      h('div', { class: 'block' },
+        h('span', { class: 'min' }, b.min + ' min'),
+        h('h3', {}, b.nombre),
+        h('div', {}, b.tarea),
+        h('ul', { class: 'clean' }, (b.reglas || []).map(r => h('li', {}, r)))
+      )
+    ));
+    root.append(
+      h('div', { class: 'card' },
+        h('h2', {}, '🗣 Pautas de feedback (método socrático)'),
+        h('div', { class: 'muted' }, 'Haz una pregunta en cada parón y espera a que respondan ellos antes de dar la solución.'),
+        h('ol', { class: 'steps' }, (m.preguntas || []).map(q => h('li', {}, q)))
+      )
+    );
+  }
+
+  function setCurrent(s, save) {
+    // si viene sin parte de míster (p. ej. sesión pública), la reconstruimos desde los diagnósticos
+    if (!s.mister) {
+      try { s = Object.assign({}, s, { mister: FutsalLib.buildSession({ tags: s.tags, fecha: s.fecha }).mister }); } catch (e) { s.mister = { bloques: [], preguntas: [] }; }
+    }
+    current = s;
+    $('#resultado').hidden = false;
+    renderMister(s);
+    document.querySelectorAll('.tabs .btn').forEach((x, i) => x.classList.toggle('on', i === 0));
+    $('#pane-mister').hidden = false; $('#pane-player').hidden = true; $('#panelPub').hidden = true;
+    FutsalAnim.stopAll();
+    $('#pubMsg').textContent = 'Sesión lista: ' + s.titulo + ' (' + s.fecha + ').';
+    if (save) saveHist(s);
+  }
+
+  /* publicar */
+  $('#fileSess').addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return;
+    f.text().then(t => {
+      const d = JSON.parse(t);
+      existing = Array.isArray(d) ? d : [d];
+      $('#pubMsg').textContent = 'Cargadas ' + existing.length + ' sesiones existentes.';
+    }).catch(() => { $('#pubMsg').textContent = 'No he podido leer ese archivo.'; });
+  });
+  $('#btnDownload').addEventListener('click', () => {
+    if (!current) return;
+    const pub = FutsalLib.publicVersion(current);
+    const all = [pub].concat(existing.filter(x => x.id !== pub.id)).sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+    const blob = new Blob([JSON.stringify(all, null, 1)], { type: 'application/json' });
+    const a = h('a', { href: URL.createObjectURL(blob), download: 'sessions.json' });
+    document.body.append(a); a.click(); a.remove();
+    $('#pubMsg').textContent = 'Descargado sessions.json con ' + all.length + ' sesión(es). Sustituye docs/sessions.json y publica.';
+  });
+
+  /* importar */
+  $('#btnImp').addEventListener('click', () => {
+    try {
+      const s = JSON.parse($('#jsonIn').value);
+      if (!s.id || !s.fecha || !s.titulo || !s.jugador || !s.jugador.escenas) throw new Error('Faltan campos: id, fecha, titulo, jugador.escenas');
+      setCurrent(s, true);
+      $('#impMsg').textContent = '✅ Sesión cargada.';
+      $('#resultado').scrollIntoView({ behavior: 'smooth' });
+    } catch (e) { $('#impMsg').textContent = '❌ ' + e.message; }
+  });
+
+  renderHist();
+})();
+</script>
+</body>
+</html>
