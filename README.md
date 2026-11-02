@@ -49,7 +49,8 @@ app.netlify.com → *Add new site* → *Import an existing project* → elige tu
 |---|---|
 | `GEMINI_API_KEY` | la clave del paso 1 |
 | `MISTER_PASSWORD` | una contraseña **larga** que inventes (12 caracteres o más). Es lo único que impide que otros usen tu panel y tu IA |
-| `GEMINI_MODEL` | (opcional) cambia el modelo. Por defecto `gemini-3.8-flash`; si Google lo renombra o retira, pon aquí el Flash vigente (ai.google.dev/gemini-api/docs/models) |
+| `GEMINI_MODEL` | (opcional) modelo principal. Por defecto `gemini-3.8-flash`. Si Google lo cambia, pon aquí el nombre vigente (ver «Cambiar de modelo de Gemini») |
+| `GEMINI_FALLBACK_MODELS` | (opcional) modelos de respaldo, separados por comas, que se prueban si el principal está saturado o no existe. Por defecto `gemini-3.6-flash,gemini-3.5-flash-lite` |
 
 Después: *Deploys → Trigger deploy*.
 
@@ -62,6 +63,16 @@ Abre `https://tu-nombre.netlify.app/panel/`, escribe tu contraseña y listo (se 
 2. Revisa *Sesión del míster* y *Vista del jugador* (es exactamente lo que verán).
 3. **Publicar** → ya está en la web de los jugadores. *Compartir el enlace* lo manda por WhatsApp.
 4. Puedes *Quitar de la web* o *Borrar* cuando quieras; el historial está en *Mis entrenamientos*.
+
+## Cambiar de modelo de Gemini
+
+La web ya reintenta sola si Gemini da un error 503 ("high demand", saturado) o 429, y si el modelo principal sigue fallando prueba los de respaldo. Al terminar, el panel dice con qué modelo se analizó. Si aun así quieres fijar tú el modelo:
+
+1. En Netlify: **Site configuration → Environment variables → Add a variable**.
+2. *Key*: `GEMINI_MODEL`. *Value*: el nombre exacto del modelo, por ejemplo `gemini-3.6-flash`.
+3. **Deploys → Trigger deploy → Deploy site** (los cambios de variables solo se aplican en un despliegue nuevo).
+
+¿Cuál es el nombre exacto? En aistudio.google.com elige un modelo en el desplegable de la derecha y pulsa **Get code**: en el código aparece `model: "…"`. También está la lista en ai.google.dev/gemini-api/docs/models. Si usaste uno en otro proyecto, es el mismo nombre. Un modelo que no existe da error 404; uno saturado da 503 y pasa solo.
 
 ## Si algo no va
 

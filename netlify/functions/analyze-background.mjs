@@ -14,9 +14,9 @@ export default async (req) => {
   try {
     const input = await store.get('in-' + jobId);
     if (!input) throw new Error('No encuentro las imágenes de este análisis.');
-    const text = await callAI(input);
+    const { text, model } = await callAI(input);
     const session = sanitizeSession(parseModelJson(text), { fecha: input.fecha, nota: input.nota, fuente: input.fuente });
-    await store.set('job-' + jobId, { status: 'done', created: Date.now(), session });
+    await store.set('job-' + jobId, { status: 'done', created: Date.now(), session, modelo: model });
   } catch (e) {
     await store.set('job-' + jobId, { status: 'error', created: Date.now(), error: String(e && e.message || e).slice(0, 300) });
   } finally {

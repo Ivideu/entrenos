@@ -1114,7 +1114,7 @@ footer{color:var(--muted);text-align:center;margin-top:34px;font-size:.88rem}
           s.mister.evidencia = prep.evidencia;
           if ($('#mostrarFotos').checked) s.jugador.evidencia = prep.evidencia;
           setCurrent(s, true, false);
-          msg.textContent = '✅ Listo. Revisa las pestañas de abajo y publica si te gusta.';
+          msg.textContent = '✅ Listo' + (st.modelo ? ' (analizado con ' + st.modelo + ')' : '') + '. Revisa las pestañas de abajo y publica si te gusta.';
           $('#resultado').scrollIntoView({ behavior: 'smooth' });
           break;
         }

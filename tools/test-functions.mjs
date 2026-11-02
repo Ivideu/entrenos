@@ -1,6 +1,8 @@
 // Pruebas de las funciones sin navegador: node tools/test-functions.mjs
 import assert from 'node:assert/strict';
 import { startServer, aiCalls } from './mock-server.mjs';
+import { retry } from '../netlify/functions/lib/core.mjs';
+retry.delays = [5, 5];   // esperas cortas en las pruebas
 
 const PORT = 8811, base = 'http://localhost:' + PORT + '/.netlify/functions/';
 const server = await startServer(PORT);
@@ -62,13 +64,53 @@ async function failWith(resp) {
   globalThis.fetch = realFetch; return st;
 }
 let e = await failWith({ status: 429, body: { error: { message: 'Quota exceeded' } } });
-t('429 de Gemini → error con mensaje', e.status === 'error' && /429/.test(e.error) && /Quota/.test(e.error));
+t('429 persistente → error claro con los modelos probados', e.status === 'error' && /saturado/.test(e.error) && /429/.test(e.error) && /gemini-3.8-flash, gemini-3.6-flash, gemini-3.5-flash-lite/.test(e.error));
 e = await failWith({ body: { promptFeedback: { blockReason: 'PROHIBITED_CONTENT' } } });
 t('imágenes bloqueadas → error claro', e.status === 'error' && /bloque/.test(e.error));
 e = await failWith({ body: { candidates: [{ finishReason: 'MAX_TOKENS', content: { parts: [{ text: '{"titu' }] } }] } });
 t('respuesta cortada → error claro', e.status === 'error' && /cort/.test(e.error));
 e = await failWith({ body: { candidates: [{ finishReason: 'STOP', content: { parts: [{ text: 'Lo siento, no puedo.' }] } }] } });
 t('texto sin JSON → error claro', e.status === 'error' && /JSON/.test(e.error));
+
+// 4b) Reintentos y modelos de respaldo
+const GURL = 'https://generativelanguage.googleapis.com/';
+const r503 = () => new Response(JSON.stringify({ error: { message: 'This model is currently experiencing high demand.' } }), { status: 503 });
+function scripted(handler) {
+  const calls = [];
+  globalThis.fetch = async (url, o) => {
+    if (String(url).startsWith(GURL)) { const m = decodeURIComponent(String(url).match(/models\/([^:]+):/)[1]); calls.push(m); const out = handler(m, calls.filter(x => x === m).length); if (out) return out; }
+    return realFetch(url, o);
+  };
+  return calls;
+}
+async function runJob() {
+  const id = (await (await fetch(base + 'start', { method: 'POST', headers: H, body: JSON.stringify({ imagenes: [jpeg] }) })).json()).jobId; let st;
+  for (let i = 0; i < 60; i++) { st = await (await fetch(base + 'status?id=' + id, { headers: H })).json(); if (st.status !== 'pending') break; await new Promise(r => setTimeout(r, 100)); }
+  globalThis.fetch = realFetch; return st;
+}
+let calls = scripted((m, n) => (n <= 2 ? r503() : null));
+let j = await runJob();
+t('503 dos veces y luego bien → reintenta el mismo modelo', j.status === 'done' && j.modelo === 'gemini-3.8-flash' && calls.length === 3);
+calls = scripted(m => (m === 'gemini-3.8-flash' ? r503() : null));
+j = await runJob();
+t('modelo principal saturado → usa el de respaldo y lo dice', j.status === 'done' && j.modelo === 'gemini-3.6-flash' && calls.filter(x => x === 'gemini-3.8-flash').length === 3);
+calls = scripted(m => (m === 'gemini-3.8-flash' ? new Response(JSON.stringify({ error: { message: 'not found' } }), { status: 404 }) : null));
+j = await runJob();
+t('modelo inexistente (404) → salta al siguiente sin reintentar', j.status === 'done' && j.modelo === 'gemini-3.6-flash' && calls.filter(x => x === 'gemini-3.8-flash').length === 1);
+calls = scripted(() => new Response(JSON.stringify({ error: { message: 'API key not valid' } }), { status: 400 }));
+j = await runJob();
+t('clave inválida (400) → error inmediato, sin reintentos', j.status === 'error' && /400/.test(j.error) && calls.length === 1);
+calls = scripted(() => new Response('{}', { status: 404 }));
+j = await runJob();
+t('ningún modelo existe → mensaje que explica GEMINI_MODEL', j.status === 'error' && /GEMINI_MODEL/.test(j.error) && calls.length === 3);
+process.env.GEMINI_MODEL = 'gemini-mio-1';
+calls = scripted(null || (() => null));
+j = await runJob(); delete process.env.GEMINI_MODEL;
+t('GEMINI_MODEL manda sobre el modelo por defecto', j.status === 'done' && j.modelo === 'gemini-mio-1' && calls[0] === 'gemini-mio-1');
+process.env.GEMINI_FALLBACK_MODELS = '';
+calls = scripted(() => r503());
+j = await runJob(); delete process.env.GEMINI_FALLBACK_MODELS;
+t('sin modelos de respaldo configurados → solo prueba el principal', j.status === 'error' && new Set(calls).size === 1);
 
 // 5) Evaluación y fuente llegan a la sesión
 const j3 = (await (await fetch(base + 'start', { method: 'POST', headers: H, body: JSON.stringify({ imagenes: [jpeg], fuente: 'https://www.instagram.com/reel/abc/', fecha: '2026-11-04' }) })).json()).jobId;

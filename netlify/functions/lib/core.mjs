@@ -4,6 +4,11 @@ import { MANUAL_UEFA } from './knowledge.mjs';
 
 // Modelo de Gemini: se puede cambiar en Netlify con la variable GEMINI_MODEL sin tocar el código.
 export const MODEL = () => process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+// Si el modelo principal está saturado (503) o no existe (404), se prueban estos, en orden.
+export const FALLBACKS = () => (process.env.GEMINI_FALLBACK_MODELS != null ? process.env.GEMINI_FALLBACK_MODELS : 'gemini-3.6-flash,gemini-3.5-flash-lite')
+  .split(',').map(x => x.trim()).filter(Boolean);
+export const retry = { delays: [3000, 8000] };   // esperas entre reintentos de un mismo modelo (ms)
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 /* ───────────── CORS + respuestas ───────────── */
 export const CORS = {
@@ -108,10 +113,7 @@ export function buildUserParts({ imagenes, nota, tipo }) {
 }
 
 /* ───────────── Llamada a la API de Gemini ───────────── */
-export async function callAI(input) {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) throw new Error('Falta configurar GEMINI_API_KEY en Netlify.');
-  const model = MODEL();
+async function callModel(model, input, key) {
   const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent', {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
@@ -123,15 +125,44 @@ export async function callAI(input) {
     signal: AbortSignal.timeout(300000)
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error('Gemini respondió con error ' + res.status + (data && data.error && data.error.message ? ': ' + String(data.error.message).slice(0, 200) : ''));
-  if (data.promptFeedback && data.promptFeedback.blockReason) throw new Error('Gemini bloqueó las imágenes (' + data.promptFeedback.blockReason + '). Prueba con otro dibujo o con menos fotogramas.');
+  if (!res.ok) {
+    const e = new Error('Gemini respondió con error ' + res.status + (data && data.error && data.error.message ? ': ' + String(data.error.message).slice(0, 160) : ''));
+    e.status = res.status;
+    throw e;
+  }
+  const fin = msg => { const e = new Error(msg); e.final = true; return e; };   // error de contenido: reintentar no sirve
+  if (data.promptFeedback && data.promptFeedback.blockReason) throw fin('Gemini bloqueó las imágenes (' + data.promptFeedback.blockReason + '). Prueba con otro dibujo o con menos fotogramas.');
   const cand = (data.candidates || [])[0];
-  if (!cand) throw new Error('Gemini no devolvió ninguna respuesta.');
-  if (cand.finishReason === 'MAX_TOKENS') throw new Error('La respuesta de la IA se cortó. Prueba con menos imágenes.');
-  if (cand.finishReason === 'SAFETY') throw new Error('Gemini bloqueó la respuesta por seguridad. Prueba con otro dibujo.');
+  if (!cand) throw fin('Gemini no devolvió ninguna respuesta.');
+  if (cand.finishReason === 'MAX_TOKENS') throw fin('La respuesta de la IA se cortó. Prueba con menos imágenes.');
+  if (cand.finishReason === 'SAFETY') throw fin('Gemini bloqueó la respuesta por seguridad. Prueba con otro dibujo.');
   const text = ((cand.content && cand.content.parts) || []).filter(p => typeof p.text === 'string' && !p.thought).map(p => p.text).join('');
-  if (!text) throw new Error('Gemini devolvió una respuesta vacía.');
+  if (!text) throw fin('Gemini devolvió una respuesta vacía.');
   return text;
+}
+
+// Prueba el modelo principal y, si está saturado o no existe, los de respaldo. Devuelve { text, model }.
+export async function callAI(input) {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error('Falta configurar GEMINI_API_KEY en Netlify.');
+  const models = [...new Set([MODEL(), ...FALLBACKS()])];
+  let last;
+  for (const model of models) {
+    for (let i = 0; i <= retry.delays.length; i++) {
+      try { return { text: await callModel(model, input, key), model }; }
+      catch (e) {
+        last = e;
+        if (e.final) throw e;                                                           // bloqueo, respuesta cortada…
+        if (e.status === 404) break;                                                    // ese modelo no existe → siguiente
+        if (e.status && ![429, 500, 502, 503, 504].includes(e.status)) throw e;         // clave mala, petición mala…: no se arregla reintentando
+        if (i < retry.delays.length) await sleep(retry.delays[i]);                      // saturado o sin red: esperar y reintentar
+      }
+    }
+  }
+  const st = last && last.status;
+  throw new Error(st === 404
+    ? 'Ninguno de los modelos existe (' + models.join(', ') + '). Pon un modelo vigente en GEMINI_MODEL.'
+    : 'Gemini está saturado o no responde ahora mismo' + (st ? ' (error ' + st + ')' : '') + '. Probé: ' + models.join(', ') + '. Inténtalo de nuevo en unos minutos.');
 }
 
 export function parseModelJson(text) {
