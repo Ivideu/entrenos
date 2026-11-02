@@ -1,0 +1,9 @@
+{
+  "name": "futsal-infantil-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fichas de entrenamiento de fútbol sala Infantil con pizarras animadas",
+  "dependencies": {
+    "@netlify/blobs": "^11.1.7"
+  }
+}

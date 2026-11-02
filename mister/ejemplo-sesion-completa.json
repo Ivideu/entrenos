@@ -1,0 +1,904 @@
+{
+ "id": "2026-11-02-bloque-estatico",
+ "fecha": "2026-11-02",
+ "titulo": "Rompe el bloque: ¡sepárate!",
+ "tags": [
+  "bloque",
+  "estatico"
+ ],
+ "jugador": {
+  "concepto": "Cuando los cuatro estáis juntos, al rival le basta con tapar un solo sitio y os defiende a todos. Si os separáis, el rival tiene que elegir… ¡y siempre llega tarde! Abrir el campo es la forma más rápida de que el balón corra libre y de que tú seas más peligroso.",
+  "reto": "Regla de oro: nunca dos compañeros en el mismo carril. ¿Eres el ancho, el cercano o el profundo?",
+  "conBalon": [
+   "Levanta la cabeza antes de pasar: ¿quién está más libre, el cercano o el lejano?",
+   "Pasa al que está lejos del rival, no al que lo tiene pegado.",
+   "Si nadie está libre, conduce hacia un hueco: así obligas a que alguien se mueva.",
+   "Pasa con intención y empieza a contar 1-2-3 mientras te mueves."
+  ],
+  "sinBalon": [
+   "Si tu compañero está cerca, ¡sepárate tú! Ve a otro carril (ancho o profundo).",
+   "Intenta estar siempre a 6 pasos o más de tu compañero más cercano.",
+   "Triángulo, no línea: tú, el del balón y un tercero formáis un triángulo.",
+   "Prohibido quedarte mirando: pasas = te mueves."
+  ],
+  "escenas": [
+   {
+    "titulo": "Del bloque a la pista abierta",
+    "clave": "Mira tus pies: ¿hay otro compañero a menos de 5 pasos? ¡Sepárate! Uno ancho, uno cerca, uno profundo.",
+    "mal": {
+     "dur": 6000,
+     "actors": [
+      {
+       "id": "a1",
+       "team": "a",
+       "label": "1",
+       "path": [
+        [
+         0,
+         140,
+         90
+        ],
+        [
+         1,
+         142,
+         92
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "a2",
+       "team": "a",
+       "label": "2",
+       "path": [
+        [
+         0,
+         165,
+         110
+        ],
+        [
+         1,
+         166,
+         111
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "a3",
+       "team": "a",
+       "label": "3",
+       "path": [
+        [
+         0,
+         150,
+         125
+        ],
+        [
+         1,
+         151,
+         126
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "a4",
+       "team": "a",
+       "label": "4",
+       "path": [
+        [
+         0,
+         170,
+         85
+        ],
+        [
+         1,
+         171,
+         86
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "b1",
+       "team": "b",
+       "label": "R",
+       "path": [
+        [
+         0,
+         215,
+         98
+        ],
+        [
+         0.3,
+         212,
+         92
+        ],
+        [
+         0.6,
+         212,
+         108
+        ],
+        [
+         1,
+         215,
+         98
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "b2",
+       "team": "b",
+       "label": "R",
+       "path": [
+        [
+         0,
+         215,
+         122
+        ],
+        [
+         0.3,
+         212,
+         116
+        ],
+        [
+         0.6,
+         212,
+         128
+        ],
+        [
+         1,
+         215,
+         122
+        ]
+       ],
+       "emoji": []
+      }
+     ],
+     "ball": [
+      [
+       0,
+       140,
+       90
+      ],
+      [
+       0.15,
+       140,
+       90
+      ],
+      [
+       0.25,
+       165,
+       110
+      ],
+      [
+       0.4,
+       165,
+       110
+      ],
+      [
+       0.5,
+       150,
+       125
+      ],
+      [
+       0.65,
+       150,
+       125
+      ],
+      [
+       0.75,
+       170,
+       85
+      ],
+      [
+       1,
+       170,
+       85
+      ]
+     ],
+     "zones": [
+      {
+       "x": 250,
+       "y": 20,
+       "w": 130,
+       "h": 160,
+       "label": "Espacio vacío 😴",
+       "from": 0,
+       "to": 1.01
+      }
+     ],
+     "notes": [
+      {
+       "from": 0,
+       "to": 1.01,
+       "text": "❌ Todos juntos: al rival le basta con 2 jugadores para taparnos a los 4."
+      }
+     ]
+    },
+    "bien": {
+     "dur": 7000,
+     "actors": [
+      {
+       "id": "a1",
+       "team": "a",
+       "label": "1",
+       "path": [
+        [
+         0,
+         110,
+         35
+        ],
+        [
+         0.38,
+         110,
+         35
+        ],
+        [
+         1,
+         235,
+         22
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "a2",
+       "team": "a",
+       "label": "2",
+       "path": [
+        [
+         0,
+         150,
+         100
+        ],
+        [
+         0.15,
+         150,
+         100
+        ],
+        [
+         0.55,
+         210,
+         65
+        ],
+        [
+         0.62,
+         210,
+         65
+        ],
+        [
+         1,
+         265,
+         55
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "a3",
+       "team": "a",
+       "label": "3",
+       "path": [
+        [
+         0,
+         110,
+         165
+        ],
+        [
+         0.3,
+         110,
+         165
+        ],
+        [
+         0.78,
+         200,
+         140
+        ],
+        [
+         0.84,
+         200,
+         140
+        ],
+        [
+         1,
+         225,
+         130
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "a4",
+       "team": "a",
+       "label": "4",
+       "path": [
+        [
+         0,
+         260,
+         100
+        ],
+        [
+         0.5,
+         260,
+         100
+        ],
+        [
+         0.55,
+         250,
+         115
+        ],
+        [
+         0.96,
+         300,
+         85
+        ],
+        [
+         1,
+         300,
+         85
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "b1",
+       "team": "b",
+       "label": "R",
+       "path": [
+        [
+         0,
+         200,
+         95
+        ],
+        [
+         0.3,
+         170,
+         60
+        ],
+        [
+         0.55,
+         190,
+         80
+        ],
+        [
+         0.78,
+         210,
+         115
+        ],
+        [
+         1,
+         235,
+         105
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "b2",
+       "team": "b",
+       "label": "R",
+       "path": [
+        [
+         0,
+         205,
+         125
+        ],
+        [
+         0.3,
+         200,
+         110
+        ],
+        [
+         0.55,
+         230,
+         95
+        ],
+        [
+         0.78,
+         240,
+         110
+        ],
+        [
+         1,
+         300,
+         115
+        ]
+       ],
+       "emoji": []
+      }
+     ],
+     "ball": [
+      [
+       0,
+       150,
+       100
+      ],
+      [
+       0.15,
+       150,
+       100
+      ],
+      [
+       0.3,
+       110,
+       35
+      ],
+      [
+       0.38,
+       110,
+       35
+      ],
+      [
+       0.55,
+       210,
+       65
+      ],
+      [
+       0.62,
+       210,
+       65
+      ],
+      [
+       0.78,
+       200,
+       140
+      ],
+      [
+       0.84,
+       200,
+       140
+      ],
+      [
+       0.96,
+       300,
+       85
+      ],
+      [
+       1,
+       300,
+       85
+      ]
+     ],
+     "zones": [
+      {
+       "x": 195,
+       "y": 40,
+       "w": 70,
+       "h": 50,
+       "label": "¡HUECO!",
+       "from": 0.36,
+       "to": 0.62
+      }
+     ],
+     "notes": [
+      {
+       "from": 0,
+       "to": 0.3,
+       "text": "1️⃣ Nos abrimos: uno ancho, uno cerca, uno profundo."
+      },
+      {
+       "from": 0.3,
+       "to": 0.6,
+       "text": "2️⃣ Paso y CORTO al hueco que se ha abierto."
+      },
+      {
+       "from": 0.6,
+       "to": 1.01,
+       "text": "3️⃣ Todos se mueven: siempre hay alguien libre."
+      }
+     ]
+    }
+   },
+   {
+    "titulo": "Pasa y muévete (3 segundos)",
+    "clave": "Pasar NO es el final de tu jugada: es el principio de la siguiente. Pasas, cuentas 1-2-3 y ya estás en otro hueco.",
+    "mal": {
+     "dur": 6000,
+     "actors": [
+      {
+       "id": "a1",
+       "team": "a",
+       "label": "1",
+       "path": [
+        [
+         0,
+         90,
+         100
+        ],
+        [
+         1,
+         90,
+         100
+        ]
+       ],
+       "emoji": [
+        {
+         "from": 0.3,
+         "to": 1.01,
+         "text": "🧍"
+        }
+       ]
+      },
+      {
+       "id": "a2",
+       "team": "a",
+       "label": "2",
+       "path": [
+        [
+         0,
+         190,
+         55
+        ],
+        [
+         1,
+         191,
+         56
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "a3",
+       "team": "a",
+       "label": "3",
+       "path": [
+        [
+         0,
+         190,
+         150
+        ],
+        [
+         1,
+         191,
+         150
+        ]
+       ],
+       "emoji": [
+        {
+         "from": 0.75,
+         "to": 1.01,
+         "text": "🧍"
+        }
+       ]
+      },
+      {
+       "id": "b1",
+       "team": "b",
+       "label": "R",
+       "path": [
+        [
+         0,
+         150,
+         100
+        ],
+        [
+         0.3,
+         175,
+         70
+        ],
+        [
+         0.7,
+         175,
+         125
+        ],
+        [
+         1,
+         175,
+         125
+        ]
+       ],
+       "emoji": []
+      }
+     ],
+     "ball": [
+      [
+       0,
+       90,
+       100
+      ],
+      [
+       0.15,
+       90,
+       100
+      ],
+      [
+       0.3,
+       190,
+       55
+      ],
+      [
+       0.45,
+       190,
+       55
+      ],
+      [
+       0.7,
+       190,
+       150
+      ],
+      [
+       1,
+       190,
+       150
+      ]
+     ],
+     "zones": [],
+     "notes": [
+      {
+       "from": 0,
+       "to": 1.01,
+       "text": "❌ Pasa y se queda mirando: el rival se coloca fácil y roba."
+      }
+     ]
+    },
+    "bien": {
+     "dur": 6500,
+     "actors": [
+      {
+       "id": "a1",
+       "team": "a",
+       "label": "1",
+       "path": [
+        [
+         0,
+         90,
+         100
+        ],
+        [
+         0.1,
+         90,
+         100
+        ],
+        [
+         0.68,
+         215,
+         110
+        ],
+        [
+         0.75,
+         215,
+         110
+        ],
+        [
+         1,
+         320,
+         95
+        ]
+       ],
+       "emoji": [
+        {
+         "from": 0.12,
+         "to": 0.4,
+         "text": "1-2-3"
+        }
+       ]
+      },
+      {
+       "id": "a2",
+       "team": "a",
+       "label": "2",
+       "path": [
+        [
+         0,
+         190,
+         55
+        ],
+        [
+         0.35,
+         190,
+         55
+        ],
+        [
+         1,
+         250,
+         45
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "a3",
+       "team": "a",
+       "label": "3",
+       "path": [
+        [
+         0,
+         190,
+         150
+        ],
+        [
+         0.25,
+         190,
+         150
+        ],
+        [
+         0.45,
+         150,
+         160
+        ],
+        [
+         0.8,
+         280,
+         130
+        ],
+        [
+         1,
+         280,
+         130
+        ]
+       ],
+       "emoji": []
+      },
+      {
+       "id": "b1",
+       "team": "b",
+       "label": "R",
+       "path": [
+        [
+         0,
+         150,
+         100
+        ],
+        [
+         0.25,
+         170,
+         70
+        ],
+        [
+         0.5,
+         170,
+         85
+        ],
+        [
+         0.7,
+         200,
+         95
+        ],
+        [
+         0.9,
+         255,
+         120
+        ],
+        [
+         1,
+         265,
+         125
+        ]
+       ],
+       "emoji": []
+      }
+     ],
+     "ball": [
+      [
+       0,
+       90,
+       100
+      ],
+      [
+       0.1,
+       90,
+       100
+      ],
+      [
+       0.25,
+       190,
+       55
+      ],
+      [
+       0.35,
+       190,
+       55
+      ],
+      [
+       0.7,
+       215,
+       110
+      ],
+      [
+       0.75,
+       215,
+       110
+      ],
+      [
+       0.95,
+       280,
+       130
+      ],
+      [
+       1,
+       280,
+       130
+      ]
+     ],
+     "zones": [
+      {
+       "x": 190,
+       "y": 90,
+       "w": 55,
+       "h": 40,
+       "label": "Espalda",
+       "from": 0.3,
+       "to": 0.7
+      }
+     ],
+     "notes": [
+      {
+       "from": 0,
+       "to": 0.35,
+       "text": "1️⃣ Pasas… ¡y ya estás en marcha!"
+      },
+      {
+       "from": 0.35,
+       "to": 0.75,
+       "text": "2️⃣ Te ofreces en la espalda del rival, en movimiento."
+      },
+      {
+       "from": 0.75,
+       "to": 1.01,
+       "text": "3️⃣ Siempre hay alguien libre: nadie se queda esperando."
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "mister": {
+  "contexto": "Se mueven en bloque, sin crear espacios y se quedan estáticos esperando el balón.",
+  "manual": [
+   "Amplitud y profundidad (p.59-60): la progresión del ataque se basa en ocupar el campo a lo ancho y en profundo. Aclarado (p.98): alejarse de la situación para separar coberturas y crear espacio.",
+   "p.86: para el poseedor es \"extremadamente negativo\" que sus compañeros permanezcan estáticos. El desmarque (zigzag, cambios de dirección y de ritmo, diagonales) debe hacerse en el momento en que el poseedor puede pasar."
+  ],
+  "bloques": [
+   {
+    "nombre": "Calentamiento / Activación cognitiva",
+    "min": 12,
+    "tarea": "Circuito de pases por carriles. Media pista dividida en 3 franjas; 4 jugadores con 1 balón (luego 2).",
+    "reglas": [
+     "Nunca dos jugadores en el mismo carril.",
+     "Tras pasar, el pasador cambia de carril antes de que llegue el balón.",
+     "Máx. 2 toques. En el minuto 6 entra un segundo balón."
+    ]
+   },
+   {
+    "nombre": "Progresión 1 · Tarea condicionada",
+    "min": 20,
+    "tarea": "2v1 + comodín exterior en pista 20×20 m. Rotación de roles cada 2 min.",
+    "reglas": [
+     "Gol válido solo si antes hubo un pase entre dos atacantes separados 6 m o más.",
+     "Si dos atacantes están a menos de 4 m, el defensor puede robar y marcar \"gol de castigo\".",
+     "Máx. 3 toques por jugador.",
+     "➕ (Se quedan parados esperando el balón) Tras cada pase, el pasador tiene 3 s para llegar a otro espacio; si el míster lo ve parado, el balón cambia de equipo."
+    ]
+   },
+   {
+    "nombre": "Progresión 2 · Tarea táctica principal",
+    "min": 25,
+    "tarea": "3v3 + comodín (siempre con quien tiene el balón) en media pista con 4 carriles marcados.",
+    "reglas": [
+     "El pasador cambia de carril tras cada pase.",
+     "Gol doble si en la jugada participaron 3 carriles distintos.",
+     "Si el equipo queda agrupado (3 jugadores en 2 carriles o menos) más de 5 s, pierde el balón.",
+     "➕ (Se quedan parados esperando el balón) Tras cada pase, el pasador tiene 3 s para llegar a otro espacio; si el míster lo ve parado, el balón cambia de equipo."
+    ]
+   },
+   {
+    "nombre": "Situación real · Transferencia",
+    "min": 15,
+    "tarea": "Partido 4v4 con porteros en pista completa.",
+    "reglas": [
+     "Gol tras jugada con 3 pases y atacantes en 3 carriles distintos = vale 2.",
+     "Tú congelas la jugada (\"¡foto fija!\") cuando veas bloque y haces las preguntas.",
+     "➕ (Se quedan parados esperando el balón) Tras cada pase, el pasador tiene 3 s para llegar a otro espacio; si el míster lo ve parado, el balón cambia de equipo."
+    ]
+   }
+  ],
+  "preguntas": [
+   "¿Cuántos rivales hacen falta para defendernos cuando estamos juntos? ¿Y cuando estamos abiertos?",
+   "¿Qué hacías justo después de pasar? ¿Y qué podrías hacer en esos 3 segundos?",
+   "Congelo la jugada: ¿quién está pegado a otro compañero? ¿Qué habría pasado si uno se hubiera abierto?"
+  ]
+ }
+}

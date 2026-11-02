@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f3f7fd">
+<meta name="color-scheme" content="light">
+<title>Panel del míster · Fútbol sala Infantil</title>
+<link rel="stylesheet" href="../docs/style.css">
+<style>
+  .badge.coach{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(47,109,246,.35)}
+  input,textarea{font:inherit;font-size:16px}
+  textarea,input[type=date],input[type=file],input[type=url],input[type=password],input[type=text]{width:100%;background:#fff;color:var(--txt);border:1.5px solid var(--line);border-radius:12px;padding:11px;box-shadow:inset 0 1px 3px rgba(28,36,52,.06)}
+  textarea:focus,input:focus{border-color:var(--blue)}
+  textarea{min-height:92px;resize:vertical}
+  .btn{min-height:44px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chips label,.chips button{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;color:var(--txt);font:inherit;font-size:.92rem;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease}
+  .chips label:hover,.chips button:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 5px 12px rgba(47,109,246,.2)}
+  .chips input{accent-color:var(--blue);width:18px;height:18px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+  .row>div{flex:1 1 180px}
+  .tabs{display:flex;gap:8px;margin:20px 0 0;flex-wrap:wrap}
+  .tabs .btn{flex:1 1 auto}
+  .tabs .btn.on{background:linear-gradient(180deg,#ffc933,#ffb300);color:#2a1d00;border-color:#e6a100;font-weight:800;box-shadow:0 6px 16px rgba(255,160,0,.40)}
+  .block{--sh:47,109,246;border-left:6px solid var(--blue);background:#fff;border-radius:16px;padding:13px 15px;margin:14px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 2px 5px rgba(var(--sh),.10),0 10px 26px rgba(var(--sh),.18);transition:transform .18s ease,box-shadow .18s ease;animation:rise .5s ease both}
+  .block:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(var(--sh),.14),0 16px 36px rgba(var(--sh),.28)}
+  .block.c0{--sh:255,179,0;border-left-color:var(--accent);background:linear-gradient(135deg,#fff8e1,#fff 60%)}
+  .block.c1{--sh:47,109,246;border-left-color:var(--blue);background:linear-gradient(135deg,#eaf1ff,#fff 60%)}
+  .block.c2{--sh:124,77,255;border-left-color:var(--violet);background:linear-gradient(135deg,#f1ebff,#fff 60%)}
+  .block.c3{--sh:15,157,120;border-left-color:var(--green);background:linear-gradient(135deg,#e5f8f1,#fff 60%)}
+  .block h3{margin:0 0 4px;font-size:1.04rem;color:#13203a}
+  .block .min{float:right;background:var(--accent);color:#2a1d00;border-radius:999px;padding:2px 11px;font-weight:800;font-size:.85rem;box-shadow:0 3px 8px rgba(255,179,0,.4)}
+  .steps li{margin:8px 0}
+  code{background:#eaf0fa;color:#1c2434;padding:2px 6px;border-radius:6px;word-break:break-all}
+  .hist .btn{margin:4px 6px 4px 0;text-align:left}
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .thumbs img{height:84px;border-radius:10px;border:1px solid var(--line);box-shadow:0 4px 10px rgba(47,109,246,.22)}
+  .topbar{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 0}
+  .topbar a,.topbar button{color:var(--blue);font-size:.92rem;background:none;border:0;text-decoration:underline;cursor:pointer;padding:6px 0;font-family:inherit}
+  .status{display:inline-block;border-radius:999px;padding:3px 12px;font-weight:800;font-size:.85rem}
+  .status.on{background:#d9f5ea;color:#0b6b50;border:1px solid #9be0c6;box-shadow:0 4px 10px rgba(15,157,120,.25)}
+  .status.off{background:var(--card2);color:var(--muted);border:1px solid var(--line)}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+  .btn.danger{border-color:#f0b4bb;color:#c62f3b;background:#fff5f6;box-shadow:0 2px 6px rgba(214,57,74,.12)}
+  .btn.danger:hover{border-color:var(--red);box-shadow:0 6px 14px rgba(214,57,74,.25)}
+  details.help{background:#eef4ff;border:1px solid #cfdcf8;border-radius:14px;padding:10px 14px;margin:12px 0;box-shadow:0 6px 16px rgba(47,109,246,.12)}
+  details.help summary,details.card summary{cursor:pointer;font-weight:700}
+  .evalcard{--sh:15,157,120;border-left:7px solid var(--green);background:linear-gradient(135deg,#e5f8f1,#fff 60%)}
+  #login{--sh:47,109,246;border-top:6px solid var(--blue)}
+  #panelIA{--sh:255,179,0;border-top:6px solid var(--accent)}
+  #panelGen{--sh:124,77,255;border-top:6px solid var(--violet)}
+  #panelPub{--sh:15,157,120;border-top:6px solid var(--green)}
+  #hist{--sh:47,109,246}
+  [hidden]{display:none!important}
+  @media print{
+    body{background:#fff!important;color:#000}
+    .card,.block{animation:none;box-shadow:none;background:#fff!important;border:1px solid #bbb;color:#000}
+    .block{border-left:5px solid #444}
+    .block .min{background:#ddd;box-shadow:none}
+    .no-print,.tabs,header.top .sub,#panelGen,#panelPub,#panelImp,#panelIA,#panelHow,#hist,#pane-player,.topbar,footer{display:none!important}
+    #pane-mister{display:block!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="badge coach">Solo para el míster</span>
+    <h1>Panel del míster 🧠</h1>
+    <div class="sub">Sube un vídeo o un dibujo → te preparo el entrenamiento y la ficha animada para los jugadores.</div>
+  </header>
+
+  <!-- Entrada con contraseña -->
+  <section class="card" id="login">
+    <h2>🔒 Entra con tu contraseña</h2>
+    <div id="loginUrlRow" hidden style="margin-bottom:10px">
+      <label class="muted" for="loginUrl">Dirección de tu web (solo si abres este archivo desde el ordenador)</label>
+      <input type="url" id="loginUrl" placeholder="https://mi-equipo.netlify.app">
+    </div>
+    <label class="muted" for="loginPass">Contraseña de míster</label>
+    <input type="password" id="loginPass" autocomplete="current-password">
+    <div style="margin-top:12px"><button class="btn primary" type="button" id="btnLogin" style="padding:12px 20px">Entrar</button> <span class="muted" id="loginMsg" role="status"></span></div>
+  </section>
+
+  <div id="app" hidden>
+    <div class="topbar no-print">
+      <a id="linkJug" href="#" target="_blank" rel="noopener">👀 Ver la web de los jugadores</a>
+      <button type="button" id="btnSalir">Cerrar sesión</button>
+    </div>
+
+    <section class="card" id="panelHow">
+      <h2>¿Cómo funciona? (30 segundos)</h2>
+      <ol class="steps">
+        <li><b>Aportas la idea:</b> un vídeo, un dibujo, capturas, o solo palabras.</li>
+        <li><b>La IA prepara dos cosas:</b> tu sesión (privada) y la ficha con pizarras animadas para los jugadores.</li>
+        <li><b>Tú decides:</b> la revisas y, si te gusta, pulsas <i>Publicar</i>. Los jugadores la ven al momento en su web.</li>
+      </ol>
+    </section>
+
+    <section class="card" id="panelIA">
+      <h2>A · Sube un vídeo, un dibujo o capturas</h2>
+      <input type="file" id="mediaFile" accept="video/*,image/*" multiple>
+
+      <details class="help">
+        <summary>📱 ¿Cómo uso un vídeo de Instagram?</summary>
+        <ol class="steps" style="margin:8px 0 0">
+          <li>Instagram no deja descargar los vídeos de otras cuentas desde una web, así que <b>graba la pantalla</b> mientras se reproduce. <b>iPhone:</b> desliza desde arriba a la derecha → botón de grabar. <b>Android:</b> ajustes rápidos → <i>Grabar pantalla</i>.</li>
+          <li>Pulsa el botón de arriba y elige esa grabación (o 4-6 capturas de los momentos clave).</li>
+          <li>Pega el enlace del vídeo abajo si quieres guardarlo como referencia (la IA no entra en Instagram, solo ve lo que subes).</li>
+        </ol>
+      </details>
+
+      <label class="muted" for="mediaLink" style="display:block;margin-top:10px">Enlace del vídeo (opcional, solo para que lo recuerdes)</label>
+      <input type="url" id="mediaLink" placeholder="https://www.instagram.com/reel/…">
+
+      <label class="muted" for="mediaNota" style="display:block;margin-top:10px">¿Qué quieres que haga con él?</label>
+      <textarea id="mediaNota" style="min-height:84px" placeholder="Ej: «Evalúa si este ejercicio sirve para que dejen de quedarse parados tras el pase y créame una sesión adaptada a 4 jugadores de campo.»"></textarea>
+      <div class="chips" id="notaChips"></div>
+
+      <label style="display:flex;gap:10px;align-items:center;margin-top:6px"><input type="checkbox" id="mostrarFotos" checked style="width:20px;height:20px;accent-color:var(--blue)"> <span>Mostrar los fotogramas a los jugadores en su ficha</span></label>
+      <div class="muted" id="fotosHint" style="margin:4px 0 0 30px"></div>
+
+      <div style="margin-top:14px"><button class="btn primary" type="button" id="btnIA" style="padding:12px 18px">🔎 Analizar y crear entrenamiento</button></div>
+      <div class="muted" id="iaMsg" role="status" style="margin-top:8px"></div>
+      <div id="iaThumbs" class="thumbs"></div>
+    </section>
+
+    <section class="card" id="panelGen">
+      <h2>B · O cuéntame con palabras lo que has visto</h2>
+      <textarea id="idea" placeholder="Ej: Se mueven en bloque, sin crear espacios y se quedan estáticos esperando el balón."></textarea>
+      <div class="muted" style="margin-top:6px">Marca los diagnósticos que encajan (se marcan solos según lo que escribas). El primero marcado es el foco principal.</div>
+      <div class="chips" id="chips"></div>
+      <div class="row">
+        <div><label class="muted" for="fecha">Fecha del entrenamiento</label><input type="date" id="fecha"></div>
+        <div><button class="btn primary" type="button" id="btnGen" style="width:100%;padding:12px">⚡ Generar entrenamiento</button></div>
+      </div>
+    </section>
+
+    <div id="resultado" hidden>
+      <div class="tabs no-print">
+        <button class="btn on" type="button" data-pane="mister">📋 Sesión del míster</button>
+        <button class="btn" type="button" data-pane="player">👀 Vista del jugador</button>
+        <button class="btn" type="button" data-pane="pub">🚀 Publicar</button>
+      </div>
+
+      <section id="pane-mister"></section>
+
+      <section id="pane-player" hidden>
+        <header class="top" style="padding-top:14px">
+          <span class="badge">Infantil · 2º año</span>
+          <h1 id="pTitulo"></h1>
+          <div class="sub" id="pFecha"></div>
+        </header>
+        <div id="pFicha"></div>
+      </section>
+
+      <section id="panelPub" hidden class="card">
+        <h2>🚀 Publicar para los jugadores</h2>
+        <p>Estado: <span class="status off" id="pubStatus">No publicada</span></p>
+        <div class="actions">
+          <button class="btn primary" type="button" id="btnPublish">🚀 Publicar ahora</button>
+          <button class="btn" type="button" id="btnUnpublish" hidden>Quitar de la web</button>
+          <button class="btn" type="button" id="btnShare">📤 Compartir el enlace</button>
+          <button class="btn danger" type="button" id="btnDelete">🗑 Borrar sesión</button>
+        </div>
+        <p class="muted" id="pubMsg" role="status"></p>
+        <p class="muted">⚠️ Los jugadores solo ven la <b>parte del jugador</b>. Tu sesión de entrenador y las notas son privadas. Antes de publicar, mira la pestaña <i>Vista del jugador</i>: es exactamente lo que verán.</p>
+      </section>
+    </div>
+
+    <section class="card hist no-print" id="hist" hidden>
+      <h2>🗂 Mis entrenamientos</h2>
+      <div id="histList"></div>
+    </section>
+
+    <details class="card" id="panelImp">
+      <summary style="cursor:pointer;font-weight:700">📥 Importar una sesión hecha con otra IA (avanzado)</summary>
+      <div class="muted" style="margin-top:8px">Pídele a tu asistente de IA un JSON de sesión con el formato de <code>ejemplo-sesion-completa.json</code> y pégalo aquí.</div>
+      <textarea id="jsonIn" placeholder='Pega aquí el JSON de la sesión…' style="margin-top:10px"></textarea>
+      <div style="margin-top:8px"><button class="btn" type="button" id="btnImp">Cargar sesión pegada</button> <span class="muted" id="impMsg"></span></div>
+    </details>
+  </div>
+
+  <footer>Panel privado · No compartas la dirección de esta página ni tu contraseña.</footer>
+</div>
+
+<script src="../docs/anim.js"></script>
+<script src="../docs/render.js"></script>
+<script src="library.js"></script>
+<script src="media.js"></script>
+<script>
+(function () {
+  const { h } = FutsalAnim;
+  const $ = s => document.querySelector(s);
+  const store = {
+    get: k => { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+    del: k => { try { localStorage.removeItem(k); } catch (e) {} }
+  };
+  const hoy = () => new Date().toLocaleDateString('sv-SE'); // AAAA-MM-DD en hora local
+  const online = /^https?:$/.test(location.protocol);
+  let BASE = online ? location.origin : store.get('mister-base-v2');
+  let PASS = store.get('mister-pass-v2');
+  let current = null, currentPub = false;
+
+  /* ───────── API ───────── */
+  async function api(path, opts) {
+    let r;
+    try {
+      r = await fetch(BASE + '/.netlify/functions/' + path, Object.assign({}, opts, { headers: Object.assign({ 'x-mister-key': PASS }, opts && opts.headers) }));
+    } catch (e) { throw new Error('No consigo conectar con tu web. Revisa la conexión y la dirección.'); }
+    const data = await r.json().catch(() => ({}));
+    if (r.status === 401) { salir(); $('#loginMsg').textContent = 'Contraseña incorrecta.'; throw new Error(data.error || 'Contraseña incorrecta.'); }
+    if (r.status === 404 || r.status === 405) {
+      throw new Error('Esta dirección no tiene el servidor de la IA (' + location.host + '). Abre el panel desde tu dirección de Netlify, la que termina en .netlify.app/panel/ (no desde GitHub Pages).');
+    }
+    if (!r.ok) throw new Error(data.error || ('Error ' + r.status));
+    return data;
+  }
+  const post = (path, body) => api(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+
+  /* ───────── Entrada ───────── */
+  if (!online) { $('#loginUrlRow').hidden = false; $('#loginUrl').value = BASE; }
+  function entrar() { $('#login').hidden = true; $('#app').hidden = false; $('#linkJug').href = BASE + '/'; cargarHistorial(); }
+  function salir() { PASS = ''; store.del('mister-pass-v2'); $('#app').hidden = true; $('#login').hidden = false; }
+  async function intentarEntrar() {
+    const msg = $('#loginMsg');
+    if (!online) BASE = $('#loginUrl').value.trim().replace(/\/+$/, '');
+    PASS = $('#loginPass').value;
+    if (!BASE || !PASS) { msg.textContent = 'Escribe la contraseña' + (online ? '.' : ' y la dirección de tu web.'); return; }
+    msg.textContent = 'Comprobando…'; $('#btnLogin').disabled = true;
+    try { await api('manage'); store.set('mister-pass-v2', PASS); if (!online) store.set('mister-base-v2', BASE); msg.textContent = ''; entrar(); }
+    catch (e) { if (!/Contraseña/.test(e.message)) msg.textContent = e.message; }
+    finally { $('#btnLogin').disabled = false; }
+  }
+  $('#btnLogin').addEventListener('click', intentarEntrar);
+  $('#loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') intentarEntrar(); });
+  $('#btnSalir').addEventListener('click', () => { salir(); $('#loginPass').value = ''; });
+  if (PASS && BASE) api('manage').then(entrar).catch(() => {});
+
+  /* ───────── Historial (en el servidor: lo ves igual desde el móvil y el ordenador) ───────── */
+  async function cargarHistorial() {
+    try {
+      const { sesiones } = await api('manage');
+      const box = $('#histList'); box.replaceChildren();
+      $('#hist').hidden = !sesiones.length;
+      sesiones.forEach(e => box.append(h('button', { class: 'btn', type: 'button', onclick: () => abrirGuardada(e.id) },
+        (e.publicada ? '✅ ' : '📝 ') + FutsalRender.fmtFecha(e.fecha) + ' · ' + e.titulo)));
+    } catch (e) { /* sin conexión: se ignora */ }
+  }
+  async function abrirGuardada(id) {
+    try {
+      const d = await api('manage?id=' + encodeURIComponent(id));
+      setCurrent(d.session, false, d.publicada);
+      $('#resultado').scrollIntoView({ behavior: 'smooth' });
+    } catch (e) { alert(e.message); }
+  }
+
+  /* ───────── Generador por palabras (B) ───────── */
+  const chips = $('#chips');
+  Object.entries(FutsalLib.TAGS).forEach(([k, t]) => chips.append(h('label', {}, h('input', { type: 'checkbox', value: k, id: 'tag-' + k }), t.nombre)));
+  ['bloque', 'estatico'].forEach(k => $('#tag-' + k).checked = true);
+  $('#fecha').value = hoy();
+  $('#idea').value = 'Se mueven en bloque, sin crear espacios y se quedan estáticos esperando el balón.';
+  $('#idea').addEventListener('input', e => FutsalLib.detectTags(e.target.value).forEach(k => $('#tag-' + k).checked = true));
+  $('#btnGen').addEventListener('click', () => {
+    const tags = Array.from(chips.querySelectorAll('input:checked')).map(i => i.value);
+    if (!tags.length) { alert('Marca al menos un diagnóstico.'); return; }
+    const s = FutsalLib.buildSession({ tags, idea: $('#idea').value.trim(), fecha: $('#fecha').value || hoy() });
+    setCurrent(s, true, false);
+    $('#resultado').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  /* ───────── Pestañas ───────── */
+  document.querySelectorAll('.tabs .btn').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.tabs .btn').forEach(x => x.classList.toggle('on', x === b));
+    $('#pane-mister').hidden = b.dataset.pane !== 'mister';
+    $('#pane-player').hidden = b.dataset.pane !== 'player';
+    $('#panelPub').hidden = b.dataset.pane !== 'pub';
+    if (b.dataset.pane === 'player') drawPlayer(); else FutsalAnim.stopAll();
+  }));
+  function drawPlayer() {
+    $('#pTitulo').textContent = current.titulo;
+    $('#pFecha').textContent = FutsalRender.fmtFecha(current.fecha);
+    FutsalRender.renderPlayer($('#pFicha'), current);
+  }
+
+  /* ───────── Ficha del míster ───────── */
+  const lista = a => h('ul', { class: 'clean' }, (a || []).map(t => h('li', {}, t)));
+  function renderMister(s) {
+    const m = s.mister || {}, root = $('#pane-mister');
+    root.replaceChildren();
+    const fuente = /^https?:\/\//.test(m.fuente || '') ? h('p', {}, h('b', {}, 'Vídeo de referencia: '), h('a', { href: m.fuente, target: '_blank', rel: 'noopener noreferrer', style: 'color:var(--blue)' }, m.fuente)) : null;
+    root.append(h('div', { class: 'card' },
+      h('h2', {}, '📋 ' + s.titulo),
+      h('div', { class: 'muted' }, FutsalRender.fmtFecha(s.fecha) + ' · Infantil 2º año · 4 jugadores de campo + 2 porteros'),
+      m.contexto ? h('p', {}, h('b', {}, 'Lo que pediste: '), m.contexto) : null,
+      m.analisis ? h('p', {}, h('b', {}, '🔎 Análisis de la IA: '), m.analisis) : null,
+      fuente,
+      (m.evidencia && m.evidencia.length) ? h('div', { class: 'thumbs' }, m.evidencia.map(src => h('img', { src, alt: 'Fotograma' }))) : null,
+      h('div', { class: 'actions no-print' }, h('button', { class: 'btn', type: 'button', onclick: () => window.print() }, '🖨 Imprimir / guardar PDF'))
+    ));
+    const ev = m.evaluacion;
+    if (ev) root.append(h('div', { class: 'card evalcard' },
+      h('h2', {}, '🧪 Evaluación del ejercicio'),
+      ev.ejercicioObservado ? h('p', {}, h('b', {}, 'Qué se ve: '), ev.ejercicioObservado) : null,
+      (ev.puntosFuertes && ev.puntosFuertes.length) ? h('div', {}, h('b', {}, '👍 Puntos fuertes'), lista(ev.puntosFuertes)) : null,
+      (ev.puntosMejorar && ev.puntosMejorar.length) ? h('div', { style: 'margin-top:8px' }, h('b', {}, '🔧 A mejorar para tu objetivo'), lista(ev.puntosMejorar)) : null,
+      ev.adaptacion ? h('p', {}, h('b', {}, '🎯 Adaptación a tu equipo: '), ev.adaptacion) : null
+    ));
+    if (m.manual && m.manual.length) root.append(h('div', { class: 'card' }, h('h2', {}, '📖 Base en el Manual UEFA de futsal'), lista(m.manual)));
+    (m.bloques || []).forEach((b, i) => root.append(h('div', { class: 'block c' + (i % 4) },
+      h('span', { class: 'min' }, b.min + ' min'), h('h3', {}, b.nombre), h('div', {}, b.tarea), lista(b.reglas))));
+    root.append(h('div', { class: 'card' },
+      h('h2', {}, '🗣 Pautas de feedback (método socrático)'),
+      h('div', { class: 'muted' }, 'Haz una pregunta en cada parón y espera a que respondan ellos antes de dar la solución.'),
+      h('ol', { class: 'steps' }, (m.preguntas || []).map(q => h('li', {}, q)))));
+  }
+
+  /* ───────── Sesión actual y publicación ───────── */
+  function pintarEstado() {
+    const st = $('#pubStatus');
+    st.textContent = currentPub ? 'Publicada ✓' : 'No publicada';
+    st.className = 'status ' + (currentPub ? 'on' : 'off');
+    $('#btnPublish').textContent = currentPub ? '🔄 Actualizar publicada' : '🚀 Publicar ahora';
+    $('#btnUnpublish').hidden = !currentPub;
+  }
+  async function guardar(publish) {
+    const body = { action: 'save', session: current };
+    if (typeof publish === 'boolean') body.publish = publish;
+    const r = await post('manage', body);
+    currentPub = r.publicada; pintarEstado(); cargarHistorial();
+    return r;
+  }
+  function setCurrent(s, autosave, publicada) {
+    current = s; currentPub = !!publicada;
+    $('#resultado').hidden = false;
+    renderMister(s); pintarEstado();
+    document.querySelectorAll('.tabs .btn').forEach((x, i) => x.classList.toggle('on', i === 0));
+    $('#pane-mister').hidden = false; $('#pane-player').hidden = true; $('#panelPub').hidden = true;
+    FutsalAnim.stopAll();
+    $('#pubMsg').textContent = '';
+    if (autosave) guardar().then(() => { $('#pubMsg').textContent = 'Guardada en tu cuenta (aún no publicada).'; }).catch(e => { $('#pubMsg').textContent = '⚠️ No se pudo guardar: ' + e.message; });
+  }
+  $('#btnPublish').addEventListener('click', async () => {
+    const b = $('#btnPublish'); b.disabled = true; $('#pubMsg').textContent = 'Publicando…';
+    try { await guardar(true); $('#pubMsg').textContent = '✅ Publicada. Los jugadores ya la ven en ' + BASE + '/'; }
+    catch (e) { $('#pubMsg').textContent = '❌ ' + e.message; } finally { b.disabled = false; }
+  });
+  $('#btnUnpublish').addEventListener('click', async () => {
+    try { await post('manage', { action: 'publish', id: current.id, publish: false }); currentPub = false; pintarEstado(); cargarHistorial(); $('#pubMsg').textContent = 'Retirada de la web de los jugadores.'; }
+    catch (e) { $('#pubMsg').textContent = '❌ ' + e.message; }
+  });
+  $('#btnDelete').addEventListener('click', async () => {
+    if (!confirm('¿Borrar esta sesión para siempre?')) return;
+    try {
+      await post('manage', { action: 'delete', id: current.id });
+      current = null; $('#resultado').hidden = true; FutsalAnim.stopAll(); cargarHistorial();
+    } catch (e) { $('#pubMsg').textContent = '❌ ' + e.message; }
+  });
+  $('#btnShare').addEventListener('click', async () => {
+    const url = BASE + '/', text = 'Entrenamiento de hoy: ' + (current ? current.titulo : '');
+    try {
+      if (navigator.share) await navigator.share({ title: 'Fútbol sala Infantil', text, url });
+      else { await navigator.clipboard.writeText(url); $('#pubMsg').textContent = 'Enlace copiado: ' + url; }
+    } catch (e) { $('#pubMsg').textContent = 'Enlace para los jugadores: ' + url; }
+  });
+
+  /* ───────── Subir vídeo / dibujo → IA (A) ───────── */
+  ['Evalúa si este ejercicio sirve para que no se queden parados tras el pase', 'Adáptalo a 4 jugadores de campo + porteros', 'Crea una progresión de tareas con puntuación doble'].forEach(t =>
+    $('#notaChips').append(h('button', { type: 'button', onclick: () => { const n = $('#mediaNota'); n.value = (n.value.trim() ? n.value.trim() + ' ' : '') + t + '.'; } }, '+ ' + t)));
+  $('#mediaLink').addEventListener('input', () => {
+    const hay = $('#mediaLink').value.trim().length > 0;
+    if (hay) $('#mostrarFotos').checked = false;
+    $('#fotosHint').textContent = hay ? 'Como el vídeo es de otra cuenta, he desmarcado esta casilla para no publicar imágenes ajenas. Tú decides.' : '';
+  });
+
+  $('#btnIA').addEventListener('click', async () => {
+    const msg = $('#iaMsg'), btn = $('#btnIA'), files = $('#mediaFile').files;
+    if (!files.length) { msg.textContent = 'Elige primero un vídeo, un dibujo o capturas.'; return; }
+    btn.disabled = true;
+    try {
+      msg.textContent = 'Preparando imágenes…';
+      const prep = await FutsalMedia.prepare(files, (i, n) => { msg.textContent = 'Leyendo el vídeo… ' + i + '/' + n; });
+      $('#iaThumbs').replaceChildren(...prep.evidencia.map(src => h('img', { src, alt: 'Fotograma' })));
+      msg.textContent = 'Enviando a la IA…';
+      const link = $('#mediaLink').value.trim();
+      const { jobId } = await post('start', { imagenes: prep.big, nota: $('#mediaNota').value.trim(), tipo: prep.tipo, fecha: $('#fecha').value || hoy(), fuente: /^https?:\/\//.test(link) ? link : '' });
+      const t0 = Date.now();
+      for (;;) {
+        await new Promise(r => setTimeout(r, 3000));
+        const st = await api('status?id=' + encodeURIComponent(jobId));
+        if (st.status === 'done') {
+          const s = st.session;
+          s.mister.evidencia = prep.evidencia;
+          if ($('#mostrarFotos').checked) s.jugador.evidencia = prep.evidencia;
+          setCurrent(s, true, false);
+          msg.textContent = '✅ Listo. Revisa las pestañas de abajo y publica si te gusta.';
+          $('#resultado').scrollIntoView({ behavior: 'smooth' });
+          break;
+        }
+        if (st.status === 'error') throw new Error(st.error || 'La IA no pudo analizarlo.');
+        msg.textContent = 'La IA está analizando… ' + Math.round((Date.now() - t0) / 1000) + ' s (suele tardar 30-90 s). Puedes dejar esta pantalla abierta.';
+        if (Date.now() - t0 > 11 * 60 * 1000) throw new Error('Tarda demasiado. Inténtalo otra vez.');
+      }
+    } catch (e) { msg.textContent = '❌ ' + e.message; }
+    finally { btn.disabled = false; }
+  });
+
+  /* ───────── Importar ───────── */
+  $('#btnImp').addEventListener('click', () => {
+    try {
+      const s = JSON.parse($('#jsonIn').value);
+      if (!s.id || !s.fecha || !s.titulo || !s.jugador || !s.jugador.escenas) throw new Error('Faltan campos: id, fecha, titulo, jugador.escenas');
+      setCurrent(s, true, false);
+      $('#impMsg').textContent = '✅ Sesión cargada.';
+      $('#resultado').scrollIntoView({ behavior: 'smooth' });
+    } catch (e) { $('#impMsg').textContent = '❌ ' + e.message; }
+  });
+})();
+</script>
+</body>
+</html>

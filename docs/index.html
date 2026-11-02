@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f3f7fd">
+<meta name="color-scheme" content="light">
+<title>Antes de saltar a pista · Infantil</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="badge">Infantil · 2º año</span>
+    <h1 id="titulo">Antes de saltar a pista ⚽</h1>
+    <div class="sub" id="fecha">Cargando el entrenamiento de hoy…</div>
+  </header>
+
+  <main id="ficha"></main>
+
+  <section class="card past" id="anteriores" hidden>
+    <h2>📚 Entrenamientos anteriores</h2>
+    <div id="lista"></div>
+  </section>
+
+  <footer>Lee la ficha, mira las pizarras y sal a la pista con la cabeza ya en marcha. 💪</footer>
+</div>
+
+<script src="anim.js"></script>
+<script src="render.js"></script>
+<script>
+(function () {
+  const { h } = FutsalAnim;
+  const API = '/.netlify/functions/sessions';
+  let lista = [];            // otras sesiones publicadas: {id, fecha, titulo}
+  let estaticas = [];        // respaldo: docs/sessions.json
+
+  function pintar(s) {
+    document.getElementById('titulo').textContent = s.titulo;
+    document.getElementById('fecha').textContent = FutsalRender.fmtFecha(s.fecha);
+    FutsalRender.renderPlayer(document.getElementById('ficha'), s);
+    try { history.replaceState(null, '', '#' + s.id); } catch (e) { /* file:// */ }
+    const cont = document.getElementById('lista');
+    cont.replaceChildren();
+    const otras = lista.filter(x => x.id !== s.id);
+    document.getElementById('anteriores').hidden = otras.length === 0;
+    otras.forEach(x => cont.append(h('button', { class: 'btn', type: 'button', onclick: () => abrir(x.id, true) }, FutsalRender.fmtFecha(x.fecha) + ' · ' + x.titulo)));
+  }
+
+  async function desdeApi(id) {
+    const r = await fetch(API + (id ? '?id=' + encodeURIComponent(id) : ''), { cache: 'no-cache' });
+    if (!r.ok) throw new Error(r.status);
+    return r.json();
+  }
+
+  async function abrir(id, arriba) {
+    try {
+      const d = await desdeApi(id);
+      if (d.sesion) { lista = d.lista || lista; pintar(d.sesion); }
+    } catch (e) {
+      const s = estaticas.find(x => x.id === id);
+      if (s) pintar(s);
+    }
+    if (arriba) scrollTo({ top: 0 });
+  }
+
+  async function iniciar() {
+    const hash = location.hash.slice(1);
+    try {
+      const d = await desdeApi(hash || '');
+      if (d.sesion) { lista = d.lista || []; pintar(d.sesion); return; }
+    } catch (e) { /* sin servidor: usamos el respaldo */ }
+    try {
+      const r = await fetch('sessions.json', { cache: 'no-cache' });
+      const data = await r.json();
+      estaticas = (Array.isArray(data) ? data : [data]).sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+      lista = estaticas.map(x => ({ id: x.id, fecha: x.fecha, titulo: x.titulo }));
+      if (estaticas.length) { pintar(estaticas.find(x => x.id === hash) || estaticas[0]); return; }
+    } catch (e) { /* nada */ }
+    document.getElementById('fecha').textContent = 'Todavía no hay entrenamiento publicado. ¡Vuelve pronto!';
+  }
+  iniciar();
+})();
+</script>
+</body>
+</html>

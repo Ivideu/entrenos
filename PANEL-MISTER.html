@@ -1,0 +1,1142 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f3f7fd">
+<meta name="color-scheme" content="light">
+<title>Panel del míster · Fútbol sala Infantil</title>
+<style>
+/* Tema claro: fondo suave, cajas blancas con sombra de color según su tipo. */
+:root{
+  color-scheme:light;
+  --bg:#f3f7fd; --card:#ffffff; --card2:#f2f6fc; --txt:#1c2434; --muted:#56637b;
+  --accent:#ffb300; --blue:#2f6df6; --green:#0f9d78; --red:#d6394a; --orange:#f57c00; --violet:#7c4dff;
+  --line:#d8e1ee;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;color:var(--txt);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:
+    radial-gradient(900px 420px at 0% -10%, rgba(47,109,246,.10), transparent 60%),
+    radial-gradient(800px 400px at 100% 0%, rgba(255,179,0,.13), transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+}
+.wrap{max-width:980px;margin:0 auto;padding:16px 16px 56px}
+header.top{padding:22px 0 8px}
+header.top h1{margin:6px 0 0;font-size:clamp(1.65rem,5.2vw,2.5rem);line-height:1.12;color:#13203a}
+header.top .sub{color:var(--muted);margin-top:6px}
+.badge{display:inline-block;background:var(--accent);color:#2a1d00;font-weight:800;border-radius:999px;padding:4px 13px;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;box-shadow:0 4px 12px rgba(255,179,0,.35)}
+
+/* ── Cajas: cada una con su sombra de color (--sh = r,g,b) ── */
+.card{
+  --sh:124,77,255;
+  background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 18px;margin:18px 0;
+  box-shadow:0 2px 5px rgba(var(--sh),.10),0 12px 30px rgba(var(--sh),.18);
+  transition:transform .18s ease,box-shadow .18s ease;
+  animation:rise .5s ease both;
+}
+.card:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(var(--sh),.14),0 18px 40px rgba(var(--sh),.28)}
+.card h2{margin:0 0 8px;font-size:1.15rem;color:#13203a}
+.card.concept{--sh:255,179,0;border-left:7px solid var(--accent);background:linear-gradient(135deg,#fff8e1,#fff 65%)}
+.card.reto{--sh:15,157,120;border-left:7px solid var(--green);background:linear-gradient(135deg,#e5f8f1,#fff 65%)}
+.card.seen{--sh:47,109,246;border-left:7px solid var(--blue);background:linear-gradient(135deg,#eaf1ff,#fff 65%)}
+.reto .big{font-size:1.25rem;font-weight:700;color:#0b5c46}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+ul.clean{margin:6px 0 0;padding-left:20px}
+ul.clean li{margin:6px 0}
+ul.clean li::marker{color:var(--blue)}
+.with{--sh:47,109,246;border-top:6px solid var(--blue)}
+.without{--sh:245,124,0;border-top:6px solid var(--orange)}
+.without ul.clean li::marker{color:var(--orange)}
+
+/* Pizarras */
+.scene{
+  --sh:124,77,255;
+  background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:12px;
+  box-shadow:0 2px 5px rgba(var(--sh),.10),0 10px 24px rgba(var(--sh),.18);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.scene:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(var(--sh),.14),0 16px 34px rgba(var(--sh),.26)}
+.scene h3{margin:0 0 8px;font-size:1rem}
+.scene.no{--sh:214,57,74;background:#fff5f6;border-color:#f4c7cc}
+.scene.yes{--sh:15,157,120;background:#f0fbf7;border-color:#bfe8da}
+.scene.no h3{color:var(--red)} .scene.yes h3{color:#0b7a5c}
+.pitch{width:100%;height:auto;display:block;border-radius:12px;background:#1a7a4a;box-shadow:0 4px 12px rgba(20,90,56,.28)}
+.cap{min-height:2.7em;margin:10px 2px 6px;font-weight:600;color:var(--txt)}
+.ctrl{display:flex;gap:8px}
+
+/* Botones */
+.btn{
+  appearance:none;border:1px solid var(--line);background:#fff;color:var(--txt);border-radius:12px;padding:9px 14px;font:inherit;font-size:.92rem;cursor:pointer;
+  box-shadow:0 2px 6px rgba(47,109,246,.10);transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;
+}
+.btn:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 6px 14px rgba(47,109,246,.22)}
+.btn:active{transform:scale(.97)}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid rgba(47,109,246,.35);outline-offset:2px}
+.btn.primary{background:linear-gradient(180deg,#ffc933,#ffb300);color:#2a1d00;border-color:#e6a100;font-weight:800;box-shadow:0 6px 16px rgba(255,160,0,.40)}
+.btn.primary:hover{box-shadow:0 10px 22px rgba(255,160,0,.55)}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+
+.key{margin-top:12px;background:#fff8e1;border:1px solid #ffe0a3;border-radius:12px;padding:11px 14px;box-shadow:0 6px 16px rgba(255,179,0,.18)}
+.muted{color:var(--muted)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:.88rem;margin:6px 0 0}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.past button{margin:4px 6px 4px 0}
+select{background:#fff;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:8px}
+.evid{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px}
+.evid img{height:150px;width:auto;border-radius:12px;border:1px solid var(--line);flex:0 0 auto;box-shadow:0 6px 16px rgba(47,109,246,.25)}
+footer{color:var(--muted);text-align:center;margin-top:34px;font-size:.88rem}
+
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+
+</style>
+<style>
+  .badge.coach{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(47,109,246,.35)}
+  input,textarea{font:inherit;font-size:16px}
+  textarea,input[type=date],input[type=file],input[type=url],input[type=password],input[type=text]{width:100%;background:#fff;color:var(--txt);border:1.5px solid var(--line);border-radius:12px;padding:11px;box-shadow:inset 0 1px 3px rgba(28,36,52,.06)}
+  textarea:focus,input:focus{border-color:var(--blue)}
+  textarea{min-height:92px;resize:vertical}
+  .btn{min-height:44px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chips label,.chips button{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;color:var(--txt);font:inherit;font-size:.92rem;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease}
+  .chips label:hover,.chips button:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 5px 12px rgba(47,109,246,.2)}
+  .chips input{accent-color:var(--blue);width:18px;height:18px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+  .row>div{flex:1 1 180px}
+  .tabs{display:flex;gap:8px;margin:20px 0 0;flex-wrap:wrap}
+  .tabs .btn{flex:1 1 auto}
+  .tabs .btn.on{background:linear-gradient(180deg,#ffc933,#ffb300);color:#2a1d00;border-color:#e6a100;font-weight:800;box-shadow:0 6px 16px rgba(255,160,0,.40)}
+  .block{--sh:47,109,246;border-left:6px solid var(--blue);background:#fff;border-radius:16px;padding:13px 15px;margin:14px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 2px 5px rgba(var(--sh),.10),0 10px 26px rgba(var(--sh),.18);transition:transform .18s ease,box-shadow .18s ease;animation:rise .5s ease both}
+  .block:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(var(--sh),.14),0 16px 36px rgba(var(--sh),.28)}
+  .block.c0{--sh:255,179,0;border-left-color:var(--accent);background:linear-gradient(135deg,#fff8e1,#fff 60%)}
+  .block.c1{--sh:47,109,246;border-left-color:var(--blue);background:linear-gradient(135deg,#eaf1ff,#fff 60%)}
+  .block.c2{--sh:124,77,255;border-left-color:var(--violet);background:linear-gradient(135deg,#f1ebff,#fff 60%)}
+  .block.c3{--sh:15,157,120;border-left-color:var(--green);background:linear-gradient(135deg,#e5f8f1,#fff 60%)}
+  .block h3{margin:0 0 4px;font-size:1.04rem;color:#13203a}
+  .block .min{float:right;background:var(--accent);color:#2a1d00;border-radius:999px;padding:2px 11px;font-weight:800;font-size:.85rem;box-shadow:0 3px 8px rgba(255,179,0,.4)}
+  .steps li{margin:8px 0}
+  code{background:#eaf0fa;color:#1c2434;padding:2px 6px;border-radius:6px;word-break:break-all}
+  .hist .btn{margin:4px 6px 4px 0;text-align:left}
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .thumbs img{height:84px;border-radius:10px;border:1px solid var(--line);box-shadow:0 4px 10px rgba(47,109,246,.22)}
+  .topbar{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 0}
+  .topbar a,.topbar button{color:var(--blue);font-size:.92rem;background:none;border:0;text-decoration:underline;cursor:pointer;padding:6px 0;font-family:inherit}
+  .status{display:inline-block;border-radius:999px;padding:3px 12px;font-weight:800;font-size:.85rem}
+  .status.on{background:#d9f5ea;color:#0b6b50;border:1px solid #9be0c6;box-shadow:0 4px 10px rgba(15,157,120,.25)}
+  .status.off{background:var(--card2);color:var(--muted);border:1px solid var(--line)}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+  .btn.danger{border-color:#f0b4bb;color:#c62f3b;background:#fff5f6;box-shadow:0 2px 6px rgba(214,57,74,.12)}
+  .btn.danger:hover{border-color:var(--red);box-shadow:0 6px 14px rgba(214,57,74,.25)}
+  details.help{background:#eef4ff;border:1px solid #cfdcf8;border-radius:14px;padding:10px 14px;margin:12px 0;box-shadow:0 6px 16px rgba(47,109,246,.12)}
+  details.help summary,details.card summary{cursor:pointer;font-weight:700}
+  .evalcard{--sh:15,157,120;border-left:7px solid var(--green);background:linear-gradient(135deg,#e5f8f1,#fff 60%)}
+  #login{--sh:47,109,246;border-top:6px solid var(--blue)}
+  #panelIA{--sh:255,179,0;border-top:6px solid var(--accent)}
+  #panelGen{--sh:124,77,255;border-top:6px solid var(--violet)}
+  #panelPub{--sh:15,157,120;border-top:6px solid var(--green)}
+  #hist{--sh:47,109,246}
+  [hidden]{display:none!important}
+  @media print{
+    body{background:#fff!important;color:#000}
+    .card,.block{animation:none;box-shadow:none;background:#fff!important;border:1px solid #bbb;color:#000}
+    .block{border-left:5px solid #444}
+    .block .min{background:#ddd;box-shadow:none}
+    .no-print,.tabs,header.top .sub,#panelGen,#panelPub,#panelImp,#panelIA,#panelHow,#hist,#pane-player,.topbar,footer{display:none!important}
+    #pane-mister{display:block!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="badge coach">Solo para el míster</span>
+    <h1>Panel del míster 🧠</h1>
+    <div class="sub">Sube un vídeo o un dibujo → te preparo el entrenamiento y la ficha animada para los jugadores.</div>
+  </header>
+
+  <!-- Entrada con contraseña -->
+  <section class="card" id="login">
+    <h2>🔒 Entra con tu contraseña</h2>
+    <div id="loginUrlRow" hidden style="margin-bottom:10px">
+      <label class="muted" for="loginUrl">Dirección de tu web (solo si abres este archivo desde el ordenador)</label>
+      <input type="url" id="loginUrl" placeholder="https://mi-equipo.netlify.app">
+    </div>
+    <label class="muted" for="loginPass">Contraseña de míster</label>
+    <input type="password" id="loginPass" autocomplete="current-password">
+    <div style="margin-top:12px"><button class="btn primary" type="button" id="btnLogin" style="padding:12px 20px">Entrar</button> <span class="muted" id="loginMsg" role="status"></span></div>
+  </section>
+
+  <div id="app" hidden>
+    <div class="topbar no-print">
+      <a id="linkJug" href="#" target="_blank" rel="noopener">👀 Ver la web de los jugadores</a>
+      <button type="button" id="btnSalir">Cerrar sesión</button>
+    </div>
+
+    <section class="card" id="panelHow">
+      <h2>¿Cómo funciona? (30 segundos)</h2>
+      <ol class="steps">
+        <li><b>Aportas la idea:</b> un vídeo, un dibujo, capturas, o solo palabras.</li>
+        <li><b>La IA prepara dos cosas:</b> tu sesión (privada) y la ficha con pizarras animadas para los jugadores.</li>
+        <li><b>Tú decides:</b> la revisas y, si te gusta, pulsas <i>Publicar</i>. Los jugadores la ven al momento en su web.</li>
+      </ol>
+    </section>
+
+    <section class="card" id="panelIA">
+      <h2>A · Sube un vídeo, un dibujo o capturas</h2>
+      <input type="file" id="mediaFile" accept="video/*,image/*" multiple>
+
+      <details class="help">
+        <summary>📱 ¿Cómo uso un vídeo de Instagram?</summary>
+        <ol class="steps" style="margin:8px 0 0">
+          <li>Instagram no deja descargar los vídeos de otras cuentas desde una web, así que <b>graba la pantalla</b> mientras se reproduce. <b>iPhone:</b> desliza desde arriba a la derecha → botón de grabar. <b>Android:</b> ajustes rápidos → <i>Grabar pantalla</i>.</li>
+          <li>Pulsa el botón de arriba y elige esa grabación (o 4-6 capturas de los momentos clave).</li>
+          <li>Pega el enlace del vídeo abajo si quieres guardarlo como referencia (la IA no entra en Instagram, solo ve lo que subes).</li>
+        </ol>
+      </details>
+
+      <label class="muted" for="mediaLink" style="display:block;margin-top:10px">Enlace del vídeo (opcional, solo para que lo recuerdes)</label>
+      <input type="url" id="mediaLink" placeholder="https://www.instagram.com/reel/…">
+
+      <label class="muted" for="mediaNota" style="display:block;margin-top:10px">¿Qué quieres que haga con él?</label>
+      <textarea id="mediaNota" style="min-height:84px" placeholder="Ej: «Evalúa si este ejercicio sirve para que dejen de quedarse parados tras el pase y créame una sesión adaptada a 4 jugadores de campo.»"></textarea>
+      <div class="chips" id="notaChips"></div>
+
+      <label style="display:flex;gap:10px;align-items:center;margin-top:6px"><input type="checkbox" id="mostrarFotos" checked style="width:20px;height:20px;accent-color:var(--blue)"> <span>Mostrar los fotogramas a los jugadores en su ficha</span></label>
+      <div class="muted" id="fotosHint" style="margin:4px 0 0 30px"></div>
+
+      <div style="margin-top:14px"><button class="btn primary" type="button" id="btnIA" style="padding:12px 18px">🔎 Analizar y crear entrenamiento</button></div>
+      <div class="muted" id="iaMsg" role="status" style="margin-top:8px"></div>
+      <div id="iaThumbs" class="thumbs"></div>
+    </section>
+
+    <section class="card" id="panelGen">
+      <h2>B · O cuéntame con palabras lo que has visto</h2>
+      <textarea id="idea" placeholder="Ej: Se mueven en bloque, sin crear espacios y se quedan estáticos esperando el balón."></textarea>
+      <div class="muted" style="margin-top:6px">Marca los diagnósticos que encajan (se marcan solos según lo que escribas). El primero marcado es el foco principal.</div>
+      <div class="chips" id="chips"></div>
+      <div class="row">
+        <div><label class="muted" for="fecha">Fecha del entrenamiento</label><input type="date" id="fecha"></div>
+        <div><button class="btn primary" type="button" id="btnGen" style="width:100%;padding:12px">⚡ Generar entrenamiento</button></div>
+      </div>
+    </section>
+
+    <div id="resultado" hidden>
+      <div class="tabs no-print">
+        <button class="btn on" type="button" data-pane="mister">📋 Sesión del míster</button>
+        <button class="btn" type="button" data-pane="player">👀 Vista del jugador</button>
+        <button class="btn" type="button" data-pane="pub">🚀 Publicar</button>
+      </div>
+
+      <section id="pane-mister"></section>
+
+      <section id="pane-player" hidden>
+        <header class="top" style="padding-top:14px">
+          <span class="badge">Infantil · 2º año</span>
+          <h1 id="pTitulo"></h1>
+          <div class="sub" id="pFecha"></div>
+        </header>
+        <div id="pFicha"></div>
+      </section>
+
+      <section id="panelPub" hidden class="card">
+        <h2>🚀 Publicar para los jugadores</h2>
+        <p>Estado: <span class="status off" id="pubStatus">No publicada</span></p>
+        <div class="actions">
+          <button class="btn primary" type="button" id="btnPublish">🚀 Publicar ahora</button>
+          <button class="btn" type="button" id="btnUnpublish" hidden>Quitar de la web</button>
+          <button class="btn" type="button" id="btnShare">📤 Compartir el enlace</button>
+          <button class="btn danger" type="button" id="btnDelete">🗑 Borrar sesión</button>
+        </div>
+        <p class="muted" id="pubMsg" role="status"></p>
+        <p class="muted">⚠️ Los jugadores solo ven la <b>parte del jugador</b>. Tu sesión de entrenador y las notas son privadas. Antes de publicar, mira la pestaña <i>Vista del jugador</i>: es exactamente lo que verán.</p>
+      </section>
+    </div>
+
+    <section class="card hist no-print" id="hist" hidden>
+      <h2>🗂 Mis entrenamientos</h2>
+      <div id="histList"></div>
+    </section>
+
+    <details class="card" id="panelImp">
+      <summary style="cursor:pointer;font-weight:700">📥 Importar una sesión hecha con otra IA (avanzado)</summary>
+      <div class="muted" style="margin-top:8px">Pídele a tu asistente de IA un JSON de sesión con el formato de <code>ejemplo-sesion-completa.json</code> y pégalo aquí.</div>
+      <textarea id="jsonIn" placeholder='Pega aquí el JSON de la sesión…' style="margin-top:10px"></textarea>
+      <div style="margin-top:8px"><button class="btn" type="button" id="btnImp">Cargar sesión pegada</button> <span class="muted" id="impMsg"></span></div>
+    </details>
+  </div>
+
+  <footer>Panel privado · No compartas la dirección de esta página ni tu contraseña.</footer>
+</div>
+
+<script>
+/* Motor de pizarra táctica animada (SVG, sin dependencias) */
+(function (root) {
+  const NS = 'http://www.w3.org/2000/svg';
+  const active = new Set();
+
+  // Ayudante DOM (HTML)
+  function h(tag, attrs, ...kids) {
+    const e = document.createElement(tag);
+    for (const k in (attrs || {})) {
+      const v = attrs[k];
+      if (k === 'class') e.className = v;
+      else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+      else e.setAttribute(k, v);
+    }
+    kids.flat().forEach(c => {
+      if (c == null || c === false) return;
+      e.append(c.nodeType ? c : document.createTextNode(String(c)));
+    });
+    return e;
+  }
+  function s(name, attrs, parent) {
+    const e = document.createElementNS(NS, name);
+    for (const k in (attrs || {})) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  const COLORS = { a: '#3b82f6', b: '#ef4444', gk: '#facc15', c: '#a855f7' };
+
+  function drawCourt(svg) {
+    const L = { stroke: '#ffffff', 'stroke-width': 1.5, fill: 'none', opacity: 0.85 };
+    s('rect', { x: 5, y: 5, width: 390, height: 190, ...L }, svg);
+    s('line', { x1: 200, y1: 5, x2: 200, y2: 195, ...L }, svg);
+    s('circle', { cx: 200, cy: 100, r: 30, ...L }, svg);
+    s('path', { d: 'M5 25 A60 60 0 0 1 65 85 L65 115 A60 60 0 0 1 5 175', ...L }, svg);
+    s('path', { d: 'M395 25 A60 60 0 0 0 335 85 L335 115 A60 60 0 0 0 395 175', ...L }, svg);
+    s('rect', { x: 1, y: 85, width: 4, height: 30, ...L }, svg);
+    s('rect', { x: 395, y: 85, width: 4, height: 30, ...L }, svg);
+  }
+
+  function pos(path, t) {
+    if (!path || !path.length) return [0, 0];
+    if (t <= path[0][0]) return [path[0][1], path[0][2]];
+    for (let i = 1; i < path.length; i++) {
+      if (t <= path[i][0]) {
+        const a = path[i - 1], b = path[i];
+        const k = (t - a[0]) / ((b[0] - a[0]) || 1);
+        return [a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
+      }
+    }
+    const l = path[path.length - 1];
+    return [l[1], l[2]];
+  }
+
+  function moved(path) {
+    let d = 0;
+    for (let i = 1; i < path.length; i++) d += Math.hypot(path[i][1] - path[i - 1][1], path[i][2] - path[i - 1][2]);
+    return d;
+  }
+
+  // scene: {dur, actors:[{id,team,label,path,emoji}], ball:{path}|[path], zones:[], notes:[]}
+  function mount(box, scene, opts) {
+    opts = opts || {};
+    box.replaceChildren();
+    const svg = s('svg', { viewBox: '0 0 400 200', class: 'pitch', role: 'img', 'aria-label': opts.label || 'Pizarra táctica animada' });
+    drawCourt(svg);
+
+    const zoneEls = (scene.zones || []).map(z => {
+      const g = s('g', { opacity: 0 }, svg);
+      s('rect', { x: z.x, y: z.y, width: z.w, height: z.h, rx: 8, fill: '#2ee6a6', 'fill-opacity': 0.28, stroke: '#2ee6a6', 'stroke-width': 1.5, 'stroke-dasharray': '5 4' }, g);
+      if (z.label) {
+        const t = s('text', { x: z.x + z.w / 2, y: z.y + z.h / 2 + 4, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 700, fill: '#eafff6' }, g);
+        t.textContent = z.label;
+      }
+      return { g, z };
+    });
+
+    scene.actors.forEach(a => {
+      if (moved(a.path) > 15) {
+        const pts = a.path.map(p => p[1] + ',' + p[2]).join(' ');
+        s('polyline', { points: pts, fill: 'none', stroke: COLORS[a.team] || '#fff', 'stroke-width': 2, 'stroke-dasharray': '3 5', opacity: 0.45, 'stroke-linecap': 'round' }, svg);
+      }
+    });
+
+    const actorEls = scene.actors.map(a => {
+      const g = s('g', {}, svg);
+      s('circle', { r: 9, fill: COLORS[a.team] || '#fff', stroke: '#fff', 'stroke-width': 1.5 }, g);
+      const t = s('text', { 'text-anchor': 'middle', y: 3.5, 'font-size': 9.5, 'font-weight': 800, fill: a.team === 'gk' ? '#222' : '#fff' }, g);
+      t.textContent = a.label || '';
+      const em = s('text', { 'text-anchor': 'middle', y: -13, 'font-size': 13, opacity: 0 }, g);
+      return { a, g, em };
+    });
+
+    const ballPath = Array.isArray(scene.ball) ? scene.ball : (scene.ball && scene.ball.path);
+    const ballG = s('g', {}, svg);
+    s('circle', { r: 4.6, fill: '#fff', stroke: '#111', 'stroke-width': 1.2 }, ballG);
+
+    const cap = h('div', { class: 'cap', 'aria-live': 'polite' });
+    const reduce = root.matchMedia && root.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let playing = !reduce, t0 = 0, pausedAt = 0, raf = 0;
+    const PAUSE = 1400;
+    const dur = scene.dur || 6000;
+
+    const btnPlay = h('button', { class: 'btn', type: 'button', onclick: () => toggle() }, playing ? '⏸ Pausa' : '▶ Play');
+    const btnRe = h('button', { class: 'btn', type: 'button', onclick: () => { t0 = performance.now(); pausedAt = 0; } }, '↻ Otra vez');
+    box.append(svg, cap, h('div', { class: 'ctrl' }, btnPlay, btnRe));
+
+    function toggle() {
+      if (playing) { playing = false; pausedAt = performance.now() - t0; }
+      else { playing = true; t0 = performance.now() - pausedAt; }
+      btnPlay.textContent = playing ? '⏸ Pausa' : '▶ Play';
+    }
+
+    function frame(p, now) {
+      actorEls.forEach(o => {
+        const [x, y] = pos(o.a.path, p);
+        o.g.setAttribute('transform', 'translate(' + x.toFixed(1) + ',' + y.toFixed(1) + ')');
+        const e = (o.a.emoji || []).find(m => p >= m.from && p < m.to);
+        if (e) { o.em.textContent = e.text; o.em.setAttribute('opacity', 1); } else o.em.setAttribute('opacity', 0);
+      });
+      if (ballPath) {
+        const [bx, by] = pos(ballPath, p);
+        ballG.setAttribute('transform', 'translate(' + bx.toFixed(1) + ',' + by.toFixed(1) + ')');
+      } else ballG.setAttribute('opacity', 0);
+      zoneEls.forEach(o => {
+        const on = p >= (o.z.from || 0) && p < (o.z.to == null ? 1.01 : o.z.to);
+        o.g.setAttribute('opacity', on ? (0.7 + 0.3 * Math.sin(now / 160)).toFixed(2) : 0);
+      });
+      const n = (scene.notes || []).find(n => p >= n.from && p < n.to) || (scene.notes || [])[(scene.notes || []).length - 1];
+      const txt = n ? n.text : '';
+      if (cap.textContent !== txt) cap.textContent = txt;
+    }
+
+    function tick(now) {
+      raf = requestAnimationFrame(tick);
+      if (!box.isConnected) { stop(); return; }
+      if (!svg.getClientRects().length) return;
+      const el = playing ? (now - t0) : pausedAt;
+      const t = el % (dur + PAUSE);
+      frame(Math.min(1, t / dur), now);
+    }
+
+    t0 = performance.now();
+    if (reduce) { frame(0.85, 0); }
+    raf = requestAnimationFrame(tick);
+    function stop() { cancelAnimationFrame(raf); active.delete(ctrl); }
+    const ctrl = { stop };
+    active.add(ctrl);
+    return ctrl;
+  }
+
+  function stopAll() { active.forEach(c => c.stop()); active.clear(); }
+
+  root.FutsalAnim = { mount, stopAll, h, s, COLORS };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* Pinta la ficha del jugador a partir de una sesión (JSON) */
+(function (root) {
+  const { h, mount, stopAll } = root.FutsalAnim;
+
+  function bullets(list) {
+    return h('ul', { class: 'clean' }, (list || []).map(t => h('li', {}, t)));
+  }
+
+  function fmtFecha(f) {
+    try {
+      const d = new Date(f + 'T12:00:00');
+      return d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+    } catch (e) { return f || ''; }
+  }
+
+  function renderPlayer(rootEl, session) {
+    stopAll();
+    rootEl.replaceChildren();
+    const j = session.jugador;
+
+    // 👀 Lo que hemos visto (dibujo o vídeo analizado) + debate en equipo
+    const evid = (j.evidencia || []).filter(src => typeof src === 'string' && src.startsWith('data:image/jpeg;base64,'));
+    if (j.analisis || evid.length) {
+      rootEl.append(h('div', { class: 'card seen' },
+        h('h2', {}, '👀 Lo que hemos visto'),
+        evid.length ? h('div', { class: 'evid' }, evid.map(src => h('img', { src, alt: 'Imagen del análisis', loading: 'lazy' }))) : null,
+        j.analisis ? h('p', { style: 'margin:10px 0 0' }, j.analisis) : null,
+        (j.debate && j.debate.length) ? h('div', { class: 'key' }, h('b', {}, '🗣 Analicémoslo juntos:'), bullets(j.debate)) : null
+      ));
+    }
+
+    rootEl.append(
+      h('div', { class: 'card concept' }, h('h2', {}, '💡 Concepto clave del día'), h('p', { style: 'margin:0' }, j.concepto)),
+      h('div', { class: 'card reto' }, h('h2', {}, '🧠 El reto de hoy'), h('div', { class: 'big' }, j.reto)),
+      h('div', { class: 'grid2' },
+        h('div', { class: 'card with' }, h('h2', {}, '⚽ CON balón'), bullets(j.conBalon)),
+        h('div', { class: 'card without' }, h('h2', {}, '🏃 SIN balón'), bullets(j.sinBalon))
+      )
+    );
+
+    const board = h('div', { class: 'card' },
+      h('h2', {}, '🎬 Pizarra en movimiento'),
+      h('div', { class: 'legend' },
+        h('span', {}, h('i', { class: 'dot', style: 'background:#3b82f6' }), 'Tu equipo'),
+        h('span', {}, h('i', { class: 'dot', style: 'background:#ef4444' }), 'Rivales'),
+        h('span', {}, h('i', { class: 'dot', style: 'background:#a855f7' }), 'Comodín'),
+        h('span', {}, '⚪ Balón'),
+        h('span', {}, '┈ Camino que recorre el jugador')
+      )
+    );
+    rootEl.append(board);
+
+    (j.escenas || []).forEach(esc => {
+      const boxNo = h('div'), boxYes = h('div');
+      board.append(
+        h('h3', { style: 'margin:18px 0 8px' }, esc.titulo),
+        h('div', { class: 'grid2' },
+          h('div', { class: 'scene no' }, h('h3', {}, '❌ Así NO'), boxNo),
+          h('div', { class: 'scene yes' }, h('h3', {}, '✅ Así SÍ'), boxYes)
+        ),
+        esc.clave ? h('div', { class: 'key' }, '🔑 ', esc.clave) : null
+      );
+      mount(boxNo, esc.mal, { label: esc.titulo + ' · así no' });
+      mount(boxYes, esc.bien, { label: esc.titulo + ' · así sí' });
+    });
+  }
+
+  root.FutsalRender = { renderPlayer, fmtFecha };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* Biblioteca de diagnósticos -> sesiones. Se usa en el navegador (panel del míster) y en Node. */
+(function (root) {
+  const A = (id, team, label, path, emoji) => ({ id, team, label, path, emoji: emoji || [] });
+
+  /* ───────────────────────── ESCENAS ANIMADAS ───────────────────────── */
+
+  // 1) BLOQUE -> separarse (carriles / ancho y profundo)
+  const escBloque = {
+    titulo: 'Del bloque a la pista abierta',
+    clave: 'Mira tus pies: ¿hay otro compañero a menos de 5 pasos? ¡Sepárate! Uno ancho, uno cerca, uno profundo.',
+    mal: {
+      dur: 6000,
+      actors: [
+        A('a1', 'a', '1', [[0, 140, 90], [1, 142, 92]]),
+        A('a2', 'a', '2', [[0, 165, 110], [1, 166, 111]]),
+        A('a3', 'a', '3', [[0, 150, 125], [1, 151, 126]]),
+        A('a4', 'a', '4', [[0, 170, 85], [1, 171, 86]]),
+        A('b1', 'b', 'R', [[0, 215, 98], [.3, 212, 92], [.6, 212, 108], [1, 215, 98]]),
+        A('b2', 'b', 'R', [[0, 215, 122], [.3, 212, 116], [.6, 212, 128], [1, 215, 122]])
+      ],
+      ball: [[0, 140, 90], [.15, 140, 90], [.25, 165, 110], [.4, 165, 110], [.5, 150, 125], [.65, 150, 125], [.75, 170, 85], [1, 170, 85]],
+      zones: [{ x: 250, y: 20, w: 130, h: 160, label: 'Espacio vacío 😴', from: 0, to: 1.01 }],
+      notes: [{ from: 0, to: 1.01, text: '❌ Todos juntos: al rival le basta con 2 jugadores para taparnos a los 4.' }]
+    },
+    bien: {
+      dur: 7000,
+      actors: [
+        A('a1', 'a', '1', [[0, 110, 35], [.38, 110, 35], [1, 235, 22]]),
+        A('a2', 'a', '2', [[0, 150, 100], [.15, 150, 100], [.55, 210, 65], [.62, 210, 65], [1, 265, 55]]),
+        A('a3', 'a', '3', [[0, 110, 165], [.3, 110, 165], [.78, 200, 140], [.84, 200, 140], [1, 225, 130]]),
+        A('a4', 'a', '4', [[0, 260, 100], [.5, 260, 100], [.55, 250, 115], [.96, 300, 85], [1, 300, 85]]),
+        A('b1', 'b', 'R', [[0, 200, 95], [.3, 170, 60], [.55, 190, 80], [.78, 210, 115], [1, 235, 105]]),
+        A('b2', 'b', 'R', [[0, 205, 125], [.3, 200, 110], [.55, 230, 95], [.78, 240, 110], [1, 300, 115]])
+      ],
+      ball: [[0, 150, 100], [.15, 150, 100], [.3, 110, 35], [.38, 110, 35], [.55, 210, 65], [.62, 210, 65], [.78, 200, 140], [.84, 200, 140], [.96, 300, 85], [1, 300, 85]],
+      zones: [{ x: 195, y: 40, w: 70, h: 50, label: '¡HUECO!', from: .36, to: .62 }],
+      notes: [
+        { from: 0, to: .3, text: '1️⃣ Nos abrimos: uno ancho, uno cerca, uno profundo.' },
+        { from: .3, to: .6, text: '2️⃣ Paso y CORTO al hueco que se ha abierto.' },
+        { from: .6, to: 1.01, text: '3️⃣ Todos se mueven: siempre hay alguien libre.' }
+      ]
+    }
+  };
+
+  // 2) ESTÁTICO -> pasa y muévete
+  const escEstatico = {
+    titulo: 'Pasa y muévete (3 segundos)',
+    clave: 'Pasar NO es el final de tu jugada: es el principio de la siguiente. Pasas, cuentas 1-2-3 y ya estás en otro hueco.',
+    mal: {
+      dur: 6000,
+      actors: [
+        A('a1', 'a', '1', [[0, 90, 100], [1, 90, 100]], [{ from: .3, to: 1.01, text: '🧍' }]),
+        A('a2', 'a', '2', [[0, 190, 55], [1, 191, 56]]),
+        A('a3', 'a', '3', [[0, 190, 150], [1, 191, 150]], [{ from: .75, to: 1.01, text: '🧍' }]),
+        A('b1', 'b', 'R', [[0, 150, 100], [.3, 175, 70], [.7, 175, 125], [1, 175, 125]])
+      ],
+      ball: [[0, 90, 100], [.15, 90, 100], [.3, 190, 55], [.45, 190, 55], [.7, 190, 150], [1, 190, 150]],
+      zones: [],
+      notes: [{ from: 0, to: 1.01, text: '❌ Pasa y se queda mirando: el rival se coloca fácil y roba.' }]
+    },
+    bien: {
+      dur: 6500,
+      actors: [
+        A('a1', 'a', '1', [[0, 90, 100], [.1, 90, 100], [.68, 215, 110], [.75, 215, 110], [1, 320, 95]], [{ from: .12, to: .4, text: '1-2-3' }]),
+        A('a2', 'a', '2', [[0, 190, 55], [.35, 190, 55], [1, 250, 45]]),
+        A('a3', 'a', '3', [[0, 190, 150], [.25, 190, 150], [.45, 150, 160], [.8, 280, 130], [1, 280, 130]]),
+        A('b1', 'b', 'R', [[0, 150, 100], [.25, 170, 70], [.5, 170, 85], [.7, 200, 95], [.9, 255, 120], [1, 265, 125]])
+      ],
+      ball: [[0, 90, 100], [.1, 90, 100], [.25, 190, 55], [.35, 190, 55], [.7, 215, 110], [.75, 215, 110], [.95, 280, 130], [1, 280, 130]],
+      zones: [{ x: 190, y: 90, w: 55, h: 40, label: 'Espalda', from: .3, to: .7 }],
+      notes: [
+        { from: 0, to: .35, text: '1️⃣ Pasas… ¡y ya estás en marcha!' },
+        { from: .35, to: .75, text: '2️⃣ Te ofreces en la espalda del rival, en movimiento.' },
+        { from: .75, to: 1.01, text: '3️⃣ Siempre hay alguien libre: nadie se queda esperando.' }
+      ]
+    }
+  };
+
+  // 3) ESPACIOS -> uno arrastra, otro rellena
+  const escEspacios = {
+    titulo: 'Uno arrastra, otro rellena',
+    clave: 'El espacio no aparece solo: lo fabricas. Si te llevas a tu marcador, tu compañero encuentra el hueco.',
+    mal: {
+      dur: 6000,
+      actors: [
+        A('a1', 'a', '1', [[0, 130, 70], [.5, 185, 85], [1, 188, 86]]),
+        A('a2', 'a', '2', [[0, 150, 130], [.5, 185, 122], [1, 188, 122]]),
+        A('b1', 'b', 'R', [[0, 200, 85], [1, 198, 88]]),
+        A('b2', 'b', 'R', [[0, 205, 125], [1, 203, 124]])
+      ],
+      ball: [[0, 130, 70], [.5, 185, 85], [1, 188, 86]],
+      zones: [],
+      notes: [{ from: 0, to: 1.01, text: '❌ Los dos van de frente al marcador: no hay hueco y se atascan.' }]
+    },
+    bien: {
+      dur: 6500,
+      actors: [
+        A('a1', 'a', '1', [[0, 130, 100], [.45, 200, 45], [1, 200, 45]]),
+        A('a2', 'a', '2', [[0, 150, 160], [.3, 150, 160], [.65, 215, 105], [1, 260, 100]]),
+        A('b1', 'b', 'R', [[0, 190, 95], [.4, 200, 60], [.6, 215, 55], [1, 220, 55]]),
+        A('b2', 'b', 'R', [[0, 195, 130], [.5, 200, 125], [.72, 225, 115], [1, 255, 105]])
+      ],
+      ball: [[0, 130, 100], [.45, 200, 45], [.72, 215, 105], [1, 260, 100]],
+      zones: [{ x: 195, y: 85, w: 55, h: 45, label: 'HUECO', from: .4, to: .72 }],
+      notes: [
+        { from: 0, to: .4, text: '1️⃣ Llevas a tu marcador hacia fuera.' },
+        { from: .4, to: .72, text: '2️⃣ Se abre el hueco… ¡tu compañero entra!' },
+        { from: .72, to: 1.01, text: '3️⃣ Pase al hueco y a por la portería.' }
+      ]
+    }
+  };
+
+  // 4) LECTURA -> cabeza arriba
+  const escLectura = {
+    titulo: 'Cabeza arriba: lee antes de decidir',
+    clave: 'Mira ANTES de recibir y ANTES de decidir: balón + rival + hueco. Dos miradas y ya sabes qué vas a hacer.',
+    mal: {
+      dur: 6000,
+      actors: [
+        A('a1', 'a', '1', [[0, 110, 100], [.5, 190, 95], [1, 200, 95]], [{ from: .1, to: .6, text: '🙈' }]),
+        A('a2', 'a', '2', [[0, 160, 40], [1, 161, 40]]),
+        A('a3', 'a', '3', [[0, 160, 160], [1, 161, 160]]),
+        A('b1', 'b', 'R', [[0, 210, 80], [.5, 200, 92], [1, 200, 94]]),
+        A('b2', 'b', 'R', [[0, 210, 125], [.5, 205, 105], [1, 205, 104]])
+      ],
+      ball: [[0, 110, 100], [.5, 190, 95], [1, 200, 95]],
+      zones: [],
+      notes: [{ from: 0, to: 1.01, text: '❌ Cabeza abajo: no ve que sus compañeros están libres. Pierde el balón.' }]
+    },
+    bien: {
+      dur: 6500,
+      actors: [
+        A('a1', 'a', '1', [[0, 110, 100], [.3, 140, 100], [1, 140, 100]], [{ from: .08, to: .4, text: '👀' }]),
+        A('a2', 'a', '2', [[0, 160, 40], [.2, 160, 40], [.6, 235, 45], [1, 300, 40]]),
+        A('a3', 'a', '3', [[0, 160, 160], [1, 170, 150]]),
+        A('b1', 'b', 'R', [[0, 210, 80], [.3, 185, 98], [1, 190, 100]]),
+        A('b2', 'b', 'R', [[0, 210, 125], [.3, 195, 115], [1, 200, 110]])
+      ],
+      ball: [[0, 110, 100], [.3, 140, 100], [.38, 140, 100], [.6, 235, 45], [1, 300, 40]],
+      zones: [{ x: 215, y: 18, w: 80, h: 55, label: 'ESPACIO LIBRE', from: .15, to: .6 }],
+      notes: [
+        { from: 0, to: .4, text: '1️⃣ Levanta la cabeza: balón, rival, hueco.' },
+        { from: .4, to: .65, text: '2️⃣ Ve el espacio libre y pasa ya.' },
+        { from: .65, to: 1.01, text: '3️⃣ El compañero que se mueve recibe y ataca.' }
+      ]
+    }
+  };
+
+  /* ───────────────────────── DIAGNÓSTICOS ───────────────────────── */
+
+  const TAGS = {
+    bloque: {
+      nombre: 'Se mueven en bloque / no abren campo',
+      palabras: ['bloque', 'juntos', 'pegados', 'agrupados', 'amontonados', 'mismo carril'],
+      titulo: 'Rompe el bloque: ¡sepárate!',
+      concepto: 'Cuando los cuatro estáis juntos, al rival le basta con tapar un solo sitio y os defiende a todos. Si os separáis, el rival tiene que elegir… ¡y siempre llega tarde! Abrir el campo es la forma más rápida de que el balón corra libre y de que tú seas más peligroso.',
+      reto: 'Regla de oro: nunca dos compañeros en el mismo carril. ¿Eres el ancho, el cercano o el profundo?',
+      conBalon: ['Levanta la cabeza antes de pasar: ¿quién está más libre, el cercano o el lejano?', 'Pasa al que está lejos del rival, no al que lo tiene pegado.', 'Si nadie está libre, conduce hacia un hueco: así obligas a que alguien se mueva.'],
+      sinBalon: ['Si tu compañero está cerca, ¡sepárate tú! Ve a otro carril (ancho o profundo).', 'Intenta estar siempre a 6 pasos o más de tu compañero más cercano.', 'Triángulo, no línea: tú, el del balón y un tercero formáis un triángulo.'],
+      escena: escBloque,
+      regla: 'Si dos atacantes están a menos de 4 m del mismo compañero, pierdes el balón / punto de castigo.',
+      preguntas: [
+        '¿Cuántos rivales hacen falta para defendernos cuando estamos juntos? ¿Y cuando estamos abiertos?',
+        'Congelo la jugada: ¿quién está pegado a otro compañero? ¿Qué habría pasado si uno se hubiera abierto?',
+        'Si eres el que pasa, ¿dónde está el compañero con más espacio? ¿Cómo lo has sabido?'
+      ],
+      bloques: [
+        { nombre: 'Calentamiento / Activación cognitiva', min: 12, tarea: 'Circuito de pases por carriles. Media pista dividida en 3 franjas; 4 jugadores con 1 balón (luego 2).', reglas: ['Nunca dos jugadores en el mismo carril.', 'Tras pasar, el pasador cambia de carril antes de que llegue el balón.', 'Máx. 2 toques. En el minuto 6 entra un segundo balón.'] },
+        { nombre: 'Progresión 1 · Tarea condicionada', min: 20, tarea: '2v1 + comodín exterior en pista 20×20 m. Rotación de roles cada 2 min.', reglas: ['Gol válido solo si antes hubo un pase entre dos atacantes separados 6 m o más.', 'Si dos atacantes están a menos de 4 m, el defensor puede robar y marcar "gol de castigo".', 'Máx. 3 toques por jugador.'] },
+        { nombre: 'Progresión 2 · Tarea táctica principal', min: 25, tarea: '3v3 + comodín (siempre con quien tiene el balón) en media pista con 4 carriles marcados.', reglas: ['El pasador cambia de carril tras cada pase.', 'Gol doble si en la jugada participaron 3 carriles distintos.', 'Si el equipo queda agrupado (3 jugadores en 2 carriles o menos) más de 5 s, pierde el balón.'] },
+        { nombre: 'Situación real · Transferencia', min: 15, tarea: 'Partido 4v4 con porteros en pista completa.', reglas: ['Gol tras jugada con 3 pases y atacantes en 3 carriles distintos = vale 2.', 'Tú congelas la jugada ("¡foto fija!") cuando veas bloque y haces las preguntas.'] }
+      ]
+    },
+
+    estatico: {
+      nombre: 'Se quedan parados esperando el balón',
+      palabras: ['parado', 'parados', 'quieto', 'quietos', 'estátic', 'estatic', 'esperando', 'mirando', 'tras el pase', 'después de pasar'],
+      titulo: 'Pasa y muévete: ¡nunca te quedes parado!',
+      concepto: 'Pasar y quedarte parado es como dejar la consola en pausa: el partido sigue y tú no juegas. Un pase no termina tu jugada, ¡empieza la siguiente! Si te mueves después de pasar, tu rival nunca sabe dónde vas a aparecer.',
+      reto: 'Regla de oro: pasas, y antes de 3 segundos ya estás en otro sitio. ¿A qué hueco te vas?',
+      conBalon: ['Pasa con intención y empieza a contar 1-2-3 mientras te mueves.', 'Pase y corte: pasa y corre a la espalda del rival.', 'Recibe de cara y en movimiento, no parado.'],
+      sinBalon: ['Prohibido quedarte mirando: pasas = te mueves.', 'Pide el balón con el cuerpo (moviéndote al hueco), no solo con la mano.', 'Si un compañero conduce, ocúpale el sitio que deja libre.'],
+      escena: escEstatico,
+      regla: 'Tras cada pase, el pasador tiene 3 s para llegar a otro espacio; si el míster lo ve parado, el balón cambia de equipo.',
+      preguntas: [
+        '¿Qué hacías justo después de pasar? ¿Y qué podrías hacer en esos 3 segundos?',
+        'Si yo fuera el rival, ¿dónde te encontraría fácil? ¿Y cómo te escondo si te mueves?',
+        '¿Hacia dónde se mueve tu compañero cuando tú pasas? ¿Cómo lo sabes?'
+      ],
+      bloques: [
+        { nombre: 'Calentamiento / Activación cognitiva', min: 12, tarea: 'Pase y sigue. Cuadrado de 15×15 m, 4 jugadores y 1 balón; luego 2 balones.', reglas: ['El que pasa ocupa el puesto del que recibe (pase y sigue).', 'Cambia de dirección cada 30 s a tu señal.', 'Prohibido quedarse quieto más de 2 s.'] },
+        { nombre: 'Progresión 1 · Tarea condicionada', min: 20, tarea: '2v2 en pista de 15×12 m con porterías pequeñas.', reglas: ['Tras pasar, el pasador debe pisar una "zona de salida" marcada con aros/conos antes de volver a tocar.', 'Máx. 2 toques; 3 s sin moverse = balón del rival.', 'Cambio de pareja cada 3 min.'] },
+        { nombre: 'Progresión 2 · Tarea táctica principal', min: 25, tarea: '3v3 + comodín en media pista con circulación continua.', reglas: ['Gol solo si antes hubo un pase y corte (pasar y atacar el espacio a la espalda).', 'Si un jugador pasa y se queda parado, el míster dice "¡pausa!" y el rival recupera.', 'El comodín no puede tocar dos veces seguidas.'] },
+        { nombre: 'Situación real · Transferencia', min: 15, tarea: 'Partido 4v4 con porteros.', reglas: ['Gol vale doble si arranca con "pase y corte".', 'Un gol "sin esperar" (en menos de 8 s) vale 3.'] }
+      ]
+    },
+
+    espacios: {
+      nombre: 'No crean espacios (no arrastran marcas)',
+      palabras: ['espacio', 'hueco', 'arrastr', 'marca', 'marcador', 'desmarque', 'desmarc'],
+      titulo: 'Crea el hueco: uno arrastra, otro entra',
+      concepto: 'Un espacio libre no aparece por arte de magia: ¡lo creas tú! Si te mueves para llevarte a tu marcador, dejas un hueco por el que entra tu compañero. Los mejores no solo corren al hueco: lo fabrican.',
+      reto: '¿Quién puede ocupar el hueco que acabo de dejar? Uno arrastra, otro rellena.',
+      conBalon: ['Conduce hacia fuera para arrastrar al defensor y suelta el pase al hueco.', 'Pasa al que entra en el espacio, no al que ya estaba.', 'Si el rival no se mueve, muévelo tú con una conducción más larga.'],
+      sinBalon: ['Llévate a tu marcador: ve a un sitio para abrir otro.', 'Cuando alguien se va, ¡entra tú! Uno sale, otro entra.', 'Nunca dos jugadores en el mismo hueco.'],
+      escena: escEspacios,
+      regla: 'Gol válido solo si antes un compañero "arrastró" a su marcador (movimiento sin balón de 5 m o más) y otro entró en el hueco.',
+      preguntas: [
+        '¿Dónde estaba el rival antes y dónde está ahora que te has movido? ¿Qué espacio ha quedado?',
+        '¿Quién iba a rellenar el hueco que has dejado? ¿Os lo habíais dicho?',
+        'Si te quedas, ¿el rival se mueve? Si te mueves, ¿qué cambia?'
+      ],
+      bloques: [
+        { nombre: 'Calentamiento / Activación cognitiva', min: 12, tarea: 'Pares en cuadrado de 12×12 m con un defensor "sombra". El atacante intenta soltarse y recibir.', reglas: ['Mira siempre al defensor: cuando se mueve, tú te mueves al lado contrario.', 'Cambio de roles cada minuto.', 'Máx. 2 toques.'] },
+        { nombre: 'Progresión 1 · Tarea condicionada', min: 20, tarea: '2v2 con zona objetivo central (10×6 m) marcada con conos.', reglas: ['Un atacante "arrastra" (sale de la zona con el marcador) y el otro entra con balón.', 'Gol solo si el pase llega a la zona central y el que entra no es quien arrastró.', 'Cambio de roles cada 2 min.'] },
+        { nombre: 'Progresión 2 · Tarea táctica principal', min: 25, tarea: '3v3 + comodín en media pista con zona libre.', reglas: ['Un jugador debe "arrastrar" antes de que otro entre: así el gol vale doble.', 'Si dos entran en el mismo hueco, el balón cambia de equipo.', 'Máx. 3 toques.'] },
+        { nombre: 'Situación real · Transferencia', min: 15, tarea: 'Partido 4v4 con porteros.', reglas: ['Gol tras arrastre + entrada = vale 2.', 'Tú anuncias el "hueco" en voz alta si lo detectas y los jugadores lo aprovechan.'] }
+      ]
+    },
+
+    lectura: {
+      nombre: 'Lentitud de lectura (cabeza abajo)',
+      palabras: ['lent', 'leer', 'lectura', 'mirar', 'cabeza', 'decide', 'decisión', 'decision', 'tarde'],
+      titulo: 'Cabeza arriba: lee antes de recibir',
+      concepto: 'Los mejores jugadores ven el pase antes de recibir el balón. Si mirar el campo se convierte en un hábito, tu cerebro irá más rápido que el de tus rivales. Es entrenar la cabeza para que las piernas lleguen a tiempo.',
+      reto: 'Antes de recibir, mira dos veces: ¿dónde está el rival? ¿dónde está el hueco?',
+      conBalon: ['Levanta la cabeza antes de que te llegue el balón (2 miradas).', 'Si no ves hueco, juega fácil y muévete.', 'Decide antes de recibir: 1 o 2 toques, no 5.'],
+      sinBalon: ['Mira balón + rival + hueco; nunca solo el balón.', 'Cuando el balón cambia de lado, cambia tú de sitio también.', 'Grita el espacio que ves: «¡Arriba!», «¡Hueco!».'],
+      escena: escLectura,
+      regla: 'Antes de recibir hay que mirar 2 veces; el míster pregunta "¿qué viste?" y si no lo sabe, la jugada no vale.',
+      preguntas: [
+        '¿Qué viste justo antes de recibir? ¿Qué rival, qué hueco?',
+        '¿Cuántas veces has levantado la cabeza antes de pasar?',
+        'Si hubieras mirado un segundo antes, ¿qué habrías elegido distinto?'
+      ],
+      bloques: [
+        { nombre: 'Calentamiento / Activación cognitiva', min: 12, tarea: 'Rondo 4v1 con señales: el míster levanta un color y el jugador con balón debe ver y pasar al compañero que lleva ese peto.', reglas: ['Los jugadores sin balón llevan petos de colores distintos.', 'Pase al color que dice el míster (que gira a espalda del jugador).', 'Máx. 2 toques.'] },
+        { nombre: 'Progresión 1 · Tarea condicionada', min: 20, tarea: '2v2 en pista de 15×12 m con porterías pequeñas.', reglas: ['Antes de pasar hay que decir en voz alta «¡hueco!» o el nombre de quien recibe.', 'Máx. 2 toques; si reciben sin mirar, balón del rival.', 'Cambio de pareja cada 3 min.'] },
+        { nombre: 'Progresión 2 · Tarea táctica principal', min: 25, tarea: '3v3 + comodín en media pista, con "estímulo" del míster que obliga a mirar.', reglas: ['A la voz del míster ("¡cambio!") el equipo debe cambiar de lado con un pase.', 'Se premia con gol doble al jugador que anuncia el espacio antes del pase.', 'Máx. 3 toques.'] },
+        { nombre: 'Situación real · Transferencia', min: 15, tarea: 'Partido 4v4 con porteros.', reglas: ['Gol vale doble si antes de recibir el goleador miró 2 veces (se lo preguntas).', 'Pausa tras cada gol: "¿qué viste?"'] }
+      ]
+    }
+  };
+
+  /* ───────────────────────── FUNCIONES ───────────────────────── */
+
+  // Base metodológica: Manual de la UEFA para entrenadores de futsal (páginas impresas)
+  const MANUAL = {
+    bloque: 'Amplitud y profundidad (p.59-60): la progresión del ataque se basa en ocupar el campo a lo ancho y en profundo. Aclarado (p.98): alejarse de la situación para separar coberturas y crear espacio.',
+    estatico: 'p.86: para el poseedor es "extremadamente negativo" que sus compañeros permanezcan estáticos. El desmarque (zigzag, cambios de dirección y de ritmo, diagonales) debe hacerse en el momento en que el poseedor puede pasar.',
+    espacios: 'p.86-87: desmarque de apoyo (acerca al receptor, opción segura) y de ruptura (aleja del poseedor, se acerca a portería); zona despejada vs zona tapada; el desmarque a la espalda del defensor es muy eficaz. Aclarado (p.98).',
+    lectura: 'p.63 (modelo cognitivo): no dar toda la información, dejar que el jugador la descubra y hacerle pensar constantemente. p.64: en sub-14/15 se desarrollan las capacidades perceptivo-decisionales con juegos reducidos 1x1, 2x2, 3x3.'
+  };
+
+  function detectTags(text) {
+    const t = (text || '').toLowerCase();
+    return Object.keys(TAGS).filter(k => TAGS[k].palabras.some(p => t.includes(p)));
+  }
+
+  function uniq(arr) { return arr.filter((x, i) => arr.indexOf(x) === i); }
+
+  function buildSession(opts) {
+    const tags = (opts.tags || []).filter(t => TAGS[t]);
+    if (!tags.length) throw new Error('Elige al menos un diagnóstico');
+    const fecha = opts.fecha || new Date().toISOString().slice(0, 10);
+    const main = TAGS[tags[0]];
+    const id = fecha + '-' + tags.join('-');
+
+    const conBalon = uniq(tags.flatMap(t => TAGS[t].conBalon)).slice(0, 4);
+    const sinBalon = uniq(tags.flatMap(t => TAGS[t].sinBalon)).slice(0, 4);
+
+    // preguntas: ronda entre diagnósticos hasta 3
+    const preguntas = [];
+    for (let i = 0; preguntas.length < 3 && i < 3; i++) {
+      tags.forEach(t => { if (preguntas.length < 3 && TAGS[t].preguntas[i]) preguntas.push(TAGS[t].preguntas[i]); });
+    }
+
+    const bloques = main.bloques.map((b, i) => {
+      const extra = i > 0 ? tags.slice(1).map(t => '➕ (' + TAGS[t].nombre + ') ' + TAGS[t].regla) : [];
+      return Object.assign({}, b, { reglas: b.reglas.concat(extra) });
+    });
+
+    return {
+      id,
+      fecha,
+      titulo: opts.titulo || main.titulo,
+      tags,
+      jugador: {
+        concepto: main.concepto,
+        reto: main.reto,
+        conBalon,
+        sinBalon,
+        escenas: tags.slice(0, 3).map(t => TAGS[t].escena)
+      },
+      mister: {
+        contexto: opts.idea || '',
+        manual: tags.map(t => MANUAL[t]).filter(Boolean),
+        bloques,
+        preguntas
+      }
+    };
+  }
+
+  function publicVersion(s) {
+    return { id: s.id, fecha: s.fecha, titulo: s.titulo, tags: s.tags, jugador: s.jugador };
+  }
+
+  const API = { TAGS, buildSession, publicVersion, detectTags };
+  if (typeof module !== 'undefined' && module.exports) module.exports = API;
+  else root.FutsalLib = API;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* Prepara dibujos y vídeos en el navegador: reduce imágenes y extrae fotogramas. Nada sale del equipo hasta que pulsas "Analizar". */
+(function (root) {
+  function drawScaled(src, w, h, maxDim, q) {
+    const k = Math.min(1, maxDim / Math.max(w, h));
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(w * k)); c.height = Math.max(1, Math.round(h * k));
+    const g = c.getContext('2d');
+    g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+    g.drawImage(src, 0, 0, c.width, c.height);
+    return c.toDataURL('image/jpeg', q);
+  }
+
+  function loadImage(file) {
+    return new Promise((res, rej) => {
+      const url = URL.createObjectURL(file), img = new Image();
+      img.onload = () => { res({ img, done: () => URL.revokeObjectURL(url) }); };
+      img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('No puedo abrir la imagen ' + file.name)); };
+      img.src = url;
+    });
+  }
+
+  async function imageFrame(file, big, thumb) {
+    const { img, done } = await loadImage(file);
+    const out = { big: drawScaled(img, img.naturalWidth, img.naturalHeight, big, 0.78), thumb: drawScaled(img, img.naturalWidth, img.naturalHeight, thumb, 0.6) };
+    done();
+    return out;
+  }
+
+  const NO_VIDEO = 'No puedo leer ese vídeo en este navegador. Haz 4-6 capturas de pantalla del vídeo y súbelas como imágenes.';
+
+  function seek(v, t) {
+    return new Promise((res, rej) => {
+      let done = false;
+      const fin = fn => { if (done) return; done = true; clearTimeout(to); v.removeEventListener('seeked', ok); v.removeEventListener('error', no); fn(); };
+      const ok = () => fin(res), no = () => fin(() => rej(new Error(NO_VIDEO)));
+      const to = setTimeout(no, 7000);
+      v.addEventListener('seeked', ok); v.addEventListener('error', no);
+      v.currentTime = t;
+    });
+  }
+
+  async function videoFrames(file, n, big, thumb, onProgress) {
+    const url = URL.createObjectURL(file);
+    const v = document.createElement('video');
+    v.muted = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.preload = 'auto'; v.src = url;
+    try {
+      await new Promise((res, rej) => {
+        const to = setTimeout(() => rej(new Error(NO_VIDEO)), 15000);
+        v.addEventListener('loadeddata', () => { clearTimeout(to); res(); }, { once: true });
+        v.addEventListener('error', () => { clearTimeout(to); rej(new Error(NO_VIDEO)); }, { once: true });
+      });
+      // Algunos móviles (iOS) no dejan buscar fotogramas hasta que el vídeo ha arrancado una vez.
+      try { await Promise.race([v.play(), new Promise(r => setTimeout(r, 1500))]); v.pause(); } catch (e) { /* ignorar */ }
+      const d = v.duration;
+      if (!isFinite(d) || d <= 0 || !v.videoWidth) throw new Error(NO_VIDEO);
+      const frames = [];
+      for (let i = 0; i < n; i++) {
+        await seek(v, Math.min(d - 0.05, (i + 0.5) / n * d));
+        frames.push({ big: drawScaled(v, v.videoWidth, v.videoHeight, big, 0.75), thumb: drawScaled(v, v.videoWidth, v.videoHeight, thumb, 0.6) });
+        if (onProgress) onProgress(i + 1, n);
+      }
+      return frames;
+    } finally { URL.revokeObjectURL(url); v.removeAttribute('src'); v.load(); }
+  }
+
+  /* files: FileList. Devuelve {tipo, big:[dataURL], evidencia:[dataURL ≤3]} */
+  async function prepare(files, onProgress) {
+    const list = Array.from(files);
+    const video = list.find(f => f.type.startsWith('video/'));
+    let frames = [], tipo = 'dibujo';
+    if (video) {
+      tipo = 'video';
+      frames = await videoFrames(video, 8, 900, 480, onProgress);
+    } else {
+      const imgs = list.filter(f => f.type.startsWith('image/')).slice(0, 6);
+      if (!imgs.length) throw new Error('Sube una imagen (foto del dibujo) o un vídeo.');
+      for (const f of imgs) frames.push(await imageFrame(f, 1100, 480));
+    }
+    const pick = frames.length <= 3 ? frames : [frames[1], frames[Math.floor(frames.length / 2)], frames[frames.length - 2]];
+    return { tipo, big: frames.map(f => f.big), evidencia: pick.map(f => f.thumb) };
+  }
+
+  root.FutsalMedia = { prepare };
+})(window);
+
+</script>
+<script>
+(function () {
+  const { h } = FutsalAnim;
+  const $ = s => document.querySelector(s);
+  const store = {
+    get: k => { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+    del: k => { try { localStorage.removeItem(k); } catch (e) {} }
+  };
+  const hoy = () => new Date().toLocaleDateString('sv-SE'); // AAAA-MM-DD en hora local
+  const online = /^https?:$/.test(location.protocol);
+  let BASE = online ? location.origin : store.get('mister-base-v2');
+  let PASS = store.get('mister-pass-v2');
+  let current = null, currentPub = false;
+
+  /* ───────── API ───────── */
+  async function api(path, opts) {
+    let r;
+    try {
+      r = await fetch(BASE + '/.netlify/functions/' + path, Object.assign({}, opts, { headers: Object.assign({ 'x-mister-key': PASS }, opts && opts.headers) }));
+    } catch (e) { throw new Error('No consigo conectar con tu web. Revisa la conexión y la dirección.'); }
+    const data = await r.json().catch(() => ({}));
+    if (r.status === 401) { salir(); $('#loginMsg').textContent = 'Contraseña incorrecta.'; throw new Error(data.error || 'Contraseña incorrecta.'); }
+    if (r.status === 404 || r.status === 405) {
+      throw new Error('Esta dirección no tiene el servidor de la IA (' + location.host + '). Abre el panel desde tu dirección de Netlify, la que termina en .netlify.app/panel/ (no desde GitHub Pages).');
+    }
+    if (!r.ok) throw new Error(data.error || ('Error ' + r.status));
+    return data;
+  }
+  const post = (path, body) => api(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+
+  /* ───────── Entrada ───────── */
+  if (!online) { $('#loginUrlRow').hidden = false; $('#loginUrl').value = BASE; }
+  function entrar() { $('#login').hidden = true; $('#app').hidden = false; $('#linkJug').href = BASE + '/'; cargarHistorial(); }
+  function salir() { PASS = ''; store.del('mister-pass-v2'); $('#app').hidden = true; $('#login').hidden = false; }
+  async function intentarEntrar() {
+    const msg = $('#loginMsg');
+    if (!online) BASE = $('#loginUrl').value.trim().replace(/\/+$/, '');
+    PASS = $('#loginPass').value;
+    if (!BASE || !PASS) { msg.textContent = 'Escribe la contraseña' + (online ? '.' : ' y la dirección de tu web.'); return; }
+    msg.textContent = 'Comprobando…'; $('#btnLogin').disabled = true;
+    try { await api('manage'); store.set('mister-pass-v2', PASS); if (!online) store.set('mister-base-v2', BASE); msg.textContent = ''; entrar(); }
+    catch (e) { if (!/Contraseña/.test(e.message)) msg.textContent = e.message; }
+    finally { $('#btnLogin').disabled = false; }
+  }
+  $('#btnLogin').addEventListener('click', intentarEntrar);
+  $('#loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') intentarEntrar(); });
+  $('#btnSalir').addEventListener('click', () => { salir(); $('#loginPass').value = ''; });
+  if (PASS && BASE) api('manage').then(entrar).catch(() => {});
+
+  /* ───────── Historial (en el servidor: lo ves igual desde el móvil y el ordenador) ───────── */
+  async function cargarHistorial() {
+    try {
+      const { sesiones } = await api('manage');
+      const box = $('#histList'); box.replaceChildren();
+      $('#hist').hidden = !sesiones.length;
+      sesiones.forEach(e => box.append(h('button', { class: 'btn', type: 'button', onclick: () => abrirGuardada(e.id) },
+        (e.publicada ? '✅ ' : '📝 ') + FutsalRender.fmtFecha(e.fecha) + ' · ' + e.titulo)));
+    } catch (e) { /* sin conexión: se ignora */ }
+  }
+  async function abrirGuardada(id) {
+    try {
+      const d = await api('manage?id=' + encodeURIComponent(id));
+      setCurrent(d.session, false, d.publicada);
+      $('#resultado').scrollIntoView({ behavior: 'smooth' });
+    } catch (e) { alert(e.message); }
+  }
+
+  /* ───────── Generador por palabras (B) ───────── */
+  const chips = $('#chips');
+  Object.entries(FutsalLib.TAGS).forEach(([k, t]) => chips.append(h('label', {}, h('input', { type: 'checkbox', value: k, id: 'tag-' + k }), t.nombre)));
+  ['bloque', 'estatico'].forEach(k => $('#tag-' + k).checked = true);
+  $('#fecha').value = hoy();
+  $('#idea').value = 'Se mueven en bloque, sin crear espacios y se quedan estáticos esperando el balón.';
+  $('#idea').addEventListener('input', e => FutsalLib.detectTags(e.target.value).forEach(k => $('#tag-' + k).checked = true));
+  $('#btnGen').addEventListener('click', () => {
+    const tags = Array.from(chips.querySelectorAll('input:checked')).map(i => i.value);
+    if (!tags.length) { alert('Marca al menos un diagnóstico.'); return; }
+    const s = FutsalLib.buildSession({ tags, idea: $('#idea').value.trim(), fecha: $('#fecha').value || hoy() });
+    setCurrent(s, true, false);
+    $('#resultado').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  /* ───────── Pestañas ───────── */
+  document.querySelectorAll('.tabs .btn').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.tabs .btn').forEach(x => x.classList.toggle('on', x === b));
+    $('#pane-mister').hidden = b.dataset.pane !== 'mister';
+    $('#pane-player').hidden = b.dataset.pane !== 'player';
+    $('#panelPub').hidden = b.dataset.pane !== 'pub';
+    if (b.dataset.pane === 'player') drawPlayer(); else FutsalAnim.stopAll();
+  }));
+  function drawPlayer() {
+    $('#pTitulo').textContent = current.titulo;
+    $('#pFecha').textContent = FutsalRender.fmtFecha(current.fecha);
+    FutsalRender.renderPlayer($('#pFicha'), current);
+  }
+
+  /* ───────── Ficha del míster ───────── */
+  const lista = a => h('ul', { class: 'clean' }, (a || []).map(t => h('li', {}, t)));
+  function renderMister(s) {
+    const m = s.mister || {}, root = $('#pane-mister');
+    root.replaceChildren();
+    const fuente = /^https?:\/\//.test(m.fuente || '') ? h('p', {}, h('b', {}, 'Vídeo de referencia: '), h('a', { href: m.fuente, target: '_blank', rel: 'noopener noreferrer', style: 'color:var(--blue)' }, m.fuente)) : null;
+    root.append(h('div', { class: 'card' },
+      h('h2', {}, '📋 ' + s.titulo),
+      h('div', { class: 'muted' }, FutsalRender.fmtFecha(s.fecha) + ' · Infantil 2º año · 4 jugadores de campo + 2 porteros'),
+      m.contexto ? h('p', {}, h('b', {}, 'Lo que pediste: '), m.contexto) : null,
+      m.analisis ? h('p', {}, h('b', {}, '🔎 Análisis de la IA: '), m.analisis) : null,
+      fuente,
+      (m.evidencia && m.evidencia.length) ? h('div', { class: 'thumbs' }, m.evidencia.map(src => h('img', { src, alt: 'Fotograma' }))) : null,
+      h('div', { class: 'actions no-print' }, h('button', { class: 'btn', type: 'button', onclick: () => window.print() }, '🖨 Imprimir / guardar PDF'))
+    ));
+    const ev = m.evaluacion;
+    if (ev) root.append(h('div', { class: 'card evalcard' },
+      h('h2', {}, '🧪 Evaluación del ejercicio'),
+      ev.ejercicioObservado ? h('p', {}, h('b', {}, 'Qué se ve: '), ev.ejercicioObservado) : null,
+      (ev.puntosFuertes && ev.puntosFuertes.length) ? h('div', {}, h('b', {}, '👍 Puntos fuertes'), lista(ev.puntosFuertes)) : null,
+      (ev.puntosMejorar && ev.puntosMejorar.length) ? h('div', { style: 'margin-top:8px' }, h('b', {}, '🔧 A mejorar para tu objetivo'), lista(ev.puntosMejorar)) : null,
+      ev.adaptacion ? h('p', {}, h('b', {}, '🎯 Adaptación a tu equipo: '), ev.adaptacion) : null
+    ));
+    if (m.manual && m.manual.length) root.append(h('div', { class: 'card' }, h('h2', {}, '📖 Base en el Manual UEFA de futsal'), lista(m.manual)));
+    (m.bloques || []).forEach((b, i) => root.append(h('div', { class: 'block c' + (i % 4) },
+      h('span', { class: 'min' }, b.min + ' min'), h('h3', {}, b.nombre), h('div', {}, b.tarea), lista(b.reglas))));
+    root.append(h('div', { class: 'card' },
+      h('h2', {}, '🗣 Pautas de feedback (método socrático)'),
+      h('div', { class: 'muted' }, 'Haz una pregunta en cada parón y espera a que respondan ellos antes de dar la solución.'),
+      h('ol', { class: 'steps' }, (m.preguntas || []).map(q => h('li', {}, q)))));
+  }
+
+  /* ───────── Sesión actual y publicación ───────── */
+  function pintarEstado() {
+    const st = $('#pubStatus');
+    st.textContent = currentPub ? 'Publicada ✓' : 'No publicada';
+    st.className = 'status ' + (currentPub ? 'on' : 'off');
+    $('#btnPublish').textContent = currentPub ? '🔄 Actualizar publicada' : '🚀 Publicar ahora';
+    $('#btnUnpublish').hidden = !currentPub;
+  }
+  async function guardar(publish) {
+    const body = { action: 'save', session: current };
+    if (typeof publish === 'boolean') body.publish = publish;
+    const r = await post('manage', body);
+    currentPub = r.publicada; pintarEstado(); cargarHistorial();
+    return r;
+  }
+  function setCurrent(s, autosave, publicada) {
+    current = s; currentPub = !!publicada;
+    $('#resultado').hidden = false;
+    renderMister(s); pintarEstado();
+    document.querySelectorAll('.tabs .btn').forEach((x, i) => x.classList.toggle('on', i === 0));
+    $('#pane-mister').hidden = false; $('#pane-player').hidden = true; $('#panelPub').hidden = true;
+    FutsalAnim.stopAll();
+    $('#pubMsg').textContent = '';
+    if (autosave) guardar().then(() => { $('#pubMsg').textContent = 'Guardada en tu cuenta (aún no publicada).'; }).catch(e => { $('#pubMsg').textContent = '⚠️ No se pudo guardar: ' + e.message; });
+  }
+  $('#btnPublish').addEventListener('click', async () => {
+    const b = $('#btnPublish'); b.disabled = true; $('#pubMsg').textContent = 'Publicando…';
+    try { await guardar(true); $('#pubMsg').textContent = '✅ Publicada. Los jugadores ya la ven en ' + BASE + '/'; }
+    catch (e) { $('#pubMsg').textContent = '❌ ' + e.message; } finally { b.disabled = false; }
+  });
+  $('#btnUnpublish').addEventListener('click', async () => {
+    try { await post('manage', { action: 'publish', id: current.id, publish: false }); currentPub = false; pintarEstado(); cargarHistorial(); $('#pubMsg').textContent = 'Retirada de la web de los jugadores.'; }
+    catch (e) { $('#pubMsg').textContent = '❌ ' + e.message; }
+  });
+  $('#btnDelete').addEventListener('click', async () => {
+    if (!confirm('¿Borrar esta sesión para siempre?')) return;
+    try {
+      await post('manage', { action: 'delete', id: current.id });
+      current = null; $('#resultado').hidden = true; FutsalAnim.stopAll(); cargarHistorial();
+    } catch (e) { $('#pubMsg').textContent = '❌ ' + e.message; }
+  });
+  $('#btnShare').addEventListener('click', async () => {
+    const url = BASE + '/', text = 'Entrenamiento de hoy: ' + (current ? current.titulo : '');
+    try {
+      if (navigator.share) await navigator.share({ title: 'Fútbol sala Infantil', text, url });
+      else { await navigator.clipboard.writeText(url); $('#pubMsg').textContent = 'Enlace copiado: ' + url; }
+    } catch (e) { $('#pubMsg').textContent = 'Enlace para los jugadores: ' + url; }
+  });
+
+  /* ───────── Subir vídeo / dibujo → IA (A) ───────── */
+  ['Evalúa si este ejercicio sirve para que no se queden parados tras el pase', 'Adáptalo a 4 jugadores de campo + porteros', 'Crea una progresión de tareas con puntuación doble'].forEach(t =>
+    $('#notaChips').append(h('button', { type: 'button', onclick: () => { const n = $('#mediaNota'); n.value = (n.value.trim() ? n.value.trim() + ' ' : '') + t + '.'; } }, '+ ' + t)));
+  $('#mediaLink').addEventListener('input', () => {
+    const hay = $('#mediaLink').value.trim().length > 0;
+    if (hay) $('#mostrarFotos').checked = false;
+    $('#fotosHint').textContent = hay ? 'Como el vídeo es de otra cuenta, he desmarcado esta casilla para no publicar imágenes ajenas. Tú decides.' : '';
+  });
+
+  $('#btnIA').addEventListener('click', async () => {
+    const msg = $('#iaMsg'), btn = $('#btnIA'), files = $('#mediaFile').files;
+    if (!files.length) { msg.textContent = 'Elige primero un vídeo, un dibujo o capturas.'; return; }
+    btn.disabled = true;
+    try {
+      msg.textContent = 'Preparando imágenes…';
+      const prep = await FutsalMedia.prepare(files, (i, n) => { msg.textContent = 'Leyendo el vídeo… ' + i + '/' + n; });
+      $('#iaThumbs').replaceChildren(...prep.evidencia.map(src => h('img', { src, alt: 'Fotograma' })));
+      msg.textContent = 'Enviando a la IA…';
+      const link = $('#mediaLink').value.trim();
+      const { jobId } = await post('start', { imagenes: prep.big, nota: $('#mediaNota').value.trim(), tipo: prep.tipo, fecha: $('#fecha').value || hoy(), fuente: /^https?:\/\//.test(link) ? link : '' });
+      const t0 = Date.now();
+      for (;;) {
+        await new Promise(r => setTimeout(r, 3000));
+        const st = await api('status?id=' + encodeURIComponent(jobId));
+        if (st.status === 'done') {
+          const s = st.session;
+          s.mister.evidencia = prep.evidencia;
+          if ($('#mostrarFotos').checked) s.jugador.evidencia = prep.evidencia;
+          setCurrent(s, true, false);
+          msg.textContent = '✅ Listo. Revisa las pestañas de abajo y publica si te gusta.';
+          $('#resultado').scrollIntoView({ behavior: 'smooth' });
+          break;
+        }
+        if (st.status === 'error') throw new Error(st.error || 'La IA no pudo analizarlo.');
+        msg.textContent = 'La IA está analizando… ' + Math.round((Date.now() - t0) / 1000) + ' s (suele tardar 30-90 s). Puedes dejar esta pantalla abierta.';
+        if (Date.now() - t0 > 11 * 60 * 1000) throw new Error('Tarda demasiado. Inténtalo otra vez.');
+      }
+    } catch (e) { msg.textContent = '❌ ' + e.message; }
+    finally { btn.disabled = false; }
+  });
+
+  /* ───────── Importar ───────── */
+  $('#btnImp').addEventListener('click', () => {
+    try {
+      const s = JSON.parse($('#jsonIn').value);
+      if (!s.id || !s.fecha || !s.titulo || !s.jugador || !s.jugador.escenas) throw new Error('Faltan campos: id, fecha, titulo, jugador.escenas');
+      setCurrent(s, true, false);
+      $('#impMsg').textContent = '✅ Sesión cargada.';
+      $('#resultado').scrollIntoView({ behavior: 'smooth' });
+    } catch (e) { $('#impMsg').textContent = '❌ ' + e.message; }
+  });
+})();
+</script>
+</body>
+</html>
