@@ -847,6 +847,10 @@
  },
  "mister": {
   "contexto": "Se mueven en bloque, sin crear espacios y se quedan estáticos esperando el balón.",
+  "manual": [
+   "Amplitud y profundidad (p.59-60): la progresión del ataque se basa en ocupar el campo a lo ancho y en profundo. Aclarado (p.98): alejarse de la situación para separar coberturas y crear espacio.",
+   "p.86: para el poseedor es \"extremadamente negativo\" que sus compañeros permanezcan estáticos. El desmarque (zigzag, cambios de dirección y de ritmo, diagonales) debe hacerse en el momento en que el poseedor puede pasar."
+  ],
   "bloques": [
    {
     "nombre": "Calentamiento / Activación cognitiva",

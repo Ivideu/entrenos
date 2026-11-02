@@ -244,6 +244,14 @@
 
   /* ───────────────────────── FUNCIONES ───────────────────────── */
 
+  // Base metodológica: Manual de la UEFA para entrenadores de futsal (páginas impresas)
+  const MANUAL = {
+    bloque: 'Amplitud y profundidad (p.59-60): la progresión del ataque se basa en ocupar el campo a lo ancho y en profundo. Aclarado (p.98): alejarse de la situación para separar coberturas y crear espacio.',
+    estatico: 'p.86: para el poseedor es "extremadamente negativo" que sus compañeros permanezcan estáticos. El desmarque (zigzag, cambios de dirección y de ritmo, diagonales) debe hacerse en el momento en que el poseedor puede pasar.',
+    espacios: 'p.86-87: desmarque de apoyo (acerca al receptor, opción segura) y de ruptura (aleja del poseedor, se acerca a portería); zona despejada vs zona tapada; el desmarque a la espalda del defensor es muy eficaz. Aclarado (p.98).',
+    lectura: 'p.63 (modelo cognitivo): no dar toda la información, dejar que el jugador la descubra y hacerle pensar constantemente. p.64: en sub-14/15 se desarrollan las capacidades perceptivo-decisionales con juegos reducidos 1x1, 2x2, 3x3.'
+  };
+
   function detectTags(text) {
     const t = (text || '').toLowerCase();
     return Object.keys(TAGS).filter(k => TAGS[k].palabras.some(p => t.includes(p)));
@@ -286,6 +294,7 @@
       },
       mister: {
         contexto: opts.idea || '',
+        manual: tags.map(t => MANUAL[t]).filter(Boolean),
         bloques,
         preguntas
       }

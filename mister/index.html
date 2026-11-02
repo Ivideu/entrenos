@@ -24,6 +24,8 @@
   .warn{border-left:5px solid var(--red);background:#2a1620}
   code{background:#0e1730;padding:2px 6px;border-radius:6px}
   .hist .btn{margin:4px 6px 4px 0}
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .thumbs img{height:84px;border-radius:8px;border:1px solid var(--line)}
   [hidden]{display:none!important}
   @media print{
     body{background:#fff;color:#000}
@@ -43,9 +45,36 @@
     <div class="sub">Cuéntame lo que has visto → te preparo el entrenamiento y la ficha animada para los jugadores.</div>
   </header>
 
+  <section class="card" id="panelHow">
+    <h2>¿Cómo funciona esto? (30 segundos)</h2>
+    <ol class="steps">
+      <li><b>Tú aportas la idea:</b> sube la foto de un dibujo, un vídeo, o escribe con palabras lo que has visto.</li>
+      <li><b>La web te prepara dos cosas:</b> tu sesión de entrenamiento (privada, solo la ves tú) y la ficha con pizarras animadas para los jugadores.</li>
+      <li><b>Tú decides:</b> miras las dos pestañas y, si te gusta, pulsas <i>Publicar</i> para que los jugadores la vean en su web.</li>
+    </ol>
+    <div class="muted">Este panel es solo para ti: ábrelo en tu ordenador (<code>mister/index.html</code>). Los jugadores nunca ven esta página.</div>
+  </section>
+
+  <section class="card" id="panelIA">
+    <h2>A · Sube un dibujo o un vídeo</h2>
+    <div class="muted" style="margin-bottom:8px">Foto de una pizarra o dibujo hecho a mano (puedes subir varias), o un vídeo corto de un entrenamiento o partido. La IA lo interpreta y te lo convierte en entrenamiento.</div>
+    <input type="file" id="mediaFile" accept="image/*,video/*" multiple>
+    <textarea id="mediaNota" style="min-height:64px;margin-top:10px" placeholder="(Opcional) Cuéntame qué quieres trabajar o qué ves: «las flechas son los movimientos, quiero que se muevan sin balón»…"></textarea>
+    <details id="iaCfg" style="margin-top:10px">
+      <summary class="muted" style="cursor:pointer">⚙️ Conexión con la IA (se rellena una sola vez)</summary>
+      <div class="row" style="margin-top:8px">
+        <div><label class="muted" for="iaUrl">Dirección de tu web en Netlify</label><input type="url" id="iaUrl" placeholder="https://mi-equipo.netlify.app" style="width:100%;background:#0e1730;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit"></div>
+        <div><label class="muted" for="iaPass">Tu contraseña de míster</label><input type="password" id="iaPass" autocomplete="off" style="width:100%;background:#0e1730;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit"></div>
+      </div>
+      <div class="muted" style="margin-top:6px">Se guardan solo en este navegador. Mira el README para crearlas (5 minutos).</div>
+    </details>
+    <div style="margin-top:12px"><button class="btn primary" type="button" id="btnIA" style="padding:12px 18px">🔎 Analizar y crear entrenamiento</button> <span class="muted" id="iaMsg" role="status"></span></div>
+    <div id="iaThumbs" class="thumbs"></div>
+  </section>
+
   <!-- 1. Generar -->
   <section class="card" id="panelGen">
-    <h2>1 · ¿Qué has visto en el último partido o entrenamiento?</h2>
+    <h2>B · O cuéntame con palabras lo que has visto</h2>
     <textarea id="idea" placeholder="Ej: Se mueven en bloque, sin crear espacios y se quedan estáticos esperando el balón."></textarea>
     <div class="muted" style="margin-top:6px">Marca el/los diagnósticos que encajan (se marcan solos según lo que escribas). El primero marcado será el foco principal.</div>
     <div class="chips" id="chips"></div>
@@ -88,8 +117,8 @@
 
   <!-- Importar -->
   <section class="card" id="panelImp">
-    <h2>📥 ¿Tienes una sesión a medida (hecha por Claude en el chat)?</h2>
-    <div class="muted">Si lo que has visto no encaja en los diagnósticos, cuéntaselo a Claude en el chat y te devolverá un JSON de sesión. Pégalo aquí para verlo, ajustarlo y publicarlo.</div>
+    <h2>📥 ¿Tienes una sesión a medida (hecha con otra IA en un chat)?</h2>
+    <div class="muted">Si lo que has visto no encaja en los diagnósticos, cuéntaselo a tu asistente de IA (Gemini, Claude…) pidiéndole un JSON de sesión con el mismo formato que <code>ejemplo-sesion-completa.json</code>. Pégalo aquí para verlo, ajustarlo y publicarlo.</div>
     <textarea id="jsonIn" placeholder='Pega aquí el JSON de la sesión…' style="margin-top:10px"></textarea>
     <div style="margin-top:8px"><button class="btn" type="button" id="btnImp">Cargar sesión pegada</button> <span class="muted" id="impMsg"></span></div>
   </section>
@@ -105,6 +134,7 @@
 <script src="../docs/anim.js"></script>
 <script src="../docs/render.js"></script>
 <script src="library.js"></script>
+<script src="media.js"></script>
 <script>
 (function () {
   const { h } = FutsalAnim;
@@ -176,9 +206,11 @@
         h('h2', {}, '📋 ' + s.titulo),
         h('div', { class: 'muted' }, FutsalRender.fmtFecha(s.fecha) + ' · Infantil 2º año · 4 jugadores de campo + 2 porteros'),
         m.contexto ? h('p', {}, h('b', {}, 'Lo que vi: '), m.contexto) : null,
+        m.analisis ? h('p', {}, h('b', {}, '🔎 Análisis de la IA: '), m.analisis) : null,
         h('button', { class: 'btn no-print', type: 'button', onclick: () => window.print() }, '🖨 Imprimir / guardar PDF')
       )
     );
+    if (m.manual && m.manual.length) root.append(h('div', { class: 'card' }, h('h2', {}, '📖 Base en el Manual UEFA de futsal'), h('ul', { class: 'clean' }, m.manual.map(t => h('li', {}, t)))));
     (m.bloques || []).forEach(b => root.append(
       h('div', { class: 'block' },
         h('span', { class: 'min' }, b.min + ' min'),
@@ -239,6 +271,56 @@
       $('#impMsg').textContent = '✅ Sesión cargada.';
       $('#resultado').scrollIntoView({ behavior: 'smooth' });
     } catch (e) { $('#impMsg').textContent = '❌ ' + e.message; }
+  });
+
+  /* ── Subir dibujo / vídeo → IA ── */
+  const CKEY = 'mister-ia-config-v1';
+  try { const c = JSON.parse(localStorage.getItem(CKEY) || '{}'); $('#iaUrl').value = c.url || ''; $('#iaPass').value = c.pass || ''; } catch (e) {}
+
+  async function api(base, pass, path, opts) {
+    let r;
+    try { r = await fetch(base + '/.netlify/functions/' + path, Object.assign({ headers: { 'x-mister-key': pass } }, opts)); }
+    catch (e) { throw new Error('No consigo conectar con tu web. Revisa la dirección y que la web esté publicada en Netlify.'); }
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || ('Error ' + r.status));
+    return data;
+  }
+
+  $('#btnIA').addEventListener('click', async () => {
+    const msg = $('#iaMsg'), btn = $('#btnIA'), files = $('#mediaFile').files;
+    if (!files.length) { msg.textContent = 'Elige primero una foto del dibujo o un vídeo.'; return; }
+    const base = $('#iaUrl').value.trim().replace(/\/+$/, ''), pass = $('#iaPass').value;
+    if (!/^https?:\/\//.test(base) || !pass) { msg.textContent = 'Rellena la dirección de tu web y la contraseña en ⚙️ Conexión.'; $('#iaCfg').open = true; return; }
+    try { localStorage.setItem(CKEY, JSON.stringify({ url: base, pass })); } catch (e) {}
+    btn.disabled = true;
+    try {
+      msg.textContent = 'Preparando imágenes…';
+      const prep = await FutsalMedia.prepare(files, (i, n) => { msg.textContent = 'Leyendo el vídeo… ' + i + '/' + n; });
+      $('#iaThumbs').replaceChildren(...prep.evidencia.map(src => h('img', { src, alt: 'Fotograma' })));
+      msg.textContent = 'Enviando a la IA…';
+      const { jobId } = await api(base, pass, 'start', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-mister-key': pass },
+        body: JSON.stringify({ imagenes: prep.big, nota: $('#mediaNota').value.trim(), tipo: prep.tipo, fecha: $('#fecha').value })
+      });
+      const t0 = Date.now();
+      for (;;) {
+        await new Promise(r => setTimeout(r, 3000));
+        const st = await api(base, pass, 'status?id=' + encodeURIComponent(jobId));
+        if (st.status === 'done') {
+          const s = st.session;
+          s.jugador.evidencia = prep.evidencia;
+          setCurrent(s, true);
+          msg.textContent = '✅ Listo. Revisa las pestañas de abajo.';
+          $('#resultado').scrollIntoView({ behavior: 'smooth' });
+          break;
+        }
+        if (st.status === 'error') throw new Error(st.error || 'La IA no pudo analizarlo.');
+        msg.textContent = 'La IA está analizando… ' + Math.round((Date.now() - t0) / 1000) + ' s (suele tardar 30-90 s)';
+        if (Date.now() - t0 > 11 * 60 * 1000) throw new Error('Tarda demasiado. Inténtalo otra vez.');
+      }
+    } catch (e) { msg.textContent = '❌ ' + e.message; }
+    finally { btn.disabled = false; }
   });
 
   renderHist();

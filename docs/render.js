@@ -18,6 +18,17 @@
     rootEl.replaceChildren();
     const j = session.jugador;
 
+    // 👀 Lo que hemos visto (dibujo o vídeo analizado) + debate en equipo
+    const evid = (j.evidencia || []).filter(src => typeof src === 'string' && src.startsWith('data:image/jpeg;base64,'));
+    if (j.analisis || evid.length) {
+      rootEl.append(h('div', { class: 'card seen' },
+        h('h2', {}, '👀 Lo que hemos visto'),
+        evid.length ? h('div', { class: 'evid' }, evid.map(src => h('img', { src, alt: 'Imagen del análisis', loading: 'lazy' }))) : null,
+        j.analisis ? h('p', { style: 'margin:10px 0 0' }, j.analisis) : null,
+        (j.debate && j.debate.length) ? h('div', { class: 'key' }, h('b', {}, '🗣 Analicémoslo juntos:'), bullets(j.debate)) : null
+      ));
+    }
+
     rootEl.append(
       h('div', { class: 'card concept' }, h('h2', {}, '💡 Concepto clave del día'), h('p', { style: 'margin:0' }, j.concepto)),
       h('div', { class: 'card reto' }, h('h2', {}, '🧠 El reto de hoy'), h('div', { class: 'big' }, j.reto)),
