@@ -4,93 +4,152 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#0b1220">
+<meta name="theme-color" content="#f3f7fd">
+<meta name="color-scheme" content="light">
 <title>Panel del míster · Fútbol sala Infantil</title>
 <style>
+/* Tema claro: fondo suave, cajas blancas con sombra de color según su tipo. */
 :root{
-  --bg:#0b1220; --card:#141d33; --card2:#1a2542; --txt:#eef2ff; --muted:#9aa8c7;
-  --accent:#ffd23f; --blue:#4c8dff; --green:#2ee6a6; --red:#ff5d5d; --line:#26345a;
+  color-scheme:light;
+  --bg:#f3f7fd; --card:#ffffff; --card2:#f2f6fc; --txt:#1c2434; --muted:#56637b;
+  --accent:#ffb300; --blue:#2f6df6; --green:#0f9d78; --red:#d6394a; --orange:#f57c00; --violet:#7c4dff;
+  --line:#d8e1ee;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{
+  margin:0;color:var(--txt);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:
+    radial-gradient(900px 420px at 0% -10%, rgba(47,109,246,.10), transparent 60%),
+    radial-gradient(800px 400px at 100% 0%, rgba(255,179,0,.13), transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+}
 .wrap{max-width:980px;margin:0 auto;padding:16px 16px 56px}
 header.top{padding:22px 0 8px}
-header.top h1{margin:0;font-size:clamp(1.6rem,5vw,2.4rem);line-height:1.1}
+header.top h1{margin:6px 0 0;font-size:clamp(1.65rem,5.2vw,2.5rem);line-height:1.12;color:#13203a}
 header.top .sub{color:var(--muted);margin-top:6px}
-.badge{display:inline-block;background:var(--accent);color:#1b1b1b;font-weight:800;border-radius:999px;padding:3px 12px;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 18px;margin:16px 0}
-.card h2{margin:0 0 8px;font-size:1.15rem}
-.card.concept{border-left:6px solid var(--accent)}
-.card.reto{border-left:6px solid var(--green);background:linear-gradient(135deg,#10302d,var(--card))}
-.reto .big{font-size:1.25rem;font-weight:700}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.badge{display:inline-block;background:var(--accent);color:#2a1d00;font-weight:800;border-radius:999px;padding:4px 13px;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;box-shadow:0 4px 12px rgba(255,179,0,.35)}
+
+/* ── Cajas: cada una con su sombra de color (--sh = r,g,b) ── */
+.card{
+  --sh:124,77,255;
+  background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 18px;margin:18px 0;
+  box-shadow:0 2px 5px rgba(var(--sh),.10),0 12px 30px rgba(var(--sh),.18);
+  transition:transform .18s ease,box-shadow .18s ease;
+  animation:rise .5s ease both;
+}
+.card:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(var(--sh),.14),0 18px 40px rgba(var(--sh),.28)}
+.card h2{margin:0 0 8px;font-size:1.15rem;color:#13203a}
+.card.concept{--sh:255,179,0;border-left:7px solid var(--accent);background:linear-gradient(135deg,#fff8e1,#fff 65%)}
+.card.reto{--sh:15,157,120;border-left:7px solid var(--green);background:linear-gradient(135deg,#e5f8f1,#fff 65%)}
+.card.seen{--sh:47,109,246;border-left:7px solid var(--blue);background:linear-gradient(135deg,#eaf1ff,#fff 65%)}
+.reto .big{font-size:1.25rem;font-weight:700;color:#0b5c46}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:700px){.grid2{grid-template-columns:1fr}}
 ul.clean{margin:6px 0 0;padding-left:20px}
 ul.clean li{margin:6px 0}
-.with{border-top:4px solid var(--blue)}
-.without{border-top:4px solid var(--accent)}
-.scene{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:12px}
+ul.clean li::marker{color:var(--blue)}
+.with{--sh:47,109,246;border-top:6px solid var(--blue)}
+.without{--sh:245,124,0;border-top:6px solid var(--orange)}
+.without ul.clean li::marker{color:var(--orange)}
+
+/* Pizarras */
+.scene{
+  --sh:124,77,255;
+  background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:12px;
+  box-shadow:0 2px 5px rgba(var(--sh),.10),0 10px 24px rgba(var(--sh),.18);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.scene:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(var(--sh),.14),0 16px 34px rgba(var(--sh),.26)}
 .scene h3{margin:0 0 8px;font-size:1rem}
-.scene.no h3{color:var(--red)} .scene.yes h3{color:var(--green)}
-.pitch{width:100%;height:auto;display:block;border-radius:10px;background:#145a38}
-.cap{min-height:2.6em;margin:8px 2px 4px;font-weight:600}
+.scene.no{--sh:214,57,74;background:#fff5f6;border-color:#f4c7cc}
+.scene.yes{--sh:15,157,120;background:#f0fbf7;border-color:#bfe8da}
+.scene.no h3{color:var(--red)} .scene.yes h3{color:#0b7a5c}
+.pitch{width:100%;height:auto;display:block;border-radius:12px;background:#1a7a4a;box-shadow:0 4px 12px rgba(20,90,56,.28)}
+.cap{min-height:2.7em;margin:10px 2px 6px;font-weight:600;color:var(--txt)}
 .ctrl{display:flex;gap:8px}
-.btn{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:10px;padding:8px 12px;font:inherit;font-size:.9rem;cursor:pointer}
-.btn:hover{border-color:var(--blue)}
-.btn.primary{background:var(--accent);color:#1b1b1b;border-color:var(--accent);font-weight:800}
-.key{margin-top:10px;background:#0e1730;border-radius:10px;padding:10px 12px}
+
+/* Botones */
+.btn{
+  appearance:none;border:1px solid var(--line);background:#fff;color:var(--txt);border-radius:12px;padding:9px 14px;font:inherit;font-size:.92rem;cursor:pointer;
+  box-shadow:0 2px 6px rgba(47,109,246,.10);transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;
+}
+.btn:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 6px 14px rgba(47,109,246,.22)}
+.btn:active{transform:scale(.97)}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid rgba(47,109,246,.35);outline-offset:2px}
+.btn.primary{background:linear-gradient(180deg,#ffc933,#ffb300);color:#2a1d00;border-color:#e6a100;font-weight:800;box-shadow:0 6px 16px rgba(255,160,0,.40)}
+.btn.primary:hover{box-shadow:0 10px 22px rgba(255,160,0,.55)}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+
+.key{margin-top:12px;background:#fff8e1;border:1px solid #ffe0a3;border-radius:12px;padding:11px 14px;box-shadow:0 6px 16px rgba(255,179,0,.18)}
 .muted{color:var(--muted)}
-.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:.85rem;margin:6px 0 0}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:.88rem;margin:6px 0 0}
 .dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .past button{margin:4px 6px 4px 0}
-select{background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:8px}
-.card.seen{border-left:6px solid var(--blue)}
-.evid{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
-.evid img{height:150px;width:auto;border-radius:10px;border:1px solid var(--line);flex:0 0 auto}
-footer{color:var(--muted);text-align:center;margin-top:34px;font-size:.85rem}
-@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+select{background:#fff;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:8px}
+.evid{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px}
+.evid img{height:150px;width:auto;border-radius:12px;border:1px solid var(--line);flex:0 0 auto;box-shadow:0 6px 16px rgba(47,109,246,.25)}
+footer{color:var(--muted);text-align:center;margin-top:34px;font-size:.88rem}
+
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
 
 </style>
 <style>
-  .badge.coach{background:var(--blue);color:#fff}
+  .badge.coach{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(47,109,246,.35)}
   input,textarea{font:inherit;font-size:16px}
-  textarea,input[type=date],input[type=file],input[type=url],input[type=password],input[type=text]{width:100%;background:#0e1730;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:11px}
+  textarea,input[type=date],input[type=file],input[type=url],input[type=password],input[type=text]{width:100%;background:#fff;color:var(--txt);border:1.5px solid var(--line);border-radius:12px;padding:11px;box-shadow:inset 0 1px 3px rgba(28,36,52,.06)}
+  textarea:focus,input:focus{border-color:var(--blue)}
   textarea{min-height:92px;resize:vertical}
   .btn{min-height:44px}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
-  .chips label,.chips button{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;color:var(--txt);font:inherit;font-size:.92rem}
-  .chips input{accent-color:var(--accent);width:18px;height:18px}
+  .chips label,.chips button{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;color:var(--txt);font:inherit;font-size:.92rem;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease}
+  .chips label:hover,.chips button:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 5px 12px rgba(47,109,246,.2)}
+  .chips input{accent-color:var(--blue);width:18px;height:18px}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
   .row>div{flex:1 1 180px}
-  .tabs{display:flex;gap:8px;margin:18px 0 0;flex-wrap:wrap}
+  .tabs{display:flex;gap:8px;margin:20px 0 0;flex-wrap:wrap}
   .tabs .btn{flex:1 1 auto}
-  .tabs .btn.on{background:var(--accent);color:#1b1b1b;border-color:var(--accent);font-weight:800}
-  .block{border-left:5px solid var(--blue);background:var(--card2);border-radius:12px;padding:12px 14px;margin:12px 0}
-  .block h3{margin:0 0 4px;font-size:1.02rem}
-  .block .min{float:right;background:var(--accent);color:#1b1b1b;border-radius:999px;padding:1px 10px;font-weight:800;font-size:.85rem}
+  .tabs .btn.on{background:linear-gradient(180deg,#ffc933,#ffb300);color:#2a1d00;border-color:#e6a100;font-weight:800;box-shadow:0 6px 16px rgba(255,160,0,.40)}
+  .block{--sh:47,109,246;border-left:6px solid var(--blue);background:#fff;border-radius:16px;padding:13px 15px;margin:14px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 2px 5px rgba(var(--sh),.10),0 10px 26px rgba(var(--sh),.18);transition:transform .18s ease,box-shadow .18s ease;animation:rise .5s ease both}
+  .block:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(var(--sh),.14),0 16px 36px rgba(var(--sh),.28)}
+  .block.c0{--sh:255,179,0;border-left-color:var(--accent);background:linear-gradient(135deg,#fff8e1,#fff 60%)}
+  .block.c1{--sh:47,109,246;border-left-color:var(--blue);background:linear-gradient(135deg,#eaf1ff,#fff 60%)}
+  .block.c2{--sh:124,77,255;border-left-color:var(--violet);background:linear-gradient(135deg,#f1ebff,#fff 60%)}
+  .block.c3{--sh:15,157,120;border-left-color:var(--green);background:linear-gradient(135deg,#e5f8f1,#fff 60%)}
+  .block h3{margin:0 0 4px;font-size:1.04rem;color:#13203a}
+  .block .min{float:right;background:var(--accent);color:#2a1d00;border-radius:999px;padding:2px 11px;font-weight:800;font-size:.85rem;box-shadow:0 3px 8px rgba(255,179,0,.4)}
   .steps li{margin:8px 0}
-  code{background:#0e1730;padding:2px 6px;border-radius:6px;word-break:break-all}
+  code{background:#eaf0fa;color:#1c2434;padding:2px 6px;border-radius:6px;word-break:break-all}
   .hist .btn{margin:4px 6px 4px 0;text-align:left}
   .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .thumbs img{height:84px;border-radius:8px;border:1px solid var(--line)}
+  .thumbs img{height:84px;border-radius:10px;border:1px solid var(--line);box-shadow:0 4px 10px rgba(47,109,246,.22)}
   .topbar{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 0}
-  .topbar a,.topbar button{color:var(--muted);font-size:.9rem;background:none;border:0;text-decoration:underline;cursor:pointer;padding:6px 0;font-family:inherit}
+  .topbar a,.topbar button{color:var(--blue);font-size:.92rem;background:none;border:0;text-decoration:underline;cursor:pointer;padding:6px 0;font-family:inherit}
   .status{display:inline-block;border-radius:999px;padding:3px 12px;font-weight:800;font-size:.85rem}
-  .status.on{background:var(--green);color:#06281d}
+  .status.on{background:#d9f5ea;color:#0b6b50;border:1px solid #9be0c6;box-shadow:0 4px 10px rgba(15,157,120,.25)}
   .status.off{background:var(--card2);color:var(--muted);border:1px solid var(--line)}
   .actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-  .btn.danger{border-color:#7a2b3a;color:#ff9aa8}
-  details.help{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:10px 0}
-  details.help summary{cursor:pointer;font-weight:700}
-  .evalcard{border-left:6px solid var(--green)}
+  .btn.danger{border-color:#f0b4bb;color:#c62f3b;background:#fff5f6;box-shadow:0 2px 6px rgba(214,57,74,.12)}
+  .btn.danger:hover{border-color:var(--red);box-shadow:0 6px 14px rgba(214,57,74,.25)}
+  details.help{background:#eef4ff;border:1px solid #cfdcf8;border-radius:14px;padding:10px 14px;margin:12px 0;box-shadow:0 6px 16px rgba(47,109,246,.12)}
+  details.help summary,details.card summary{cursor:pointer;font-weight:700}
+  .evalcard{--sh:15,157,120;border-left:7px solid var(--green);background:linear-gradient(135deg,#e5f8f1,#fff 60%)}
+  #login{--sh:47,109,246;border-top:6px solid var(--blue)}
+  #panelIA{--sh:255,179,0;border-top:6px solid var(--accent)}
+  #panelGen{--sh:124,77,255;border-top:6px solid var(--violet)}
+  #panelPub{--sh:15,157,120;border-top:6px solid var(--green)}
+  #hist{--sh:47,109,246}
   [hidden]{display:none!important}
   @media print{
-    body{background:#fff;color:#000}
-    .no-print,.tabs,header.top .sub,#panelGen,#panelPub,#panelImp,#panelIA,#panelHow,#hist,#pane-player,.topbar,footer{display:none!important}
-    .card,.block{background:#fff;border:1px solid #bbb;color:#000}
+    body{background:#fff!important;color:#000}
+    .card,.block{animation:none;box-shadow:none;background:#fff!important;border:1px solid #bbb;color:#000}
     .block{border-left:5px solid #444}
-    .block .min{background:#ddd}
+    .block .min{background:#ddd;box-shadow:none}
+    .no-print,.tabs,header.top .sub,#panelGen,#panelPub,#panelImp,#panelIA,#panelHow,#hist,#pane-player,.topbar,footer{display:none!important}
     #pane-mister{display:block!important}
   }
 </style>
@@ -150,7 +209,7 @@ footer{color:var(--muted);text-align:center;margin-top:34px;font-size:.85rem}
       <textarea id="mediaNota" style="min-height:84px" placeholder="Ej: «Evalúa si este ejercicio sirve para que dejen de quedarse parados tras el pase y créame una sesión adaptada a 4 jugadores de campo.»"></textarea>
       <div class="chips" id="notaChips"></div>
 
-      <label style="display:flex;gap:10px;align-items:center;margin-top:6px"><input type="checkbox" id="mostrarFotos" checked style="width:20px;height:20px;accent-color:var(--accent)"> <span>Mostrar los fotogramas a los jugadores en su ficha</span></label>
+      <label style="display:flex;gap:10px;align-items:center;margin-top:6px"><input type="checkbox" id="mostrarFotos" checked style="width:20px;height:20px;accent-color:var(--blue)"> <span>Mostrar los fotogramas a los jugadores en su ficha</span></label>
       <div class="muted" id="fotosHint" style="margin:4px 0 0 30px"></div>
 
       <div style="margin-top:14px"><button class="btn primary" type="button" id="btnIA" style="padding:12px 18px">🔎 Analizar y crear entrenamiento</button></div>
@@ -947,7 +1006,7 @@ footer{color:var(--muted);text-align:center;margin-top:34px;font-size:.85rem}
   function renderMister(s) {
     const m = s.mister || {}, root = $('#pane-mister');
     root.replaceChildren();
-    const fuente = /^https?:\/\//.test(m.fuente || '') ? h('p', {}, h('b', {}, 'Vídeo de referencia: '), h('a', { href: m.fuente, target: '_blank', rel: 'noopener noreferrer', style: 'color:var(--accent)' }, m.fuente)) : null;
+    const fuente = /^https?:\/\//.test(m.fuente || '') ? h('p', {}, h('b', {}, 'Vídeo de referencia: '), h('a', { href: m.fuente, target: '_blank', rel: 'noopener noreferrer', style: 'color:var(--blue)' }, m.fuente)) : null;
     root.append(h('div', { class: 'card' },
       h('h2', {}, '📋 ' + s.titulo),
       h('div', { class: 'muted' }, FutsalRender.fmtFecha(s.fecha) + ' · Infantil 2º año · 4 jugadores de campo + 2 porteros'),
@@ -966,7 +1025,7 @@ footer{color:var(--muted);text-align:center;margin-top:34px;font-size:.85rem}
       ev.adaptacion ? h('p', {}, h('b', {}, '🎯 Adaptación a tu equipo: '), ev.adaptacion) : null
     ));
     if (m.manual && m.manual.length) root.append(h('div', { class: 'card' }, h('h2', {}, '📖 Base en el Manual UEFA de futsal'), lista(m.manual)));
-    (m.bloques || []).forEach(b => root.append(h('div', { class: 'block' },
+    (m.bloques || []).forEach((b, i) => root.append(h('div', { class: 'block c' + (i % 4) },
       h('span', { class: 'min' }, b.min + ' min'), h('h3', {}, b.nombre), h('div', {}, b.tarea), lista(b.reglas))));
     root.append(h('div', { class: 'card' },
       h('h2', {}, '🗣 Pautas de feedback (método socrático)'),

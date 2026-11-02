@@ -4,48 +4,62 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#0b1220">
+<meta name="theme-color" content="#f3f7fd">
+<meta name="color-scheme" content="light">
 <title>Panel del míster · Fútbol sala Infantil</title>
 <link rel="stylesheet" href="../docs/style.css">
 <style>
-  .badge.coach{background:var(--blue);color:#fff}
+  .badge.coach{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(47,109,246,.35)}
   input,textarea{font:inherit;font-size:16px}
-  textarea,input[type=date],input[type=file],input[type=url],input[type=password],input[type=text]{width:100%;background:#0e1730;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:11px}
+  textarea,input[type=date],input[type=file],input[type=url],input[type=password],input[type=text]{width:100%;background:#fff;color:var(--txt);border:1.5px solid var(--line);border-radius:12px;padding:11px;box-shadow:inset 0 1px 3px rgba(28,36,52,.06)}
+  textarea:focus,input:focus{border-color:var(--blue)}
   textarea{min-height:92px;resize:vertical}
   .btn{min-height:44px}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
-  .chips label,.chips button{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;color:var(--txt);font:inherit;font-size:.92rem}
-  .chips input{accent-color:var(--accent);width:18px;height:18px}
+  .chips label,.chips button{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;color:var(--txt);font:inherit;font-size:.92rem;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease}
+  .chips label:hover,.chips button:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 5px 12px rgba(47,109,246,.2)}
+  .chips input{accent-color:var(--blue);width:18px;height:18px}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
   .row>div{flex:1 1 180px}
-  .tabs{display:flex;gap:8px;margin:18px 0 0;flex-wrap:wrap}
+  .tabs{display:flex;gap:8px;margin:20px 0 0;flex-wrap:wrap}
   .tabs .btn{flex:1 1 auto}
-  .tabs .btn.on{background:var(--accent);color:#1b1b1b;border-color:var(--accent);font-weight:800}
-  .block{border-left:5px solid var(--blue);background:var(--card2);border-radius:12px;padding:12px 14px;margin:12px 0}
-  .block h3{margin:0 0 4px;font-size:1.02rem}
-  .block .min{float:right;background:var(--accent);color:#1b1b1b;border-radius:999px;padding:1px 10px;font-weight:800;font-size:.85rem}
+  .tabs .btn.on{background:linear-gradient(180deg,#ffc933,#ffb300);color:#2a1d00;border-color:#e6a100;font-weight:800;box-shadow:0 6px 16px rgba(255,160,0,.40)}
+  .block{--sh:47,109,246;border-left:6px solid var(--blue);background:#fff;border-radius:16px;padding:13px 15px;margin:14px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 2px 5px rgba(var(--sh),.10),0 10px 26px rgba(var(--sh),.18);transition:transform .18s ease,box-shadow .18s ease;animation:rise .5s ease both}
+  .block:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(var(--sh),.14),0 16px 36px rgba(var(--sh),.28)}
+  .block.c0{--sh:255,179,0;border-left-color:var(--accent);background:linear-gradient(135deg,#fff8e1,#fff 60%)}
+  .block.c1{--sh:47,109,246;border-left-color:var(--blue);background:linear-gradient(135deg,#eaf1ff,#fff 60%)}
+  .block.c2{--sh:124,77,255;border-left-color:var(--violet);background:linear-gradient(135deg,#f1ebff,#fff 60%)}
+  .block.c3{--sh:15,157,120;border-left-color:var(--green);background:linear-gradient(135deg,#e5f8f1,#fff 60%)}
+  .block h3{margin:0 0 4px;font-size:1.04rem;color:#13203a}
+  .block .min{float:right;background:var(--accent);color:#2a1d00;border-radius:999px;padding:2px 11px;font-weight:800;font-size:.85rem;box-shadow:0 3px 8px rgba(255,179,0,.4)}
   .steps li{margin:8px 0}
-  code{background:#0e1730;padding:2px 6px;border-radius:6px;word-break:break-all}
+  code{background:#eaf0fa;color:#1c2434;padding:2px 6px;border-radius:6px;word-break:break-all}
   .hist .btn{margin:4px 6px 4px 0;text-align:left}
   .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .thumbs img{height:84px;border-radius:8px;border:1px solid var(--line)}
+  .thumbs img{height:84px;border-radius:10px;border:1px solid var(--line);box-shadow:0 4px 10px rgba(47,109,246,.22)}
   .topbar{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 0}
-  .topbar a,.topbar button{color:var(--muted);font-size:.9rem;background:none;border:0;text-decoration:underline;cursor:pointer;padding:6px 0;font-family:inherit}
+  .topbar a,.topbar button{color:var(--blue);font-size:.92rem;background:none;border:0;text-decoration:underline;cursor:pointer;padding:6px 0;font-family:inherit}
   .status{display:inline-block;border-radius:999px;padding:3px 12px;font-weight:800;font-size:.85rem}
-  .status.on{background:var(--green);color:#06281d}
+  .status.on{background:#d9f5ea;color:#0b6b50;border:1px solid #9be0c6;box-shadow:0 4px 10px rgba(15,157,120,.25)}
   .status.off{background:var(--card2);color:var(--muted);border:1px solid var(--line)}
   .actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-  .btn.danger{border-color:#7a2b3a;color:#ff9aa8}
-  details.help{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:10px 0}
-  details.help summary{cursor:pointer;font-weight:700}
-  .evalcard{border-left:6px solid var(--green)}
+  .btn.danger{border-color:#f0b4bb;color:#c62f3b;background:#fff5f6;box-shadow:0 2px 6px rgba(214,57,74,.12)}
+  .btn.danger:hover{border-color:var(--red);box-shadow:0 6px 14px rgba(214,57,74,.25)}
+  details.help{background:#eef4ff;border:1px solid #cfdcf8;border-radius:14px;padding:10px 14px;margin:12px 0;box-shadow:0 6px 16px rgba(47,109,246,.12)}
+  details.help summary,details.card summary{cursor:pointer;font-weight:700}
+  .evalcard{--sh:15,157,120;border-left:7px solid var(--green);background:linear-gradient(135deg,#e5f8f1,#fff 60%)}
+  #login{--sh:47,109,246;border-top:6px solid var(--blue)}
+  #panelIA{--sh:255,179,0;border-top:6px solid var(--accent)}
+  #panelGen{--sh:124,77,255;border-top:6px solid var(--violet)}
+  #panelPub{--sh:15,157,120;border-top:6px solid var(--green)}
+  #hist{--sh:47,109,246}
   [hidden]{display:none!important}
   @media print{
-    body{background:#fff;color:#000}
-    .no-print,.tabs,header.top .sub,#panelGen,#panelPub,#panelImp,#panelIA,#panelHow,#hist,#pane-player,.topbar,footer{display:none!important}
-    .card,.block{background:#fff;border:1px solid #bbb;color:#000}
+    body{background:#fff!important;color:#000}
+    .card,.block{animation:none;box-shadow:none;background:#fff!important;border:1px solid #bbb;color:#000}
     .block{border-left:5px solid #444}
-    .block .min{background:#ddd}
+    .block .min{background:#ddd;box-shadow:none}
+    .no-print,.tabs,header.top .sub,#panelGen,#panelPub,#panelImp,#panelIA,#panelHow,#hist,#pane-player,.topbar,footer{display:none!important}
     #pane-mister{display:block!important}
   }
 </style>
@@ -105,7 +119,7 @@
       <textarea id="mediaNota" style="min-height:84px" placeholder="Ej: «Evalúa si este ejercicio sirve para que dejen de quedarse parados tras el pase y créame una sesión adaptada a 4 jugadores de campo.»"></textarea>
       <div class="chips" id="notaChips"></div>
 
-      <label style="display:flex;gap:10px;align-items:center;margin-top:6px"><input type="checkbox" id="mostrarFotos" checked style="width:20px;height:20px;accent-color:var(--accent)"> <span>Mostrar los fotogramas a los jugadores en su ficha</span></label>
+      <label style="display:flex;gap:10px;align-items:center;margin-top:6px"><input type="checkbox" id="mostrarFotos" checked style="width:20px;height:20px;accent-color:var(--blue)"> <span>Mostrar los fotogramas a los jugadores en su ficha</span></label>
       <div class="muted" id="fotosHint" style="margin:4px 0 0 30px"></div>
 
       <div style="margin-top:14px"><button class="btn primary" type="button" id="btnIA" style="padding:12px 18px">🔎 Analizar y crear entrenamiento</button></div>
@@ -275,7 +289,7 @@
   function renderMister(s) {
     const m = s.mister || {}, root = $('#pane-mister');
     root.replaceChildren();
-    const fuente = /^https?:\/\//.test(m.fuente || '') ? h('p', {}, h('b', {}, 'Vídeo de referencia: '), h('a', { href: m.fuente, target: '_blank', rel: 'noopener noreferrer', style: 'color:var(--accent)' }, m.fuente)) : null;
+    const fuente = /^https?:\/\//.test(m.fuente || '') ? h('p', {}, h('b', {}, 'Vídeo de referencia: '), h('a', { href: m.fuente, target: '_blank', rel: 'noopener noreferrer', style: 'color:var(--blue)' }, m.fuente)) : null;
     root.append(h('div', { class: 'card' },
       h('h2', {}, '📋 ' + s.titulo),
       h('div', { class: 'muted' }, FutsalRender.fmtFecha(s.fecha) + ' · Infantil 2º año · 4 jugadores de campo + 2 porteros'),
@@ -294,7 +308,7 @@
       ev.adaptacion ? h('p', {}, h('b', {}, '🎯 Adaptación a tu equipo: '), ev.adaptacion) : null
     ));
     if (m.manual && m.manual.length) root.append(h('div', { class: 'card' }, h('h2', {}, '📖 Base en el Manual UEFA de futsal'), lista(m.manual)));
-    (m.bloques || []).forEach(b => root.append(h('div', { class: 'block' },
+    (m.bloques || []).forEach((b, i) => root.append(h('div', { class: 'block c' + (i % 4) },
       h('span', { class: 'min' }, b.min + ' min'), h('h3', {}, b.nombre), h('div', {}, b.tarea), lista(b.reglas))));
     root.append(h('div', { class: 'card' },
       h('h2', {}, '🗣 Pautas de feedback (método socrático)'),
