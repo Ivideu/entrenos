@@ -4,32 +4,45 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b1220">
 <title>Panel del míster · Fútbol sala Infantil</title>
 <link rel="stylesheet" href="../docs/style.css">
 <style>
   .badge.coach{background:var(--blue);color:#fff}
-  textarea,input[type=date],input[type=file]{width:100%;background:#0e1730;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit}
+  input,textarea{font:inherit;font-size:16px}
+  textarea,input[type=date],input[type=file],input[type=url],input[type=password],input[type=text]{width:100%;background:#0e1730;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:11px}
   textarea{min-height:92px;resize:vertical}
+  .btn{min-height:44px}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
-  .chips label{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer}
+  .chips label,.chips button{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;color:var(--txt);font:inherit;font-size:.92rem}
   .chips input{accent-color:var(--accent);width:18px;height:18px}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
   .row>div{flex:1 1 180px}
   .tabs{display:flex;gap:8px;margin:18px 0 0;flex-wrap:wrap}
+  .tabs .btn{flex:1 1 auto}
   .tabs .btn.on{background:var(--accent);color:#1b1b1b;border-color:var(--accent);font-weight:800}
   .block{border-left:5px solid var(--blue);background:var(--card2);border-radius:12px;padding:12px 14px;margin:12px 0}
   .block h3{margin:0 0 4px;font-size:1.02rem}
   .block .min{float:right;background:var(--accent);color:#1b1b1b;border-radius:999px;padding:1px 10px;font-weight:800;font-size:.85rem}
   .steps li{margin:8px 0}
-  .warn{border-left:5px solid var(--red);background:#2a1620}
-  code{background:#0e1730;padding:2px 6px;border-radius:6px}
-  .hist .btn{margin:4px 6px 4px 0}
+  code{background:#0e1730;padding:2px 6px;border-radius:6px;word-break:break-all}
+  .hist .btn{margin:4px 6px 4px 0;text-align:left}
   .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
   .thumbs img{height:84px;border-radius:8px;border:1px solid var(--line)}
+  .topbar{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 0}
+  .topbar a,.topbar button{color:var(--muted);font-size:.9rem;background:none;border:0;text-decoration:underline;cursor:pointer;padding:6px 0;font-family:inherit}
+  .status{display:inline-block;border-radius:999px;padding:3px 12px;font-weight:800;font-size:.85rem}
+  .status.on{background:var(--green);color:#06281d}
+  .status.off{background:var(--card2);color:var(--muted);border:1px solid var(--line)}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+  .btn.danger{border-color:#7a2b3a;color:#ff9aa8}
+  details.help{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:10px 0}
+  details.help summary{cursor:pointer;font-weight:700}
+  .evalcard{border-left:6px solid var(--green)}
   [hidden]{display:none!important}
   @media print{
     body{background:#fff;color:#000}
-    .no-print,.tabs,header.top .sub,#panelGen,#panelPub,#panelImp,#hist,#pane-player,footer{display:none!important}
+    .no-print,.tabs,header.top .sub,#panelGen,#panelPub,#panelImp,#panelIA,#panelHow,#hist,#pane-player,.topbar,footer{display:none!important}
     .card,.block{background:#fff;border:1px solid #bbb;color:#000}
     .block{border-left:5px solid #444}
     .block .min{background:#ddd}
@@ -42,93 +55,121 @@
   <header class="top">
     <span class="badge coach">Solo para el míster</span>
     <h1>Panel del míster 🧠</h1>
-    <div class="sub">Cuéntame lo que has visto → te preparo el entrenamiento y la ficha animada para los jugadores.</div>
+    <div class="sub">Sube un vídeo o un dibujo → te preparo el entrenamiento y la ficha animada para los jugadores.</div>
   </header>
 
-  <section class="card" id="panelHow">
-    <h2>¿Cómo funciona esto? (30 segundos)</h2>
-    <ol class="steps">
-      <li><b>Tú aportas la idea:</b> sube la foto de un dibujo, un vídeo, o escribe con palabras lo que has visto.</li>
-      <li><b>La web te prepara dos cosas:</b> tu sesión de entrenamiento (privada, solo la ves tú) y la ficha con pizarras animadas para los jugadores.</li>
-      <li><b>Tú decides:</b> miras las dos pestañas y, si te gusta, pulsas <i>Publicar</i> para que los jugadores la vean en su web.</li>
-    </ol>
-    <div class="muted">Este panel es solo para ti: ábrelo en tu ordenador (<code>mister/index.html</code>). Los jugadores nunca ven esta página.</div>
-  </section>
-
-  <section class="card" id="panelIA">
-    <h2>A · Sube un dibujo o un vídeo</h2>
-    <div class="muted" style="margin-bottom:8px">Foto de una pizarra o dibujo hecho a mano (puedes subir varias), o un vídeo corto de un entrenamiento o partido. La IA lo interpreta y te lo convierte en entrenamiento.</div>
-    <input type="file" id="mediaFile" accept="image/*,video/*" multiple>
-    <textarea id="mediaNota" style="min-height:64px;margin-top:10px" placeholder="(Opcional) Cuéntame qué quieres trabajar o qué ves: «las flechas son los movimientos, quiero que se muevan sin balón»…"></textarea>
-    <details id="iaCfg" style="margin-top:10px">
-      <summary class="muted" style="cursor:pointer">⚙️ Conexión con la IA (se rellena una sola vez)</summary>
-      <div class="row" style="margin-top:8px">
-        <div><label class="muted" for="iaUrl">Dirección de tu web en Netlify</label><input type="url" id="iaUrl" placeholder="https://mi-equipo.netlify.app" style="width:100%;background:#0e1730;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit"></div>
-        <div><label class="muted" for="iaPass">Tu contraseña de míster</label><input type="password" id="iaPass" autocomplete="off" style="width:100%;background:#0e1730;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit"></div>
-      </div>
-      <div class="muted" style="margin-top:6px">Se guardan solo en este navegador. Mira el README para crearlas (5 minutos).</div>
-    </details>
-    <div style="margin-top:12px"><button class="btn primary" type="button" id="btnIA" style="padding:12px 18px">🔎 Analizar y crear entrenamiento</button> <span class="muted" id="iaMsg" role="status"></span></div>
-    <div id="iaThumbs" class="thumbs"></div>
-  </section>
-
-  <!-- 1. Generar -->
-  <section class="card" id="panelGen">
-    <h2>B · O cuéntame con palabras lo que has visto</h2>
-    <textarea id="idea" placeholder="Ej: Se mueven en bloque, sin crear espacios y se quedan estáticos esperando el balón."></textarea>
-    <div class="muted" style="margin-top:6px">Marca el/los diagnósticos que encajan (se marcan solos según lo que escribas). El primero marcado será el foco principal.</div>
-    <div class="chips" id="chips"></div>
-    <div class="row">
-      <div><label class="muted" for="fecha">Fecha del entrenamiento</label><input type="date" id="fecha"></div>
-      <div><button class="btn primary" type="button" id="btnGen" style="width:100%;padding:12px">⚡ Generar entrenamiento</button></div>
+  <!-- Entrada con contraseña -->
+  <section class="card" id="login">
+    <h2>🔒 Entra con tu contraseña</h2>
+    <div id="loginUrlRow" hidden style="margin-bottom:10px">
+      <label class="muted" for="loginUrl">Dirección de tu web (solo si abres este archivo desde el ordenador)</label>
+      <input type="url" id="loginUrl" placeholder="https://mi-equipo.netlify.app">
     </div>
+    <label class="muted" for="loginPass">Contraseña de míster</label>
+    <input type="password" id="loginPass" autocomplete="current-password">
+    <div style="margin-top:12px"><button class="btn primary" type="button" id="btnLogin" style="padding:12px 20px">Entrar</button> <span class="muted" id="loginMsg" role="status"></span></div>
   </section>
 
-  <div id="resultado" hidden>
-    <div class="tabs no-print">
-      <button class="btn on" type="button" data-pane="mister">📋 Sesión del míster</button>
-      <button class="btn" type="button" data-pane="player">👀 Vista del jugador</button>
-      <button class="btn" type="button" data-pane="pub">🚀 Publicar</button>
+  <div id="app" hidden>
+    <div class="topbar no-print">
+      <a id="linkJug" href="#" target="_blank" rel="noopener">👀 Ver la web de los jugadores</a>
+      <button type="button" id="btnSalir">Cerrar sesión</button>
     </div>
 
-    <section id="pane-mister"></section>
-
-    <section id="pane-player" hidden>
-      <header class="top" style="padding-top:14px">
-        <span class="badge">Infantil · 2º año</span>
-        <h1 id="pTitulo"></h1>
-        <div class="sub" id="pFecha"></div>
-      </header>
-      <div id="pFicha"></div>
-    </section>
-
-    <section id="panelPub" hidden class="card">
-      <h2>🚀 Publicar la ficha para los jugadores</h2>
+    <section class="card" id="panelHow">
+      <h2>¿Cómo funciona? (30 segundos)</h2>
       <ol class="steps">
-        <li>(Opcional, si ya tienes entrenamientos publicados) carga tu <code>docs/sessions.json</code> actual para no perderlos:
-          <input type="file" id="fileSess" accept="application/json,.json"></li>
-        <li><button class="btn primary" type="button" id="btnDownload">⬇ Descargar sessions.json actualizado</button></li>
-        <li>Sustituye el archivo <code>docs/sessions.json</code> de tu proyecto por el descargado y sube el cambio (commit en GitHub o arrastra la carpeta <code>docs</code> a Netlify).</li>
+        <li><b>Aportas la idea:</b> un vídeo, un dibujo, capturas, o solo palabras.</li>
+        <li><b>La IA prepara dos cosas:</b> tu sesión (privada) y la ficha con pizarras animadas para los jugadores.</li>
+        <li><b>Tú decides:</b> la revisas y, si te gusta, pulsas <i>Publicar</i>. Los jugadores la ven al momento en su web.</li>
       </ol>
-      <p class="muted" id="pubMsg"></p>
-      <p class="muted">⚠️ Solo se publica la <b>parte del jugador</b>. Tu sesión de entrenador no sale de tu ordenador.</p>
     </section>
+
+    <section class="card" id="panelIA">
+      <h2>A · Sube un vídeo, un dibujo o capturas</h2>
+      <input type="file" id="mediaFile" accept="video/*,image/*" multiple>
+
+      <details class="help">
+        <summary>📱 ¿Cómo uso un vídeo de Instagram?</summary>
+        <ol class="steps" style="margin:8px 0 0">
+          <li>Instagram no deja descargar los vídeos de otras cuentas desde una web, así que <b>graba la pantalla</b> mientras se reproduce. <b>iPhone:</b> desliza desde arriba a la derecha → botón de grabar. <b>Android:</b> ajustes rápidos → <i>Grabar pantalla</i>.</li>
+          <li>Pulsa el botón de arriba y elige esa grabación (o 4-6 capturas de los momentos clave).</li>
+          <li>Pega el enlace del vídeo abajo si quieres guardarlo como referencia (la IA no entra en Instagram, solo ve lo que subes).</li>
+        </ol>
+      </details>
+
+      <label class="muted" for="mediaLink" style="display:block;margin-top:10px">Enlace del vídeo (opcional, solo para que lo recuerdes)</label>
+      <input type="url" id="mediaLink" placeholder="https://www.instagram.com/reel/…">
+
+      <label class="muted" for="mediaNota" style="display:block;margin-top:10px">¿Qué quieres que haga con él?</label>
+      <textarea id="mediaNota" style="min-height:84px" placeholder="Ej: «Evalúa si este ejercicio sirve para que dejen de quedarse parados tras el pase y créame una sesión adaptada a 4 jugadores de campo.»"></textarea>
+      <div class="chips" id="notaChips"></div>
+
+      <label style="display:flex;gap:10px;align-items:center;margin-top:6px"><input type="checkbox" id="mostrarFotos" checked style="width:20px;height:20px;accent-color:var(--accent)"> <span>Mostrar los fotogramas a los jugadores en su ficha</span></label>
+      <div class="muted" id="fotosHint" style="margin:4px 0 0 30px"></div>
+
+      <div style="margin-top:14px"><button class="btn primary" type="button" id="btnIA" style="padding:12px 18px">🔎 Analizar y crear entrenamiento</button></div>
+      <div class="muted" id="iaMsg" role="status" style="margin-top:8px"></div>
+      <div id="iaThumbs" class="thumbs"></div>
+    </section>
+
+    <section class="card" id="panelGen">
+      <h2>B · O cuéntame con palabras lo que has visto</h2>
+      <textarea id="idea" placeholder="Ej: Se mueven en bloque, sin crear espacios y se quedan estáticos esperando el balón."></textarea>
+      <div class="muted" style="margin-top:6px">Marca los diagnósticos que encajan (se marcan solos según lo que escribas). El primero marcado es el foco principal.</div>
+      <div class="chips" id="chips"></div>
+      <div class="row">
+        <div><label class="muted" for="fecha">Fecha del entrenamiento</label><input type="date" id="fecha"></div>
+        <div><button class="btn primary" type="button" id="btnGen" style="width:100%;padding:12px">⚡ Generar entrenamiento</button></div>
+      </div>
+    </section>
+
+    <div id="resultado" hidden>
+      <div class="tabs no-print">
+        <button class="btn on" type="button" data-pane="mister">📋 Sesión del míster</button>
+        <button class="btn" type="button" data-pane="player">👀 Vista del jugador</button>
+        <button class="btn" type="button" data-pane="pub">🚀 Publicar</button>
+      </div>
+
+      <section id="pane-mister"></section>
+
+      <section id="pane-player" hidden>
+        <header class="top" style="padding-top:14px">
+          <span class="badge">Infantil · 2º año</span>
+          <h1 id="pTitulo"></h1>
+          <div class="sub" id="pFecha"></div>
+        </header>
+        <div id="pFicha"></div>
+      </section>
+
+      <section id="panelPub" hidden class="card">
+        <h2>🚀 Publicar para los jugadores</h2>
+        <p>Estado: <span class="status off" id="pubStatus">No publicada</span></p>
+        <div class="actions">
+          <button class="btn primary" type="button" id="btnPublish">🚀 Publicar ahora</button>
+          <button class="btn" type="button" id="btnUnpublish" hidden>Quitar de la web</button>
+          <button class="btn" type="button" id="btnShare">📤 Compartir el enlace</button>
+          <button class="btn danger" type="button" id="btnDelete">🗑 Borrar sesión</button>
+        </div>
+        <p class="muted" id="pubMsg" role="status"></p>
+        <p class="muted">⚠️ Los jugadores solo ven la <b>parte del jugador</b>. Tu sesión de entrenador y las notas son privadas. Antes de publicar, mira la pestaña <i>Vista del jugador</i>: es exactamente lo que verán.</p>
+      </section>
+    </div>
+
+    <section class="card hist no-print" id="hist" hidden>
+      <h2>🗂 Mis entrenamientos</h2>
+      <div id="histList"></div>
+    </section>
+
+    <details class="card" id="panelImp">
+      <summary style="cursor:pointer;font-weight:700">📥 Importar una sesión hecha con otra IA (avanzado)</summary>
+      <div class="muted" style="margin-top:8px">Pídele a tu asistente de IA un JSON de sesión con el formato de <code>ejemplo-sesion-completa.json</code> y pégalo aquí.</div>
+      <textarea id="jsonIn" placeholder='Pega aquí el JSON de la sesión…' style="margin-top:10px"></textarea>
+      <div style="margin-top:8px"><button class="btn" type="button" id="btnImp">Cargar sesión pegada</button> <span class="muted" id="impMsg"></span></div>
+    </details>
   </div>
 
-  <!-- Importar -->
-  <section class="card" id="panelImp">
-    <h2>📥 ¿Tienes una sesión a medida (hecha con otra IA en un chat)?</h2>
-    <div class="muted">Si lo que has visto no encaja en los diagnósticos, cuéntaselo a tu asistente de IA (Gemini, Claude…) pidiéndole un JSON de sesión con el mismo formato que <code>ejemplo-sesion-completa.json</code>. Pégalo aquí para verlo, ajustarlo y publicarlo.</div>
-    <textarea id="jsonIn" placeholder='Pega aquí el JSON de la sesión…' style="margin-top:10px"></textarea>
-    <div style="margin-top:8px"><button class="btn" type="button" id="btnImp">Cargar sesión pegada</button> <span class="muted" id="impMsg"></span></div>
-  </section>
-
-  <section class="card hist no-print" id="hist" hidden>
-    <h2>🗂 Mis entrenamientos generados</h2>
-    <div id="histList"></div>
-  </section>
-
-  <footer>Guarda esta carpeta <code>mister/</code> solo en tu ordenador (no la subas a GitHub/Netlify).</footer>
+  <footer>Panel privado · No compartas la dirección de esta página ni tu contraseña.</footer>
 </div>
 
 <script src="../docs/anim.js"></script>
@@ -139,191 +180,228 @@
 (function () {
   const { h } = FutsalAnim;
   const $ = s => document.querySelector(s);
-  const HKEY = 'mister-historial-v1';
-  let current = null, existing = [];
-
-  /* historial local */
-  const loadHist = () => { try { return JSON.parse(localStorage.getItem(HKEY) || '[]'); } catch (e) { return []; } };
-  const saveHist = s => {
-    try {
-      const l = loadHist().filter(x => x.id !== s.id); l.unshift(s);
-      localStorage.setItem(HKEY, JSON.stringify(l.slice(0, 40)));
-    } catch (e) {}
-    renderHist();
+  const store = {
+    get: k => { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+    del: k => { try { localStorage.removeItem(k); } catch (e) {} }
   };
-  function renderHist() {
-    const l = loadHist(), box = $('#histList');
-    box.replaceChildren();
-    $('#hist').hidden = !l.length;
-    l.forEach(s => box.append(h('button', { class: 'btn', type: 'button', onclick: () => setCurrent(s, false) }, FutsalRender.fmtFecha(s.fecha) + ' · ' + s.titulo)));
+  const hoy = () => new Date().toLocaleDateString('sv-SE'); // AAAA-MM-DD en hora local
+  const online = /^https?:$/.test(location.protocol);
+  let BASE = online ? location.origin : store.get('mister-base-v2');
+  let PASS = store.get('mister-pass-v2');
+  let current = null, currentPub = false;
+
+  /* ───────── API ───────── */
+  async function api(path, opts) {
+    let r;
+    try {
+      r = await fetch(BASE + '/.netlify/functions/' + path, Object.assign({}, opts, { headers: Object.assign({ 'x-mister-key': PASS }, opts && opts.headers) }));
+    } catch (e) { throw new Error('No consigo conectar con tu web. Revisa la conexión y la dirección.'); }
+    const data = await r.json().catch(() => ({}));
+    if (r.status === 401) { salir(); $('#loginMsg').textContent = 'Contraseña incorrecta.'; throw new Error(data.error || 'Contraseña incorrecta.'); }
+    if (!r.ok) throw new Error(data.error || ('Error ' + r.status));
+    return data;
+  }
+  const post = (path, body) => api(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+
+  /* ───────── Entrada ───────── */
+  if (!online) { $('#loginUrlRow').hidden = false; $('#loginUrl').value = BASE; }
+  function entrar() { $('#login').hidden = true; $('#app').hidden = false; $('#linkJug').href = BASE + '/'; cargarHistorial(); }
+  function salir() { PASS = ''; store.del('mister-pass-v2'); $('#app').hidden = true; $('#login').hidden = false; }
+  async function intentarEntrar() {
+    const msg = $('#loginMsg');
+    if (!online) BASE = $('#loginUrl').value.trim().replace(/\/+$/, '');
+    PASS = $('#loginPass').value;
+    if (!BASE || !PASS) { msg.textContent = 'Escribe la contraseña' + (online ? '.' : ' y la dirección de tu web.'); return; }
+    msg.textContent = 'Comprobando…'; $('#btnLogin').disabled = true;
+    try { await api('manage'); store.set('mister-pass-v2', PASS); if (!online) store.set('mister-base-v2', BASE); msg.textContent = ''; entrar(); }
+    catch (e) { if (!/Contraseña/.test(e.message)) msg.textContent = e.message; }
+    finally { $('#btnLogin').disabled = false; }
+  }
+  $('#btnLogin').addEventListener('click', intentarEntrar);
+  $('#loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') intentarEntrar(); });
+  $('#btnSalir').addEventListener('click', () => { salir(); $('#loginPass').value = ''; });
+  if (PASS && BASE) api('manage').then(entrar).catch(() => {});
+
+  /* ───────── Historial (en el servidor: lo ves igual desde el móvil y el ordenador) ───────── */
+  async function cargarHistorial() {
+    try {
+      const { sesiones } = await api('manage');
+      const box = $('#histList'); box.replaceChildren();
+      $('#hist').hidden = !sesiones.length;
+      sesiones.forEach(e => box.append(h('button', { class: 'btn', type: 'button', onclick: () => abrirGuardada(e.id) },
+        (e.publicada ? '✅ ' : '📝 ') + FutsalRender.fmtFecha(e.fecha) + ' · ' + e.titulo)));
+    } catch (e) { /* sin conexión: se ignora */ }
+  }
+  async function abrirGuardada(id) {
+    try {
+      const d = await api('manage?id=' + encodeURIComponent(id));
+      setCurrent(d.session, false, d.publicada);
+      $('#resultado').scrollIntoView({ behavior: 'smooth' });
+    } catch (e) { alert(e.message); }
   }
 
-  /* chips */
+  /* ───────── Generador por palabras (B) ───────── */
   const chips = $('#chips');
-  Object.entries(FutsalLib.TAGS).forEach(([k, t]) => {
-    chips.append(h('label', {}, h('input', { type: 'checkbox', value: k, id: 'tag-' + k }), t.nombre));
-  });
+  Object.entries(FutsalLib.TAGS).forEach(([k, t]) => chips.append(h('label', {}, h('input', { type: 'checkbox', value: k, id: 'tag-' + k }), t.nombre)));
   ['bloque', 'estatico'].forEach(k => $('#tag-' + k).checked = true);
-  $('#fecha').value = new Date().toISOString().slice(0, 10);
+  $('#fecha').value = hoy();
   $('#idea').value = 'Se mueven en bloque, sin crear espacios y se quedan estáticos esperando el balón.';
-  $('#idea').addEventListener('input', e => {
-    FutsalLib.detectTags(e.target.value).forEach(k => $('#tag-' + k).checked = true);
-  });
-  const checkedTags = () => Array.from(chips.querySelectorAll('input:checked')).map(i => i.value);
-
-  /* generar */
+  $('#idea').addEventListener('input', e => FutsalLib.detectTags(e.target.value).forEach(k => $('#tag-' + k).checked = true));
   $('#btnGen').addEventListener('click', () => {
-    const tags = checkedTags();
+    const tags = Array.from(chips.querySelectorAll('input:checked')).map(i => i.value);
     if (!tags.length) { alert('Marca al menos un diagnóstico.'); return; }
-    const s = FutsalLib.buildSession({ tags, idea: $('#idea').value.trim(), fecha: $('#fecha').value });
-    setCurrent(s, true);
+    const s = FutsalLib.buildSession({ tags, idea: $('#idea').value.trim(), fecha: $('#fecha').value || hoy() });
+    setCurrent(s, true, false);
     $('#resultado').scrollIntoView({ behavior: 'smooth' });
   });
 
-  /* pestañas */
+  /* ───────── Pestañas ───────── */
   document.querySelectorAll('.tabs .btn').forEach(b => b.addEventListener('click', () => {
     document.querySelectorAll('.tabs .btn').forEach(x => x.classList.toggle('on', x === b));
     $('#pane-mister').hidden = b.dataset.pane !== 'mister';
     $('#pane-player').hidden = b.dataset.pane !== 'player';
     $('#panelPub').hidden = b.dataset.pane !== 'pub';
-    if (b.dataset.pane === 'player') drawPlayer();
-    else FutsalAnim.stopAll();
+    if (b.dataset.pane === 'player') drawPlayer(); else FutsalAnim.stopAll();
   }));
-
   function drawPlayer() {
     $('#pTitulo').textContent = current.titulo;
     $('#pFecha').textContent = FutsalRender.fmtFecha(current.fecha);
     FutsalRender.renderPlayer($('#pFicha'), current);
   }
 
-  /* ficha del míster */
+  /* ───────── Ficha del míster ───────── */
+  const lista = a => h('ul', { class: 'clean' }, (a || []).map(t => h('li', {}, t)));
   function renderMister(s) {
-    const m = s.mister || {};
-    const root = $('#pane-mister');
+    const m = s.mister || {}, root = $('#pane-mister');
     root.replaceChildren();
-    root.append(
-      h('div', { class: 'card' },
-        h('h2', {}, '📋 ' + s.titulo),
-        h('div', { class: 'muted' }, FutsalRender.fmtFecha(s.fecha) + ' · Infantil 2º año · 4 jugadores de campo + 2 porteros'),
-        m.contexto ? h('p', {}, h('b', {}, 'Lo que vi: '), m.contexto) : null,
-        m.analisis ? h('p', {}, h('b', {}, '🔎 Análisis de la IA: '), m.analisis) : null,
-        h('button', { class: 'btn no-print', type: 'button', onclick: () => window.print() }, '🖨 Imprimir / guardar PDF')
-      )
-    );
-    if (m.manual && m.manual.length) root.append(h('div', { class: 'card' }, h('h2', {}, '📖 Base en el Manual UEFA de futsal'), h('ul', { class: 'clean' }, m.manual.map(t => h('li', {}, t)))));
-    (m.bloques || []).forEach(b => root.append(
-      h('div', { class: 'block' },
-        h('span', { class: 'min' }, b.min + ' min'),
-        h('h3', {}, b.nombre),
-        h('div', {}, b.tarea),
-        h('ul', { class: 'clean' }, (b.reglas || []).map(r => h('li', {}, r)))
-      )
+    const fuente = /^https?:\/\//.test(m.fuente || '') ? h('p', {}, h('b', {}, 'Vídeo de referencia: '), h('a', { href: m.fuente, target: '_blank', rel: 'noopener noreferrer', style: 'color:var(--accent)' }, m.fuente)) : null;
+    root.append(h('div', { class: 'card' },
+      h('h2', {}, '📋 ' + s.titulo),
+      h('div', { class: 'muted' }, FutsalRender.fmtFecha(s.fecha) + ' · Infantil 2º año · 4 jugadores de campo + 2 porteros'),
+      m.contexto ? h('p', {}, h('b', {}, 'Lo que pediste: '), m.contexto) : null,
+      m.analisis ? h('p', {}, h('b', {}, '🔎 Análisis de la IA: '), m.analisis) : null,
+      fuente,
+      (m.evidencia && m.evidencia.length) ? h('div', { class: 'thumbs' }, m.evidencia.map(src => h('img', { src, alt: 'Fotograma' }))) : null,
+      h('div', { class: 'actions no-print' }, h('button', { class: 'btn', type: 'button', onclick: () => window.print() }, '🖨 Imprimir / guardar PDF'))
     ));
-    root.append(
-      h('div', { class: 'card' },
-        h('h2', {}, '🗣 Pautas de feedback (método socrático)'),
-        h('div', { class: 'muted' }, 'Haz una pregunta en cada parón y espera a que respondan ellos antes de dar la solución.'),
-        h('ol', { class: 'steps' }, (m.preguntas || []).map(q => h('li', {}, q)))
-      )
-    );
+    const ev = m.evaluacion;
+    if (ev) root.append(h('div', { class: 'card evalcard' },
+      h('h2', {}, '🧪 Evaluación del ejercicio'),
+      ev.ejercicioObservado ? h('p', {}, h('b', {}, 'Qué se ve: '), ev.ejercicioObservado) : null,
+      (ev.puntosFuertes && ev.puntosFuertes.length) ? h('div', {}, h('b', {}, '👍 Puntos fuertes'), lista(ev.puntosFuertes)) : null,
+      (ev.puntosMejorar && ev.puntosMejorar.length) ? h('div', { style: 'margin-top:8px' }, h('b', {}, '🔧 A mejorar para tu objetivo'), lista(ev.puntosMejorar)) : null,
+      ev.adaptacion ? h('p', {}, h('b', {}, '🎯 Adaptación a tu equipo: '), ev.adaptacion) : null
+    ));
+    if (m.manual && m.manual.length) root.append(h('div', { class: 'card' }, h('h2', {}, '📖 Base en el Manual UEFA de futsal'), lista(m.manual)));
+    (m.bloques || []).forEach(b => root.append(h('div', { class: 'block' },
+      h('span', { class: 'min' }, b.min + ' min'), h('h3', {}, b.nombre), h('div', {}, b.tarea), lista(b.reglas))));
+    root.append(h('div', { class: 'card' },
+      h('h2', {}, '🗣 Pautas de feedback (método socrático)'),
+      h('div', { class: 'muted' }, 'Haz una pregunta en cada parón y espera a que respondan ellos antes de dar la solución.'),
+      h('ol', { class: 'steps' }, (m.preguntas || []).map(q => h('li', {}, q)))));
   }
 
-  function setCurrent(s, save) {
-    // si viene sin parte de míster (p. ej. sesión pública), la reconstruimos desde los diagnósticos
-    if (!s.mister) {
-      try { s = Object.assign({}, s, { mister: FutsalLib.buildSession({ tags: s.tags, fecha: s.fecha }).mister }); } catch (e) { s.mister = { bloques: [], preguntas: [] }; }
-    }
-    current = s;
+  /* ───────── Sesión actual y publicación ───────── */
+  function pintarEstado() {
+    const st = $('#pubStatus');
+    st.textContent = currentPub ? 'Publicada ✓' : 'No publicada';
+    st.className = 'status ' + (currentPub ? 'on' : 'off');
+    $('#btnPublish').textContent = currentPub ? '🔄 Actualizar publicada' : '🚀 Publicar ahora';
+    $('#btnUnpublish').hidden = !currentPub;
+  }
+  async function guardar(publish) {
+    const body = { action: 'save', session: current };
+    if (typeof publish === 'boolean') body.publish = publish;
+    const r = await post('manage', body);
+    currentPub = r.publicada; pintarEstado(); cargarHistorial();
+    return r;
+  }
+  function setCurrent(s, autosave, publicada) {
+    current = s; currentPub = !!publicada;
     $('#resultado').hidden = false;
-    renderMister(s);
+    renderMister(s); pintarEstado();
     document.querySelectorAll('.tabs .btn').forEach((x, i) => x.classList.toggle('on', i === 0));
     $('#pane-mister').hidden = false; $('#pane-player').hidden = true; $('#panelPub').hidden = true;
     FutsalAnim.stopAll();
-    $('#pubMsg').textContent = 'Sesión lista: ' + s.titulo + ' (' + s.fecha + ').';
-    if (save) saveHist(s);
+    $('#pubMsg').textContent = '';
+    if (autosave) guardar().then(() => { $('#pubMsg').textContent = 'Guardada en tu cuenta (aún no publicada).'; }).catch(e => { $('#pubMsg').textContent = '⚠️ No se pudo guardar: ' + e.message; });
   }
-
-  /* publicar */
-  $('#fileSess').addEventListener('change', e => {
-    const f = e.target.files[0]; if (!f) return;
-    f.text().then(t => {
-      const d = JSON.parse(t);
-      existing = Array.isArray(d) ? d : [d];
-      $('#pubMsg').textContent = 'Cargadas ' + existing.length + ' sesiones existentes.';
-    }).catch(() => { $('#pubMsg').textContent = 'No he podido leer ese archivo.'; });
+  $('#btnPublish').addEventListener('click', async () => {
+    const b = $('#btnPublish'); b.disabled = true; $('#pubMsg').textContent = 'Publicando…';
+    try { await guardar(true); $('#pubMsg').textContent = '✅ Publicada. Los jugadores ya la ven en ' + BASE + '/'; }
+    catch (e) { $('#pubMsg').textContent = '❌ ' + e.message; } finally { b.disabled = false; }
   });
-  $('#btnDownload').addEventListener('click', () => {
-    if (!current) return;
-    const pub = FutsalLib.publicVersion(current);
-    const all = [pub].concat(existing.filter(x => x.id !== pub.id)).sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
-    const blob = new Blob([JSON.stringify(all, null, 1)], { type: 'application/json' });
-    const a = h('a', { href: URL.createObjectURL(blob), download: 'sessions.json' });
-    document.body.append(a); a.click(); a.remove();
-    $('#pubMsg').textContent = 'Descargado sessions.json con ' + all.length + ' sesión(es). Sustituye docs/sessions.json y publica.';
+  $('#btnUnpublish').addEventListener('click', async () => {
+    try { await post('manage', { action: 'publish', id: current.id, publish: false }); currentPub = false; pintarEstado(); cargarHistorial(); $('#pubMsg').textContent = 'Retirada de la web de los jugadores.'; }
+    catch (e) { $('#pubMsg').textContent = '❌ ' + e.message; }
   });
-
-  /* importar */
-  $('#btnImp').addEventListener('click', () => {
+  $('#btnDelete').addEventListener('click', async () => {
+    if (!confirm('¿Borrar esta sesión para siempre?')) return;
     try {
-      const s = JSON.parse($('#jsonIn').value);
-      if (!s.id || !s.fecha || !s.titulo || !s.jugador || !s.jugador.escenas) throw new Error('Faltan campos: id, fecha, titulo, jugador.escenas');
-      setCurrent(s, true);
-      $('#impMsg').textContent = '✅ Sesión cargada.';
-      $('#resultado').scrollIntoView({ behavior: 'smooth' });
-    } catch (e) { $('#impMsg').textContent = '❌ ' + e.message; }
+      await post('manage', { action: 'delete', id: current.id });
+      current = null; $('#resultado').hidden = true; FutsalAnim.stopAll(); cargarHistorial();
+    } catch (e) { $('#pubMsg').textContent = '❌ ' + e.message; }
+  });
+  $('#btnShare').addEventListener('click', async () => {
+    const url = BASE + '/', text = 'Entrenamiento de hoy: ' + (current ? current.titulo : '');
+    try {
+      if (navigator.share) await navigator.share({ title: 'Fútbol sala Infantil', text, url });
+      else { await navigator.clipboard.writeText(url); $('#pubMsg').textContent = 'Enlace copiado: ' + url; }
+    } catch (e) { $('#pubMsg').textContent = 'Enlace para los jugadores: ' + url; }
   });
 
-  /* ── Subir dibujo / vídeo → IA ── */
-  const CKEY = 'mister-ia-config-v1';
-  try { const c = JSON.parse(localStorage.getItem(CKEY) || '{}'); $('#iaUrl').value = c.url || ''; $('#iaPass').value = c.pass || ''; } catch (e) {}
-
-  async function api(base, pass, path, opts) {
-    let r;
-    try { r = await fetch(base + '/.netlify/functions/' + path, Object.assign({ headers: { 'x-mister-key': pass } }, opts)); }
-    catch (e) { throw new Error('No consigo conectar con tu web. Revisa la dirección y que la web esté publicada en Netlify.'); }
-    const data = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error(data.error || ('Error ' + r.status));
-    return data;
-  }
+  /* ───────── Subir vídeo / dibujo → IA (A) ───────── */
+  ['Evalúa si este ejercicio sirve para que no se queden parados tras el pase', 'Adáptalo a 4 jugadores de campo + porteros', 'Crea una progresión de tareas con puntuación doble'].forEach(t =>
+    $('#notaChips').append(h('button', { type: 'button', onclick: () => { const n = $('#mediaNota'); n.value = (n.value.trim() ? n.value.trim() + ' ' : '') + t + '.'; } }, '+ ' + t)));
+  $('#mediaLink').addEventListener('input', () => {
+    const hay = $('#mediaLink').value.trim().length > 0;
+    if (hay) $('#mostrarFotos').checked = false;
+    $('#fotosHint').textContent = hay ? 'Como el vídeo es de otra cuenta, he desmarcado esta casilla para no publicar imágenes ajenas. Tú decides.' : '';
+  });
 
   $('#btnIA').addEventListener('click', async () => {
     const msg = $('#iaMsg'), btn = $('#btnIA'), files = $('#mediaFile').files;
-    if (!files.length) { msg.textContent = 'Elige primero una foto del dibujo o un vídeo.'; return; }
-    const base = $('#iaUrl').value.trim().replace(/\/+$/, ''), pass = $('#iaPass').value;
-    if (!/^https?:\/\//.test(base) || !pass) { msg.textContent = 'Rellena la dirección de tu web y la contraseña en ⚙️ Conexión.'; $('#iaCfg').open = true; return; }
-    try { localStorage.setItem(CKEY, JSON.stringify({ url: base, pass })); } catch (e) {}
+    if (!files.length) { msg.textContent = 'Elige primero un vídeo, un dibujo o capturas.'; return; }
     btn.disabled = true;
     try {
       msg.textContent = 'Preparando imágenes…';
       const prep = await FutsalMedia.prepare(files, (i, n) => { msg.textContent = 'Leyendo el vídeo… ' + i + '/' + n; });
       $('#iaThumbs').replaceChildren(...prep.evidencia.map(src => h('img', { src, alt: 'Fotograma' })));
       msg.textContent = 'Enviando a la IA…';
-      const { jobId } = await api(base, pass, 'start', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', 'x-mister-key': pass },
-        body: JSON.stringify({ imagenes: prep.big, nota: $('#mediaNota').value.trim(), tipo: prep.tipo, fecha: $('#fecha').value })
-      });
+      const link = $('#mediaLink').value.trim();
+      const { jobId } = await post('start', { imagenes: prep.big, nota: $('#mediaNota').value.trim(), tipo: prep.tipo, fecha: $('#fecha').value || hoy(), fuente: /^https?:\/\//.test(link) ? link : '' });
       const t0 = Date.now();
       for (;;) {
         await new Promise(r => setTimeout(r, 3000));
-        const st = await api(base, pass, 'status?id=' + encodeURIComponent(jobId));
+        const st = await api('status?id=' + encodeURIComponent(jobId));
         if (st.status === 'done') {
           const s = st.session;
-          s.jugador.evidencia = prep.evidencia;
-          setCurrent(s, true);
-          msg.textContent = '✅ Listo. Revisa las pestañas de abajo.';
+          s.mister.evidencia = prep.evidencia;
+          if ($('#mostrarFotos').checked) s.jugador.evidencia = prep.evidencia;
+          setCurrent(s, true, false);
+          msg.textContent = '✅ Listo. Revisa las pestañas de abajo y publica si te gusta.';
           $('#resultado').scrollIntoView({ behavior: 'smooth' });
           break;
         }
         if (st.status === 'error') throw new Error(st.error || 'La IA no pudo analizarlo.');
-        msg.textContent = 'La IA está analizando… ' + Math.round((Date.now() - t0) / 1000) + ' s (suele tardar 30-90 s)';
+        msg.textContent = 'La IA está analizando… ' + Math.round((Date.now() - t0) / 1000) + ' s (suele tardar 30-90 s). Puedes dejar esta pantalla abierta.';
         if (Date.now() - t0 > 11 * 60 * 1000) throw new Error('Tarda demasiado. Inténtalo otra vez.');
       }
     } catch (e) { msg.textContent = '❌ ' + e.message; }
     finally { btn.disabled = false; }
   });
 
-  renderHist();
+  /* ───────── Importar ───────── */
+  $('#btnImp').addEventListener('click', () => {
+    try {
+      const s = JSON.parse($('#jsonIn').value);
+      if (!s.id || !s.fecha || !s.titulo || !s.jugador || !s.jugador.escenas) throw new Error('Faltan campos: id, fecha, titulo, jugador.escenas');
+      setCurrent(s, true, false);
+      $('#impMsg').textContent = '✅ Sesión cargada.';
+      $('#resultado').scrollIntoView({ behavior: 'smooth' });
+    } catch (e) { $('#impMsg').textContent = '❌ ' + e.message; }
+  });
 })();
 </script>
 </body>

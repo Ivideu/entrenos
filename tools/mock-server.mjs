@@ -43,6 +43,7 @@ const fakeSession = {
     }, { titulo: 'Escena rota (se descarta)', mal: { actors: [] }, bien: null }]
   },
   mister: {
+    evaluacion: { ejercicioObservado: 'Rondo de 4 con un defensor.', puntosFuertes: ['Mucho ritmo', 'Muchos toques'], puntosMejorar: ['Se quedan parados tras pasar'], adaptacion: 'Pasa a 3 toques y obliga a cambiar de carril.' },
     bloques: [
       { nombre: 'Calentamiento', min: 12, tarea: 'Pases por carriles', reglas: ['Nunca dos en el mismo carril'] },
       { nombre: 'Progresión 1', min: 20, tarea: '2v1 + comodín', reglas: ['Gol solo tras pase abierto'] },
@@ -72,7 +73,7 @@ globalThis.fetch = async (url, opts) => {
 };
 
 const handlers = {};
-for (const n of ['start', 'status', 'analyze-background']) handlers[n] = (await import(`../netlify/functions/${n}.mjs`)).default;
+for (const n of ['start', 'status', 'analyze-background', 'manage', 'sessions']) handlers[n] = (await import(`../netlify/functions/${n}.mjs`)).default;
 
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json' };
 
@@ -92,9 +93,9 @@ export function startServer(port) {
       res.writeHead(out.status, Object.fromEntries(out.headers));
       return res.end(Buffer.from(await out.arrayBuffer()));
     }
-    let f = path.join(root, decodeURIComponent(u.pathname));
+    let f = path.join(root, 'docs', decodeURIComponent(u.pathname));   // Netlify publica la carpeta docs
     if (fs.existsSync(f) && fs.statSync(f).isDirectory()) f = path.join(f, 'index.html');
-    if (!f.startsWith(root) || !fs.existsSync(f)) { res.writeHead(404); return res.end('no'); }
+    if (!f.startsWith(path.join(root, 'docs')) || !fs.existsSync(f)) { res.writeHead(404); return res.end('no'); }
     res.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'application/octet-stream' });
     fs.createReadStream(f).pipe(res);
   });

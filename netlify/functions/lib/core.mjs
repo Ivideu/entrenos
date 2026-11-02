@@ -45,6 +45,8 @@ Recibes imágenes y una nota opcional del míster. Las imágenes pueden ser:
 (A) un DIBUJO o pizarra táctica hecha a mano: interpreta posiciones, flechas de movimiento, líneas discontinuas de pase y quién tiene el balón;
 (B) FOTOGRAMAS de un vídeo de entrenamiento o partido, en orden cronológico: describe con prudencia lo que se ve (posiciones, si se mueven o están parados, distancia entre compañeros, espacios libres). No inventes lo que no se ve; si algo no se aprecia, dilo en "analisis".
 
+IMPORTANTE: la NOTA DEL MÍSTER manda. Haz exactamente lo que pida en ella (qué trabajar, qué corregir, qué evaluar) y úsala para centrar el diagnóstico; las imágenes sirven para ver el contexto o el ejercicio. Si el vídeo o las capturas muestran un ejercicio de otra fuente (por ejemplo, un entrenamiento visto en redes sociales): descríbelo con tus palabras, evalúa si encaja con este equipo y con el problema que quiere corregir el míster (edad, nivel, 4 jugadores de campo + porteros, objetivo), y diseña la sesión alrededor de una versión ADAPTADA y progresiva de ese ejercicio. No copies textos ni nombres de otras cuentas.
+
 Con eso detectas la idea o el problema táctico y devuelves UNA sesión completa: una ficha para los jugadores (lenguaje cercano, motivador, para 13-15 años) y el diseño de la sesión para el míster.
 
 FORMATO DE SALIDA: responde SOLO con un objeto JSON válido (sin markdown, sin comentarios, sin texto antes ni después), en español, con esta forma:
@@ -60,6 +62,7 @@ FORMATO DE SALIDA: responde SOLO con un objeto JSON válido (sin markdown, sin c
    "escenas": [ { "titulo": "...", "clave": "frase clave", "mal": ESCENA, "bien": ESCENA } ]
  },
  "mister": {
+   "evaluacion": {"ejercicioObservado":"qué ejercicio o situación se ve, en 2-3 frases","puntosFuertes":["2-3"],"puntosMejorar":["2-3, centrados en el problema que quiere corregir el míster"],"adaptacion":"cómo adaptarlo a este equipo Infantil 2º año (reglas, espacio, número de jugadores)"},
    "bloques": [
      {"nombre":"Calentamiento / Activación cognitiva","min":12,"tarea":"...","reglas":["..."]},
      {"nombre":"Progresión 1 · Tarea condicionada","min":20,"tarea":"...","reglas":["..."]},
@@ -182,35 +185,73 @@ export function cleanScene(sc) {
   return { dur: clamp(num(sc.dur, 6500), 4000, 10000), actors, ball: ball || undefined, zones, notes };
 }
 
-export function sanitizeSession(raw, { fecha, nota } = {}) {
+const ID_RE = /^[A-Za-z0-9_-]{3,70}$/;
+const isJpeg = v => typeof v === 'string' && v.startsWith('data:image/jpeg;base64,') && v.length < 400000;
+const cleanUrl = v => (typeof v === 'string' && /^https?:\/\/[^\s]{3,300}$/.test(v.trim()) ? v.trim() : '');
+
+// Normaliza cualquier sesión (generada por la IA, por la biblioteca o importada) a la forma segura que usan las páginas.
+export function cleanSession(raw, { id, fecha, nota, fuente } = {}) {
   if (!raw || typeof raw !== 'object') throw new Error('Sesión vacía.');
   const j = raw.jugador || {}, m = raw.mister || {};
-  const escenas = (Array.isArray(j.escenas) ? j.escenas : []).slice(0, 2).map(e => {
+  const escenas = (Array.isArray(j.escenas) ? j.escenas : []).slice(0, 3).map(e => {
     const mal = cleanScene(e && e.mal), bien = cleanScene(e && e.bien);
     if (!mal || !bien) return null;
     return { titulo: str(e.titulo, 90) || 'Escena', clave: str(e.clave, 300), mal, bien };
   }).filter(Boolean);
   const bloques = (Array.isArray(m.bloques) ? m.bloques : []).slice(0, 5).map(b => ({
     nombre: str(b && b.nombre, 90), min: clamp(Math.round(num(b && b.min, 15)), 1, 60),
-    tarea: str(b && b.tarea, 500), reglas: strs(b && b.reglas, 6, 300)
+    tarea: str(b && b.tarea, 500), reglas: strs(b && b.reglas, 8, 300)
   })).filter(b => b.nombre && b.tarea);
-  if (!bloques.length) throw new Error('La IA no devolvió el diseño de la sesión.');
-  const titulo = str(raw.titulo, 90) || 'Entrenamiento a partir de tu análisis';
-  const f = /^\d{4}-\d{2}-\d{2}$/.test(fecha || '') ? fecha : new Date().toISOString().slice(0, 10);
+  if (!bloques.length) throw new Error('La sesión no tiene el diseño de entrenamiento.');
+  const ev = m.evaluacion && typeof m.evaluacion === 'object' ? m.evaluacion : null;
+  const evaluacion = ev ? {
+    ejercicioObservado: str(ev.ejercicioObservado, 500), puntosFuertes: strs(ev.puntosFuertes, 4), puntosMejorar: strs(ev.puntosMejorar, 4), adaptacion: str(ev.adaptacion, 600)
+  } : null;
+  const f = /^\d{4}-\d{2}-\d{2}$/.test(fecha || raw.fecha || '') ? (fecha || raw.fecha) : new Date().toISOString().slice(0, 10);
+  const jugador = {
+    analisis: str(j.analisis || raw.analisis, 900),
+    concepto: str(j.concepto, 700),
+    reto: str(j.reto, 300),
+    conBalon: strs(j.conBalon, 4),
+    sinBalon: strs(j.sinBalon, 4),
+    debate: strs(j.debate, 3),
+    escenas
+  };
+  const evJ = (Array.isArray(j.evidencia) ? j.evidencia : []).filter(isJpeg).slice(0, 3);
+  if (evJ.length) jugador.evidencia = evJ;
+  const mister = {
+    contexto: str(nota != null ? nota : m.contexto, 600),
+    analisis: str(m.analisis || raw.analisis, 900),
+    fuente: cleanUrl(fuente != null ? fuente : m.fuente),
+    manual: strs(m.manual, 4, 500),
+    bloques,
+    preguntas: strs(m.preguntas, 3)
+  };
+  if (evaluacion && (evaluacion.ejercicioObservado || evaluacion.puntosFuertes.length || evaluacion.puntosMejorar.length || evaluacion.adaptacion)) mister.evaluacion = evaluacion;
+  const evM = (Array.isArray(m.evidencia) ? m.evidencia : []).filter(isJpeg).slice(0, 3);
+  if (evM.length) mister.evidencia = evM;
   return {
-    id: f + '-ia-' + randomBytes(3).toString('hex'),
+    id: id || (f + '-ia-' + randomBytes(3).toString('hex')),
     fecha: f,
-    titulo,
-    tags: ['ia'],
-    jugador: {
-      analisis: str(raw.analisis, 900),
-      concepto: str(j.concepto, 700),
-      reto: str(j.reto, 300),
-      conBalon: strs(j.conBalon, 4),
-      sinBalon: strs(j.sinBalon, 4),
-      debate: strs(j.debate, 3),
-      escenas
-    },
-    mister: { contexto: str(nota, 600), analisis: str(raw.analisis, 900), bloques, preguntas: strs(m.preguntas, 3) }
+    titulo: str(raw.titulo, 90) || 'Entrenamiento a partir de tu análisis',
+    tags: strs(raw.tags, 6, 20).length ? strs(raw.tags, 6, 20) : ['ia'],
+    jugador,
+    mister
   };
 }
+
+// Respuesta de la IA → sesión nueva
+export function sanitizeSession(raw, opts = {}) {
+  return cleanSession(raw, { fecha: opts.fecha, nota: opts.nota || '', fuente: opts.fuente || '' });
+}
+
+// Sesión guardada por el míster (conserva id y fotogramas)
+export function cleanStored(raw) {
+  if (!raw || typeof raw !== 'object' || !ID_RE.test(raw.id || '')) throw new Error('Identificador de sesión no válido.');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(raw.fecha || '')) throw new Error('Fecha no válida.');
+  return cleanSession(raw, { id: raw.id, fecha: raw.fecha });
+}
+
+// Lo único que ven los jugadores
+export const publicSession = s => ({ id: s.id, fecha: s.fecha, titulo: s.titulo, tags: s.tags, jugador: s.jugador });
+export const isValidId = id => ID_RE.test(id || '');

@@ -1,62 +1,88 @@
-# Fútbol sala Infantil · Web de entrenamientos con IA
+# Fútbol sala Infantil · Web de entrenamientos con IA (online y para el móvil)
 
 ## Qué hace
 
-1. Tú subes un **dibujo** (foto de una pizarra) o un **vídeo** corto en tu panel privado, o escribes una frase.
-2. La IA lo interpreta y te prepara: tu **sesión de entrenamiento** (4 bloques + preguntas socráticas) y la **ficha para los jugadores** (con los fotogramas, preguntas para debatir y pizarras animadas).
-3. Pulsas **Publicar** y los jugadores lo ven en su web.
+1. Entras desde el móvil o el ordenador a **`tu-web.netlify.app/panel/`** con tu contraseña.
+2. Subes un **vídeo** (por ejemplo, una grabación de pantalla de un reel de Instagram), un **dibujo** o capturas, y escribes qué quieres que haga ("evalúa si sirve para que no se queden parados y adáptalo a 4v4").
+3. La IA (Gemini) lo analiza, **evalúa el ejercicio** y te crea la **sesión de entrenamiento** (4 bloques + preguntas socráticas) y la **ficha para los jugadores** con pizarras animadas, siguiendo el Manual de la UEFA.
+4. Tú la revisas y pulsas **Publicar**. Los jugadores la ven al instante en **`tu-web.netlify.app`**. Sin GitHub, sin archivos.
 
-| Carpeta | Para quién | ¿Se publica? |
+| Dirección | Quién | Qué es |
 |---|---|---|
-| `docs/` | Jugadores | **Sí** (es lo que sirve Netlify) |
-| `mister/` | Tú | **No**: se abre con doble clic en tu ordenador |
-| `netlify/functions/` | La IA (backend) | Sí, pero protegido con tu contraseña |
+| `tu-web.netlify.app` | Jugadores | La ficha del día (y las anteriores) |
+| `tu-web.netlify.app/panel/` | Tú | El panel; pide contraseña |
+
+Todo lo que guardas (historial, sesiones) vive en tu cuenta de Netlify, así que lo ves igual desde el móvil y desde el ordenador.
+
+## Vídeos de Instagram: cómo funciona (y su límite)
+
+Instagram **no permite** que una web descargue sus vídeos, y la IA no puede entrar en Instagram. Lo que sí funciona, y es rápido desde el móvil:
+
+1. Reproduce el reel y **graba la pantalla** (iPhone: desliza desde arriba a la derecha → botón de grabar; Android: ajustes rápidos → *Grabar pantalla*). También sirven 4-6 capturas de los momentos clave.
+2. En el panel pulsa *Elegir archivo* y selecciona esa grabación.
+3. (Opcional) Pega el enlace del reel para tenerlo de referencia en tu sesión.
+4. Escribe qué quieres y pulsa **Analizar**. Tarda 30-90 segundos; puedes dejar la pantalla abierta.
+
+Los vídeos no se suben enteros: el navegador saca 8 fotogramas y solo esas imágenes se envían a la IA.
+
+> El vídeo de otra cuenta es de su autor. Para uso interno de entrenamiento, vale; pero **no publiques sus imágenes** en la web de los jugadores. Por eso, si pegas un enlace, el panel desmarca "Mostrar los fotogramas a los jugadores".
 
 ## Puesta en marcha (una sola vez, ~10 min)
 
 ### 1. Clave de Gemini
-Entra en aistudio.google.com/apikey con tu cuenta de Google y crea una clave (*Create API key*). Hay un nivel gratuito con límites; revisa en Google AI Studio qué límites tiene tu cuenta y, si quieres más, activa la facturación y pon un tope de gasto.
+Entra en aistudio.google.com/apikey con tu cuenta de Google y crea una clave (*Create API key*). Hay un nivel gratuito con límites; revisa en Google AI Studio qué límites tiene tu cuenta y, si quieres más, activa la facturación con un tope de gasto.
 
 > Antes de subir vídeos con caras de menores, lee las condiciones de datos de Google: normalmente el nivel gratuito permite usar el contenido para mejorar sus productos y el de pago no. Con dibujos o capturas de pizarra no hay problema.
 
 ### 2. Subir el proyecto a GitHub
-Crea un repositorio **privado** y sube esta carpeta entera (con `mister/`, `docs/`, `netlify/`, `netlify.toml` y `package.json`).
+Crea un repositorio **privado** y sube esta carpeta entera (con `docs/`, `netlify/`, `mister/`, `tools/`, `netlify.toml` y `package.json`).
 
-> Importante: para que las funciones con IA se instalen bien, Netlify tiene que desplegar desde Git. Arrastrar la carpeta a Netlify Drop **no sirve** para esta versión.
+> Netlify tiene que desplegar desde Git para instalar las funciones. Arrastrar la carpeta a Netlify Drop **no sirve**.
 
 ### 3. Conectar Netlify
-app.netlify.com → *Add new site* → *Import an existing project* → elige tu repo. No cambies nada: `netlify.toml` ya indica la carpeta `docs` y las funciones.
+app.netlify.com → *Add new site* → *Import an existing project* → elige tu repo. Deja *Base directory*, *Package directory* y *Build command* vacíos; *Publish directory* = `docs`, *Functions directory* = `netlify/functions` (ya vienen de `netlify.toml`).
 
 ### 4. Variables de entorno
-En Netlify: *Site configuration → Environment variables*:
+*Site configuration → Environment variables*:
 
 | Nombre | Valor |
 |---|---|
 | `GEMINI_API_KEY` | la clave del paso 1 |
-| `GEMINI_MODEL` | (opcional) nombre del modelo si quieres cambiarlo. Por defecto `gemini-3.8-flash`; si Google lo renombra o lo retira, pon aquí el modelo Flash vigente (lista en ai.google.dev/gemini-api/docs/models) |
-| `MISTER_PASSWORD` | una contraseña que inventes (la usarás en tu panel; sin ella nadie puede gastar tu IA) |
+| `MISTER_PASSWORD` | una contraseña **larga** que inventes (12 caracteres o más). Es lo único que impide que otros usen tu panel y tu IA |
+| `GEMINI_MODEL` | (opcional) cambia el modelo. Por defecto `gemini-3.8-flash`; si Google lo renombra o retira, pon aquí el Flash vigente (ai.google.dev/gemini-api/docs/models) |
 
-Vuelve a desplegar (*Deploys → Trigger deploy*). Tu web queda en `https://tu-nombre.netlify.app`: esa es la dirección que pasas a los jugadores.
+Después: *Deploys → Trigger deploy*.
 
-### 5. Configurar tu panel
-Abre `mister/index.html` en tu ordenador → ⚙️ *Conexión con la IA* → pega la dirección de tu web y tu contraseña. Se guardan en tu navegador.
+### 5. Entrar desde el móvil
+Abre `https://tu-nombre.netlify.app/panel/`, escribe tu contraseña y listo (se queda recordada en ese móvil). Guárdalo como acceso directo: en el navegador, *Compartir/Menú → Añadir a pantalla de inicio*.
 
-## Uso semanal
+## Uso diario
 
-1. Abre `mister/index.html`.
-2. **A**: sube la foto del dibujo o un vídeo (+ una nota si quieres) → *Analizar*. Tarda 30-90 s.
-   **B**: o escribe con palabras lo que has visto (esto funciona sin IA ni internet).
-3. Revisa las pestañas *Sesión del míster* y *Vista del jugador*.
-4. *Publicar* → carga tu `docs/sessions.json` actual → descarga el actualizado → sustitúyelo en `docs/` y haz commit en GitHub. Netlify lo publica solo.
+1. Abre el panel → sube vídeo/dibujo + qué quieres → **Analizar** (o describe con palabras lo que has visto en la opción **B**).
+2. Revisa *Sesión del míster* y *Vista del jugador* (es exactamente lo que verán).
+3. **Publicar** → ya está en la web de los jugadores. *Compartir el enlace* lo manda por WhatsApp.
+4. Puedes *Quitar de la web* o *Borrar* cuando quieras; el historial está en *Mis entrenamientos*.
+
+## Si algo no va
+
+- **Contraseña incorrecta aunque es la buena:** comprueba que `MISTER_PASSWORD` está en Netlify y que has vuelto a desplegar después de crearla.
+- **"Falta configurar GEMINI_API_KEY":** añade la variable y vuelve a desplegar.
+- **Error de Gemini con el nombre del modelo:** pon un modelo vigente en `GEMINI_MODEL`.
+- **"No puedo leer ese vídeo en este navegador":** haz 4-6 capturas de pantalla del vídeo y súbelas como imágenes (pasa a veces en iPhone con vídeos largos).
+- **Los jugadores ven una sesión de ejemplo:** es lo normal hasta que publiques la primera.
+- Si cambias algo en `mister/` o `docs/`, regenera el panel con `node tools/build-mister.mjs`.
+
+## Seguridad
+
+- La web de los jugadores solo recibe la parte pública de las sesiones publicadas. Tu sesión, tus notas y el enlace del vídeo son privados.
+- No hay límite de intentos en el login: usa una contraseña larga.
+- Las imágenes se envían a la API de Gemini (Google) para analizarlas; revisa en *Vista del jugador* que no salgan caras de menores antes de publicar fotogramas.
+- **Revisa siempre lo que devuelve la IA**: es un borrador de ayudante, no sustituye tu criterio.
 
 ## Base metodológica
 
-La IA recibe un resumen del *Manual de la UEFA para entrenadores de futsal* (desmarque de apoyo y de ruptura, zona despejada/tapada, amplitud y profundidad, triángulos, aclarado, modelo cognitivo y objetivos de la etapa sub-14/15). Está en `netlify/functions/lib/knowledge.mjs`: puedes editarlo y añadir más contenido del manual. El panel offline (opción B) también cita las páginas del manual en cada sesión.
+La IA recibe un resumen del *Manual de la UEFA para entrenadores de futsal* (desmarque de apoyo y de ruptura, zona despejada/tapada, amplitud y profundidad, triángulos, aclarado, modelo cognitivo y objetivos de la etapa sub-14/15). Está en `netlify/functions/lib/knowledge.mjs`: puedes editarlo y ampliarlo.
 
-## Notas
+## Para desarrolladores
 
-- **Vídeo:** se leen 8 fotogramas en tu navegador; el vídeo en sí no se sube a ningún sitio. Funciona con MP4 o WebM. Si tu navegador no lo abre, sube capturas.
-- **Dibujo:** cuanto más claro (flechas gruesas, jugadores numerados), mejor lo interpreta. Puedes subir varias fotos.
-- **Privacidad:** las imágenes se envían a la API de Gemini (Google) para analizarlas. En la ficha pública solo se publican 1-3 miniaturas: revisa que no salgan caras de menores en un vídeo antes de publicar (en la pestaña *Vista del jugador* ves exactamente lo que verán).
-- **Revisa siempre lo que devuelve la IA** antes de publicar: es un borrador de un entrenador ayudante, no sustituye tu criterio.
-- Las pruebas locales están en `tools/` (`node tools/test-functions.mjs`).
+Pruebas locales: `node tools/test-functions.mjs` (49 comprobaciones con una IA simulada).

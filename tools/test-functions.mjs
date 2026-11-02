@@ -70,5 +70,58 @@ t('respuesta cortada → error claro', e.status === 'error' && /cort/.test(e.err
 e = await failWith({ body: { candidates: [{ finishReason: 'STOP', content: { parts: [{ text: 'Lo siento, no puedo.' }] } }] } });
 t('texto sin JSON → error claro', e.status === 'error' && /JSON/.test(e.error));
 
+// 5) Evaluación y fuente llegan a la sesión
+const j3 = (await (await fetch(base + 'start', { method: 'POST', headers: H, body: JSON.stringify({ imagenes: [jpeg], fuente: 'https://www.instagram.com/reel/abc/', fecha: '2026-11-04' }) })).json()).jobId;
+let st3; for (let i = 0; i < 30; i++) { st3 = await (await fetch(base + 'status?id=' + j3, { headers: H })).json(); if (st3.status !== 'pending') break; await new Promise(r => setTimeout(r, 200)); }
+t('la evaluación del ejercicio llega a la sesión', st3.status === 'done' && st3.session.mister.evaluacion.puntosMejorar[0].includes('parados'));
+t('el enlace de referencia se guarda en la parte del míster', st3.session.mister.fuente === 'https://www.instagram.com/reel/abc/' && !('fuente' in st3.session.jugador));
+
+// 6) Guardar / publicar / leer (manage + sessions)
+const M = (body) => fetch(base + 'manage', { method: 'POST', headers: H, body: JSON.stringify(body) });
+r = await fetch(base + 'manage'); t('manage sin contraseña → 401', r.status === 401);
+r = await fetch(base + 'sessions'); let pub = await r.json();
+t('antes de publicar, la web pública está vacía', r.status === 200 && pub.sesion === null && pub.lista.length === 0);
+
+const sess = { ...st3.session, jugador: { ...st3.session.jugador, evidencia: [jpeg, 'data:image/png;base64,AAAA', 'http://evil'] } };
+sess.mister.evidencia = [jpeg];
+r = await M({ action: 'save', session: sess }); let d = await r.json();
+t('guardar sesión (sin publicar)', r.status === 200 && d.publicada === false);
+pub = await (await fetch(base + 'sessions')).json();
+t('guardada pero NO publicada → los jugadores no la ven', pub.sesion === null);
+r = await M({ action: 'save', session: { ...sess, id: '../../x' } });
+t('id malicioso rechazado', r.status === 400);
+r = await M({ action: 'save', session: { ...sess, fecha: 'ayer' } });
+t('fecha mala rechazada', r.status === 400);
+
+r = await M({ action: 'publish', id: sess.id, publish: true });
+t('publicar', r.status === 200);
+const resPub = await fetch(base + 'sessions'); pub = await resPub.json();
+t('ahora los jugadores la ven', pub.sesion && pub.sesion.id === sess.id && pub.lista.length === 1);
+t('la parte del míster NO se publica', !('mister' in pub.sesion) && !JSON.stringify(pub).includes('Rondo de 4') && !JSON.stringify(pub).includes('instagram.com') && !JSON.stringify(pub).includes('Quiero que se muevan'));
+t('solo miniaturas JPEG válidas en la ficha pública', pub.sesion.jugador.evidencia.length === 1 && pub.sesion.jugador.evidencia[0].startsWith('data:image/jpeg;base64,'));
+t('la lectura pública es accesible desde cualquier origen y se cachea', resPub.headers.get('access-control-allow-origin') === '*' && /max-age/.test(resPub.headers.get('cache-control')));
+r = await fetch(base + 'sessions?id=' + sess.id); t('abrir una publicada por id', r.status === 200);
+r = await fetch(base + 'sessions?id=../etc'); t('id raro en lectura pública → 404/400', r.status >= 400);
+
+d = await (await fetch(base + 'manage?id=' + sess.id, { headers: H })).json();
+t('el míster recupera la sesión completa (con su parte privada)', d.session.mister.evaluacion && d.publicada === true && d.session.mister.evidencia.length === 1);
+d = await (await fetch(base + 'manage', { headers: H })).json();
+t('lista del míster con estado', d.sesiones.length === 1 && d.sesiones[0].publicada === true);
+
+// una sesión de la biblioteca sin IA (formato offline) también se guarda bien
+const { createRequire } = await import('node:module'); const req = createRequire(import.meta.url);
+const Lib = req('../mister/library.js');
+const lib = Lib.buildSession({ tags: ['bloque', 'estatico'], idea: 'prueba', fecha: '2026-11-05' });
+r = await M({ action: 'save', session: lib, publish: true }); d = await r.json();
+pub = await (await fetch(base + 'sessions')).json();
+t('sesión del generador offline: guardada y publicada, con sus pizarras', r.status === 200 && pub.sesion.id === lib.id && pub.sesion.jugador.escenas.length === 2 && pub.lista.length === 2);
+
+r = await M({ action: 'publish', id: sess.id, publish: false });
+pub = await (await fetch(base + 'sessions')).json();
+t('despublicar la retira de la lista pública', pub.lista.length === 1 && pub.lista[0].id === lib.id);
+r = await M({ action: 'delete', id: lib.id });
+pub = await (await fetch(base + 'sessions')).json();
+t('borrar la elimina', pub.sesion === null && (await (await fetch(base + 'manage', { headers: H })).json()).sesiones.length === 1);
+
 console.log('\n' + ok + ' comprobaciones OK');
 server.close(); process.exit(0);

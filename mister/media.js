@@ -26,12 +26,15 @@
     return out;
   }
 
+  const NO_VIDEO = 'No puedo leer ese vídeo en este navegador. Haz 4-6 capturas de pantalla del vídeo y súbelas como imágenes.';
+
   function seek(v, t) {
     return new Promise((res, rej) => {
-      const ok = () => { v.removeEventListener('error', no); res(); };
-      const no = () => { v.removeEventListener('seeked', ok); rej(new Error('No puedo leer ese vídeo en este navegador. Prueba con otro formato (MP4/WebM) o sube capturas.')); };
-      v.addEventListener('seeked', ok, { once: true });
-      v.addEventListener('error', no, { once: true });
+      let done = false;
+      const fin = fn => { if (done) return; done = true; clearTimeout(to); v.removeEventListener('seeked', ok); v.removeEventListener('error', no); fn(); };
+      const ok = () => fin(res), no = () => fin(() => rej(new Error(NO_VIDEO)));
+      const to = setTimeout(no, 7000);
+      v.addEventListener('seeked', ok); v.addEventListener('error', no);
       v.currentTime = t;
     });
   }
@@ -39,14 +42,17 @@
   async function videoFrames(file, n, big, thumb, onProgress) {
     const url = URL.createObjectURL(file);
     const v = document.createElement('video');
-    v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = url;
+    v.muted = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.preload = 'auto'; v.src = url;
     try {
       await new Promise((res, rej) => {
-        v.addEventListener('loadedmetadata', res, { once: true });
-        v.addEventListener('error', () => rej(new Error('No puedo abrir ese vídeo en este navegador. Prueba con MP4/WebM o sube capturas.')), { once: true });
+        const to = setTimeout(() => rej(new Error(NO_VIDEO)), 15000);
+        v.addEventListener('loadeddata', () => { clearTimeout(to); res(); }, { once: true });
+        v.addEventListener('error', () => { clearTimeout(to); rej(new Error(NO_VIDEO)); }, { once: true });
       });
+      // Algunos móviles (iOS) no dejan buscar fotogramas hasta que el vídeo ha arrancado una vez.
+      try { await Promise.race([v.play(), new Promise(r => setTimeout(r, 1500))]); v.pause(); } catch (e) { /* ignorar */ }
       const d = v.duration;
-      if (!isFinite(d) || d <= 0) throw new Error('No puedo leer la duración del vídeo.');
+      if (!isFinite(d) || d <= 0 || !v.videoWidth) throw new Error(NO_VIDEO);
       const frames = [];
       for (let i = 0; i < n; i++) {
         await seek(v, Math.min(d - 0.05, (i + 0.5) / n * d));

@@ -24,7 +24,8 @@ export default async (req) => {
     imagenes,
     nota: typeof body.nota === 'string' ? body.nota.slice(0, 1500) : '',
     tipo: body.tipo === 'video' ? 'video' : 'dibujo',
-    fecha: typeof body.fecha === 'string' ? body.fecha : ''
+    fecha: typeof body.fecha === 'string' ? body.fecha : '',
+    fuente: typeof body.fuente === 'string' ? body.fuente.slice(0, 300) : ''
   });
   await store.set('job-' + jobId, { status: 'pending', created: Date.now() });
 
